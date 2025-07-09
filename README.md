@@ -21,14 +21,14 @@ npm install easy-tooltips
 ```
 
 ```js
-import "easy-tooltips/easy-tooltips.css"
+import "easy-tooltips/src/easy-tooltips.css"
 import "easy-tooltips"
 ```
 
 ### Or use via CDN
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easy-tooltips@1.0.2/easy-tooltips.css">
-<script type="module" src="https://cdn.jsdelivr.net/npm/easy-tooltips@1.0.2/easy-tooltips.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easy-tooltips@1.0.3/easy-tooltips.min.css">
+<script type="module" src="https://cdn.jsdelivr.net/npm/easy-tooltips@1.0.3/easy-tooltips.min.js"></script>
 ```
 
 ### Add tooltips to your HTML

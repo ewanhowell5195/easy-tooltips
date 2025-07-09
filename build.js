@@ -28,7 +28,7 @@ const minifiedJs = (await minify(js, {
 
 const minifiedCss = new CleanCSS().minify(css).styles
 
-fs.writeFileSync("dist/easy-tooltips.js", banner + minifiedJs)
-fs.writeFileSync("dist/easy-tooltips.css", banner + minifiedCss)
+fs.writeFileSync("dist/easy-tooltips.min.js", banner + minifiedJs)
+fs.writeFileSync("dist/easy-tooltips.min.css", banner + minifiedCss)
 
 console.log("Built easy-tooltips v" + version)
