@@ -21,7 +21,7 @@ npm install easy-tooltips
 ```
 
 ```js
-import "easy-tooltips/src/easy-tooltips.css"
+import "easy-tooltips/styles.css"
 import "easy-tooltips"
 ```
 
