@@ -12,7 +12,7 @@ const css = fs.readFileSync("src/easy-tooltips.css", "utf8")
 
 const banner = `/*!
  * easy-tooltips
- * Version  : 1.0.0
+ * Version  : ${version}
  * License  : MIT
  * Copyright: 2025 Ewan Howell
  */

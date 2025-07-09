@@ -71,12 +71,5 @@
   border: var(--tooltip-border-size) solid var(--tooltip-border-color);
   text-align: center;
   box-sizing: border-box;
-}
-
-#sub-tooltip {
-  --tooltip-background: skyblue;
-}
-
-#big-tooltip {
-  --tooltip-max-width: 800px;
+  min-width: calc(var(--tooltip-arrow-edge-buffer) * 2 + var(--tooltip-arrow-size) * 1.41421356);
 }
