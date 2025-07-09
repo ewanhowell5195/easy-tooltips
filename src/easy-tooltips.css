@@ -10,6 +10,30 @@
   --tooltip-arrow-radius: 0;
 }
 
+@property --tooltip-background {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #fff;
+}
+
+@property --tooltip-border-color {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #aaa;
+}
+
+@property --tooltip-arrow-radius {
+  syntax: "<length-percentage>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --tooltip-max-width {
+  syntax: "<length-percentage> | auto";
+  inherits: true;
+  initial-value: auto;
+}
+
 #tooltips {
   z-index: 99999;
   position: relative;
@@ -24,6 +48,7 @@
   transition: opacity var(--tooltip-animation-length), translate var(--tooltip-animation-length);
   translate: 0 4px;
   max-width: min(100% - var(--tooltip-viewport-padding) * 2, var(--tooltip-max-width, 100%));
+  min-width: calc(var(--tooltip-arrow-edge-buffer) * 2 + var(--tooltip-arrow-size) * 1.41421356);
 }
 
 .tooltip.visible {
@@ -71,5 +96,5 @@
   border: var(--tooltip-border-size) solid var(--tooltip-border-color);
   text-align: center;
   box-sizing: border-box;
-  min-width: calc(var(--tooltip-arrow-edge-buffer) * 2 + var(--tooltip-arrow-size) * 1.41421356);
+  min-width: 100%;
 }

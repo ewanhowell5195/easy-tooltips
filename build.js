@@ -1,9 +1,8 @@
-import pkg from "./package.json" with { type: "json" }
 import CleanCSS from "clean-css"
 import { minify } from "terser"
 import fs from "node:fs"
 
-const version = pkg.version
+const version = "1.1.0"
 
 fs.mkdirSync("dist", { recursive: true })
 
