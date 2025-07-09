@@ -1,12 +1,16 @@
 {
   "name": "easy-tooltips",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A lightweight, zero-dependency tooltip library using modern JavaScript and CSS.",
   "author": "Ewan Howell <ewanhowell5195>",
   "license": "MIT",
   "type": "module",
   "exports": {
-    "import": "./src/easy-tooltips.js"
+    ".": {
+      "import": "./dist/easy-tooltips.min.js",
+      "require": "./dist/easy-tooltips.min.js"
+    },
+    "./style.css": "./dist/easy-tooltips.min.css"
   },
   "files": [
     "src",
