@@ -36,7 +36,7 @@ https://www.jsdelivr.com/package/npm/easy-tooltips
 <div data-tooltip="Multi-line tooltips<br>are supported too">Info</div>
 ```
 
-No additional setup is needed for Vue, React, Svelte, or other frameworks! Tooltips automatically attach to dynamic elements.
+No additional setup is needed for Vue, React, Svelte, or other frameworks! Tooltips automatically update when the element updates!
 
 ## Advanced Usage
 
