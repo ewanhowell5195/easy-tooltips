@@ -2,7 +2,7 @@ import CleanCSS from "clean-css"
 import { minify } from "terser"
 import fs from "node:fs"
 
-const version = "1.1.0"
+const version = "1.2.1"
 
 fs.mkdirSync("dist", { recursive: true })
 
