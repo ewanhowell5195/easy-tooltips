@@ -63,7 +63,7 @@ You can style tooltips using CSS variables (recommended) or by targeting the too
   --tooltip-background: #fff;         /* Background color */
   --tooltip-border-color: #aaa;       /* Border color */
   --tooltip-border-size: 1px;         /* Border thickness */
-  --tooltip-max-width: 300px;         /* Maximum width (not set by default) */
+  --tooltip-max-width: 100%;          /* Maximum tooltip width */
   
   /* Positioning (required for JS positioning) */
   --tooltip-vertical-distance: 16px;  /* Distance from trigger element */

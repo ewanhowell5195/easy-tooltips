@@ -8,6 +8,7 @@
   --tooltip-border-size: 1px;
   --tooltip-animation-length: .15s;
   --tooltip-arrow-radius: 0;
+  --tooltip-max-width: 100%;
 }
 
 @property --tooltip-background {
@@ -47,7 +48,7 @@
   opacity: 0;
   transition: opacity var(--tooltip-animation-length), translate var(--tooltip-animation-length);
   translate: 0 4px;
-  max-width: min(calc(100% - var(--tooltip-viewport-padding) * 2), var(--tooltip-max-width, 100%));
+  max-width: min(100% - var(--tooltip-viewport-padding) * 2, var(--tooltip-max-width, 100%));
   min-width: calc(var(--tooltip-arrow-edge-buffer) * 2 + var(--tooltip-arrow-size) * 1.41421356);
 }
 
