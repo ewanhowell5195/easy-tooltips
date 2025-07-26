@@ -12,6 +12,7 @@ Just add `data-tooltip` to any element — no setup, no config, no JavaScript ca
 * Works with both mouse and touch
 * Customizable via CSS variables
 * Automatically repositions and shifts to fit the screen
+* Compatible with Vue, React, Svelte, and more
 
 ## Quick Start
 
@@ -34,6 +35,8 @@ https://www.jsdelivr.com/package/npm/easy-tooltips
 <span data-tooltip="This field is required">Username *</span>
 <div data-tooltip="Multi-line tooltips<br>are supported too">Info</div>
 ```
+
+No additional setup is needed for Vue, React, Svelte, or other frameworks! Tooltips automatically attach to dynamic elements.
 
 ## Advanced Usage
 

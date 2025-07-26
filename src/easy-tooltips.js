@@ -60,6 +60,14 @@ function addTooltips() {
         node._tooltipText = tooltipText
         
         tooltips.append(tooltip)
+      } else {
+        tooltipText.innerHTML = node.dataset.tooltip
+
+        if (node.dataset.tooltipId) {
+          tooltip.id = node.dataset.tooltipId 
+        } else {
+          tooltip.id = null
+        }
       }
       
       const rect = node.getBoundingClientRect()
