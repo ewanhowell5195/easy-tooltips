@@ -132,13 +132,12 @@ function addTooltips() {
   }
 }
 
-function removeTooltips(nodes, single) {
+function removeTooltips(nodes) {
   for (let node of nodes) {
     while (node && node !== document.body) {
-      if (node._tooltip && (!node.matches(":hover") || single)) {
+      if (node._tooltip && !node.matches(":hover")) {
         tooltipVisibility(node._tooltip, false)
       }
-      if (single) break
       node = node.parentElement
     }
   }
@@ -173,6 +172,7 @@ function reloadTooltips() {
 
 document.addEventListener("mouseover", e => {
   queueTooltipUpdate(() => {
+    removeTooltips([lastElement])
     lastElement = e.target
     addTooltips()
   })
@@ -180,13 +180,11 @@ document.addEventListener("mouseover", e => {
 
 document.addEventListener("touchstart", e => {
   queueTooltipUpdate(() => {
+    removeTooltips([lastElement])
     lastElement = e.target
-    const elements = Array.from(document.querySelectorAll("[data-tooltip]")).filter(el => !el.contains(lastElement))
-    removeTooltips(elements, true)
     addTooltips()
   })
 })
 
-document.addEventListener("mouseout", e => removeTooltips([e.target]))
 window.addEventListener("resize", reloadTooltips)
 window.addEventListener("scroll", reloadTooltips)
