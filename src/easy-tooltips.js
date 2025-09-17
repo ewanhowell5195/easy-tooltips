@@ -133,10 +133,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function removeTooltips(nodes) {
+  function removeTooltips(nodes, force = false) {
     for (let node of nodes) {
       while (node && node !== document.body) {
-        if (node._tooltip && !node.matches(":hover")) {
+        if (node._tooltip && (force || !node.matches(":hover"))) {
           tooltipVisibility(node._tooltip, false)
         }
         node = node.parentElement
@@ -171,20 +171,28 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   }
 
-  document.addEventListener("mouseover", e => {
+  function updateTooltipTarget(e, forceRemove = false) {
     queueTooltipUpdate(() => {
-      removeTooltips([lastElement])
+      removeTooltips([lastElement], forceRemove)
       lastElement = e.target
       addTooltips()
     })
-  })
+  }
+
+  let touched = false
 
   document.addEventListener("touchstart", e => {
-    queueTooltipUpdate(() => {
-      removeTooltips([lastElement])
-      lastElement = e.target
-      addTooltips()
-    })
+    touched = true
+    if (e.target === lastElement) return
+    updateTooltipTarget(e, true)
+  })
+
+  document.addEventListener("mouseover", e => {
+    if (touched) {
+      touched = false
+      return
+    }
+    updateTooltipTarget(e)
   })
 
   window.addEventListener("resize", reloadTooltips)
