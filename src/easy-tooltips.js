@@ -1,4 +1,4 @@
-(() => {
+document.addEventListener("DOMContentLoaded", () => {
   const tooltips = document.createElement("div")
   tooltips.id = "tooltips"
   document.body.append(tooltips)
@@ -189,4 +189,4 @@
 
   window.addEventListener("resize", reloadTooltips)
   window.addEventListener("scroll", reloadTooltips)
-})()
+})
