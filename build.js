@@ -2,7 +2,7 @@ import CleanCSS from "clean-css"
 import { minify } from "terser"
 import fs from "node:fs"
 
-const version = "1.2.8"
+const version = "1.2.9"
 
 fs.mkdirSync("dist", { recursive: true })
 
@@ -18,11 +18,7 @@ const banner = `/*!
 `
 
 const minifiedJs = (await minify(js, {
-  module: true,
-  compress: true,
-  mangle: {
-    toplevel: true
-  }
+  compress: true
 })).code
 
 const minifiedCss = new CleanCSS().minify(css).styles
