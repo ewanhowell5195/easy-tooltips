@@ -96,6 +96,7 @@
   text-align: center;
   box-sizing: border-box;
   min-width: 100%;
+  white-space: pre-line;
 }
 
 [data-tooltip-src="next"] + * {
