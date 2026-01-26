@@ -84,6 +84,7 @@
             tooltipText.className = "tooltip-text"
             if (node._source) {
               tooltipText.replaceChildren(...node._source.cloneNode(true).childNodes)
+              tooltipText.classList.add("tooltip-text-html")
             } else {
               tooltipText.textContent = node.dataset.tooltip
             }
@@ -100,8 +101,10 @@
 
             if (node._source) {
               tooltipText.replaceChildren(...node._source.cloneNode(true).childNodes)
+              tooltipText.classList.add("tooltip-text-html")
             } else {
               tooltipText.textContent = node.dataset.tooltip
+              tooltipText.classList.remove("tooltip-text-html")
             }
           }
           
