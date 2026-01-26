@@ -1,139 +1,545 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>easy-tooltips demo</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>easy-tooltips</title>
+  <link rel="icon" type="image/webp" sizes="16x16" href="https://ewanhowell.com/assets/images/logo/logo_16.webp">
+  <link rel="icon" type="image/webp" sizes="32x32" href="https://ewanhowell.com/assets/images/logo/logo_32.webp">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="easy-tooltips">
+  <meta property="og:description" content="A lightweight, zero-dependency tooltip library using modern JavaScript and CSS. Just add &quot;data-tooltip&quot; to any element! No setup or config required.">
+  <link href="https://cdn.jsdelivr.net/npm/easy-tooltips/dist/easy-tooltips.min.css" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: #f5f5f5;
+      font-size: 16px;
+    }
+    
+    header {
+      background: #2c3e50;
+      color: white;
+      padding: 40px;
+      text-align: center;
+    }
+    
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+    
+    header p {
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+    
+    .container {
+      max-width: 1024px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    
+    .content {
+      padding: 40px;
+    }
+    
+    .section {
+      margin-bottom: 50px;
+    }
+    
+    .section h2 {
+      font-size: 1.5rem;
+      color: #2c3e50;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #3498db;
+    }
+    
+    .section p {
+      color: #666;
+      margin-bottom: 20px;
+      line-height: 1.7;
+    }
 
-    <link href="https://cdn.jsdelivr.net/npm/easy-tooltips/dist/easy-tooltips.min.css" rel="stylesheet">
+    code {
+      border: 1px solid #ccc;
+      border-radius: 2px;
+      padding: 0.1em 0.3em;
+    }
+    
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin: 20px 0;
+    }
+    
+    .demo-card {
+      background: #f9f9f9;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+    }
+    
+    .demo-card h3 {
+      color: #2c3e50;
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+    }
+    
+    button {
+      background: #3498db;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: background 0.2s ease;
+    }
+    
+    button:hover {
+      background: #2980b9;
+    }
+    
+    .btn-success {
+      background: #27ae60;
+    }
+    
+    .btn-success:hover {
+      background: #229954;
+    }
+    
+    .btn-danger {
+      background: #e74c3c;
+    }
+    
+    .btn-danger:hover {
+      background: #c0392b;
+    }
+    
+    pre {
+      background: #2c3e50;
+      color: #ecf0f1;
+      padding: 15px;
+      border-radius: 6px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      overflow-x: auto;
+      line-height: 1.4;
+    }
+    
+    .input-group {
+      margin: 15px 0;
+      text-align: left;
+    }
+    
+    .input-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+      color: #333;
+      font-size: 0.9rem;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-family: inherit;
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: #3498db;
+      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+    }
+    
+    .icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #3498db;
+      color: white;
+      font-weight: bold;
+      cursor: help;
+      margin: 0 5px;
+    }
+    
+    .icon.warning {
+      background: #f39c12;
+    }
+    
+    .icon.info {
+      background: #9b59b6;
+    }
+    
+    .positioning-demo {
+      padding: 30px;
+      background: #f9f9f9;
+      border: 2px dashed #ddd;
+      border-radius: 8px;
+      text-align: center;
+    }
+    
+    .feature-list {
+      list-style: none;
+      margin: 20px 0;
+    }
+    
+    .feature-list li {
+      padding: 2px 0;
+      padding-left: 25px;
+      position: relative;
+      color: #555;
+    }
 
-    <style>
-      body {
-        font-family: system-ui, sans-serif;
-        padding: 40px;
-        line-height: 1.5;
+    .feature-list li:first-child {
+      padding-top: 0;
+    }
+
+    .feature-list li:last-child {
+      padding-bottom: 0;
+    }
+    
+    .feature-list li:before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: #27ae60;
+      font-weight: bold;
+    }
+    
+    footer {
+      background: #f0f0f0;
+      padding: 20px 40px;
+      text-align: center;
+      color: #666;
+      font-size: 0.9rem;
+      border-top: 1px solid #e0e0e0;
+    }
+    
+    footer a {
+      color: #3498db;
+      text-decoration: none;
+    }
+    
+    footer a:hover {
+      text-decoration: underline;
+    }
+    
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 1.8rem;
       }
-
-      section {
-        margin-bottom: 48px;
+      
+      .content {
+        padding: 20px;
       }
-
-      h2 {
-        margin-bottom: 12px;
+      
+      .demo-grid {
+        grid-template-columns: 1fr;
       }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>easy-tooltips</h1>
+    <p>A lightweight, zero-dependency tooltip library using modern JavaScript and CSS.</p>
+    <p>Just add <code>data-tooltip</code> to any element! No setup or config required.</p>
+  </header>
 
-      .row {
-        display: flex;
-        gap: 24px;
-        flex-wrap: wrap;
-        align-items: center;
-      }
-
-      button {
-        padding: 10px 16px;
-        font-size: 14px;
-        cursor: pointer;
-      }
-
-      .box {
-        width: 120px;
-        height: 80px;
-        background: #eee;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      /* Custom tooltip via ID */
-      #custom-tooltip {
-        --tooltip-background: #0a4446;
-        --tooltip-border-color: #0a4446;
-        --tooltip-color: #fff;
-      }
-
-      /* Slow animation + delay demo */
-      .delayed {
-        --tooltip-animation-length: 0.4s;
-        --tooltip-delay: 0.4s;
-      }
-    </style>
-  </head>
-
-  <body>
-    <h1>easy-tooltips demo</h1>
-
-    <section>
-      <h2>Basic tooltips</h2>
-      <div class="row">
-        <button data-tooltip="Click to save your changes">Save</button>
-        <span data-tooltip="This field is required">Username *</span>
+  <div class="container">
+    <div class="content">
+      <div class="section">
+        <h2>Features</h2>
+        <ul class="feature-list">
+          <li>No dependencies or frameworks required</li>
+          <li>Works with mouse and touch events</li>
+          <li>Customizable via CSS variables</li>
+          <li>Smart positioning and viewport detection</li>
+          <li>Smooth animations with no flicker</li>
+          <li>Works in Vue, React, Svelte, and more</li>
+        </ul>
       </div>
-    </section>
 
-    <section>
-      <h2>Multi-line content (HTML supported)</h2>
-      <div
-        class="box"
-        data-tooltip-src="next"
-      >
-        Hover me
+      <div class="section">
+        <h2>Basic Usage</h2>
+        <p>Simply add the <code>data-tooltip</code> attribute to any element:</p>
+        
+        <div class="demo-grid">
+          <div class="demo-card">
+            <h3>Button</h3>
+            <button data-tooltip="Click to save your changes">Save Document</button>
+          </div>
+          
+          <div class="demo-card">
+            <h3>Text Element</h3>
+            <p>Hover over <span data-tooltip="This field is required for login" style="cursor: help; text-decoration: underline;">username</span></p>
+          </div>
+          
+          <div class="demo-card">
+            <h3>Icon</h3>
+            <div class="icon" data-tooltip="Multi-line tooltips&#10;are supported too">i</div>
+          </div>
+        </div>
+        
+        <pre>&lt;button data-tooltip="Click to save your changes"&gt;Save&lt;/button&gt;
+&lt;span data-tooltip="This field is required"&gt;username&lt;/span&gt;
+&lt;div data-tooltip="Multi-line tooltips&amp;#10;are supported"&gt;Info&lt;/div&gt;</pre>
       </div>
-      <div>Multi-line tooltip<br><strong>HTML</strong> is supported<br>including line breaks</div>
-    </section>
 
-    <section>
-      <h2>Viewport-aware positioning</h2>
-      <p>
-        Tooltips automatically flip and shift to stay within the viewport.
-        Try resizing the window or hovering near the edges.
-      </p>
-      <div class="row">
-        <button data-tooltip="Top edge test">Top</button>
-        <button data-tooltip="Another tooltip near the edge">Edge</button>
+      <div class="section">
+        <h2>Custom HTML</h2>
+        <p>Use <code>data-tooltip-src</code> to pull content from another element:</p>
+        
+        <div class="demo-grid">
+          <div class="demo-card">
+            <h3>CSS Selector</h3>
+            <button data-tooltip-src="#tip-shipping">Shipping Info</button>
+            <div id="tip-shipping">
+              <strong>Free shipping</strong> on orders over £50<br>
+              Delivered in 2-4 working days
+            </div>
+          </div>
+          
+          <div class="demo-card">
+            <h3>From Next Element</h3>
+            <button class="btn btn-success" data-tooltip-src="next">Ingredients</button>
+            <div style="display: none;">
+              <ul style="text-align: left; margin: 10px 0;">
+                <li>Oats</li>
+                <li>Honey</li>
+                <li>Sea salt</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <pre>&lt;button data-tooltip-src="#tip-shipping"&gt;Shipping Info&lt;/button&gt;
+&lt;template id="tip-shipping"&gt;
+  &lt;strong&gt;Free shipping&lt;/strong&gt; on orders over £50&lt;br&gt;
+  Delivered in 2-4 working days
+&lt;/template&gt;
+
+&lt;button class="btn btn-success" data-tooltip-src="next"&gt;Ingredients&lt;/button&gt;
+&lt;div style="display: none;"&gt;
+  &lt;ul&gt;&lt;li&gt;Oats&lt;/li&gt;&lt;li&gt;Honey&lt;/li&gt;&lt;li&gt;Sea salt&lt;/li&gt;&lt;/ul&gt;
+&lt;/div&gt;</pre>
       </div>
-    </section>
 
-    <section>
-      <h2>Custom tooltip ID styling</h2>
-      <button
-        data-tooltip="This tooltip is styled via its ID"
-        data-tooltip-id="custom-tooltip"
-      >
-        Custom styled tooltip
-      </button>
-    </section>
 
-    <section>
-      <h2>Delay and non-interrupting animations</h2>
-      <p>
-        These tooltips use a longer delay and animation. Rapid hover in/out will
-        never cause flicker.
-      </p>
-      <div class="row">
-        <button
-          class="delayed"
-          data-tooltip="This tooltip has a delay and a longer animation"
-        >
-          Delayed tooltip
-        </button>
-        <button
-          class="delayed"
-          data-tooltip="Hover quickly in and out to test interruption handling"
-        >
-          No flicker
-        </button>
+
+      <div class="section">
+        <h2>Smart Positioning</h2>
+        <p>Tooltips automatically adapt to screen boundaries. Hover over the buttons at the corners of your screen to see smart positioning in action:</p>
+        
+        <div class="positioning-demo">
+          <button id="center-element" data-tooltip="I adapt to screen boundaries automatically">Center Element</button>
+        </div>
       </div>
-    </section>
 
-    <section>
-      <h2>Touch support</h2>
-      <p>
-        On touch devices, tooltips open on tap and close on tap outside.
-        Delay is ignored for a responsive mobile experience.
-      </p>
-      <button data-tooltip="Tap me on mobile">Mobile tooltip</button>
-    </section>
+      <div class="section">
+        <h2>Custom Colors</h2>
+        <p>Style specific tooltips using <code>data-tooltip-id</code> and CSS variables:</p>
+        
+        <div class="demo-grid">
+          <div class="demo-card">
+            <h3>Success</h3>
+            <button class="btn btn-success" data-tooltip="Saved!" data-tooltip-id="success-tooltip">Save</button>
+          </div>
+          
+          <div class="demo-card">
+            <h3>Danger</h3>
+            <button class="btn btn-danger" data-tooltip="This cannot be undone!" data-tooltip-id="danger-tooltip">Delete</button>
+          </div>
+          
+          <div class="demo-card">
+            <h3>Info</h3>
+            <div class="icon info" data-tooltip="Get help" data-tooltip-id="info-tooltip">?</div>
+          </div>
+        </div>
+        
+        <pre>&lt;button data-tooltip="Saved!" data-tooltip-id="success-tooltip"&gt;Save&lt;/button&gt;
+&lt;button data-tooltip="This cannot be undone!" data-tooltip-id="danger-tooltip"&gt;Delete&lt;/button&gt;
+&lt;div data-tooltip="Get help" data-tooltip-id="info-tooltip"&gt;?&lt;/div&gt;
 
-    <script src="https://cdn.jsdelivr.net/npm/easy-tooltips/dist/easy-tooltips.min.js"></script>
-  </body>
+&lt;style&gt;
+  #success-tooltip {
+    --tooltip-background: #f0fdf4;
+    --tooltip-border-color: #27ae60;
+    color: #27ae60;
+  }
+  
+  #danger-tooltip {
+    --tooltip-background: #fef2f2;
+    --tooltip-border-color: #e74c3c;
+    color: #e74c3c;
+  }
+  
+  #info-tooltip {
+    --tooltip-background: #faf5ff;
+    --tooltip-border-color: #9b59b6;
+    color: #9b59b6;
+  }
+&lt;/style&gt;</pre>
+      </div>
+
+      <div class="section">
+        <h2>Customization Variables</h2>
+        <p>Fine-tune tooltips with CSS variables:</p>
+        
+        <div class="demo-grid">
+          <div class="demo-card">
+            <h3>Custom Border</h3>
+            <button data-tooltip="Custom border" data-tooltip-id="border-color">Hover me</button>
+          </div>
+          
+          <div class="demo-card">
+            <h3>Max Width</h3>
+            <button data-tooltip="This tooltip has a constrained maximum width and will wrap text accordingly" data-tooltip-id="narrow-tooltip">Hover me</button>
+          </div>
+          
+          <div class="demo-card">
+            <h3>Large Arrow</h3>
+            <button data-tooltip="Larger arrow pointer" data-tooltip-id="large-arrow">Hover me</button>
+          </div>
+          
+          <div class="demo-card">
+            <h3>Rounded Arrow Point</h3>
+            <button data-tooltip="Rounded arrow corners" data-tooltip-id="arrow-radius">Hover me</button>
+          </div>
+          
+          <div class="demo-card">
+            <h3>Delay</h3>
+            <button data-tooltip="Waits before appearing" data-tooltip-id="with-delay">Hover me</button>
+          </div>
+          
+          <div class="demo-card">
+            <h3>Longer Animation</h3>
+            <button data-tooltip="Smooth fade in" data-tooltip-id="long-animation">Hover me</button>
+          </div>
+        </div>
+        
+        <pre>&lt;style&gt;
+  :root {
+  --tooltip-background: #fff;
+  --tooltip-border-color: #aaa;
+  --tooltip-border-size: 1px;
+  --tooltip-max-width: 100%;
+  --tooltip-arrow-size: 12px;
+  --tooltip-arrow-radius: 0;
+  --tooltip-animation-length: 0.15s;
+  --tooltip-delay: 0.15s;
+  }
+&lt;/style&gt;</pre>
+      </div>
+
+      <style>
+        #success-tooltip {
+          --tooltip-background: #f0fdf4;
+          --tooltip-border-color: #27ae60;
+          color: #27ae60;
+        }
+        
+        #danger-tooltip {
+          --tooltip-background: #fef2f2;
+          --tooltip-border-color: #e74c3c;
+          color: #e74c3c;
+        }
+        
+        #info-tooltip {
+          --tooltip-background: #faf5ff;
+          --tooltip-border-color: #9b59b6;
+          color: #9b59b6;
+        }
+        
+        #border-color {
+          --tooltip-border-color: #e74c3c;
+          --tooltip-border-size: 3px;
+        }
+        
+        #narrow-tooltip {
+          --tooltip-max-width: 120px;
+        }
+        
+        #large-arrow {
+          --tooltip-arrow-size: 20px;
+          --tooltip-vertical-distance: 20px;
+        }
+        
+        #arrow-radius {
+          --tooltip-arrow-size: 16px;
+          --tooltip-arrow-radius: 6px;
+        }
+        
+        #with-delay {
+          --tooltip-delay: 1s;
+        }
+        
+        #long-animation {
+          --tooltip-animation-length: 1s;
+        }
+      </style>
+    </div>
+    
+    <div id="edge-buttons" style="display: none;">
+      <div style="position: fixed; top: 20px; left: 20px; z-index: 1000;">
+        <button data-tooltip="Tooltips shift and adjust to stay fully visible" style="background: #e74c3c;">Top Left</button>
+      </div>
+      
+      <div style="position: fixed; top: 20px; right: 20px; z-index: 1000;">
+        <button data-tooltip="Tooltips shift and adjust to stay fully visible" style="background: #f39c12;">Top Right</button>
+      </div>
+      
+      <div style="position: fixed; bottom: 20px; left: 20px; z-index: 1000;">
+        <button data-tooltip="Tooltips shift and adjust to stay fully visible" style="background: #27ae60;">Bottom Left</button>
+      </div>
+      
+      <div style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+        <button data-tooltip="Tooltips shift and adjust to stay fully visible" style="background: #9b59b6;">Bottom Right</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p><strong>Easy Tooltips</strong> — <a href="https://github.com/ewanhowell5195/easy-tooltips" target="_blank">GitHub</a> | <a href="https://www.npmjs.com/package/easy-tooltips" target="_blank">NPM</a> | <a href="https://www.jsdelivr.com/package/npm/easy-tooltips" target="_blank">JSDelivr</a></p>
+    <p style="margin-top: 10px;">MIT License © <a href="https://github.com/ewanhowell5195" target="_blank">Ewan Howell</a></p>
+  </footer>
+  
+  <script src="https://cdn.jsdelivr.net/npm/easy-tooltips/dist/easy-tooltips.min.js"></script>
+  <script>
+    const centerElement = document.getElementById("center-element")
+    const edgeButtons = document.getElementById("edge-buttons")
+    
+    window.addEventListener("scroll", () => {
+      const rect = centerElement.getBoundingClientRect()
+      const topThreshold = window.innerHeight * 0.25
+      const bottomThreshold = window.innerHeight * 0.75
+      const elementCenter = rect.top + rect.height / 2
+      if (elementCenter > topThreshold && elementCenter < bottomThreshold) {
+        edgeButtons.style.display = "block"
+      } else {
+        edgeButtons.style.display = "none"
+      }
+    })
+  </script>
+</body>
 </html>

@@ -96,6 +96,9 @@
   text-align: center;
   box-sizing: border-box;
   min-width: 100%;
+}
+
+.tooltip-text:not(.tooltip-text-html) {
   white-space: pre-line;
 }
 
