@@ -7,9 +7,25 @@
     let lastElement
 
     function tooltipVisibility(tooltip, visible) {
-      if (tooltip._animation_duration === undefined) {
-        const styles = getComputedStyle(tooltip)
-        const raw = styles.getPropertyValue("--tooltip-animation-length").trim()
+      const styles = getComputedStyle(tooltip)
+      const raw = styles.getPropertyValue("--tooltip-animation-length").trim()
+      if (visible) {
+        const delayStr = styles.getPropertyValue("--tooltip-delay").trim()
+        const delay = delayStr.endsWith("ms") ? parseFloat(delayStr) : parseFloat(delayStr) * 1000
+        if (delay) {
+          tooltip._start = performance.now()
+          tooltip._delay = delay
+        }
+        tooltip._animation_duration = (raw.endsWith("ms") ? parseFloat(raw) : parseFloat(raw) * 1000) + delay
+      } else {
+        if (tooltip._delay && performance.now() < tooltip._start + tooltip._delay) {
+          tooltip.classList.remove("visible")
+          clearTimeout(tooltip._timeout)
+          delete tooltip._timeout
+          delete tooltip._start
+          delete tooltip._delay
+          return
+        }
         tooltip._animation_duration = raw.endsWith("ms") ? parseFloat(raw) : parseFloat(raw) * 1000
       }
 
@@ -37,8 +53,17 @@
         const toAdd = []
         let node = lastElement
         while (node && node !== document.body) {
-          if (node.hasAttribute("data-tooltip")) {
+          if (node.dataset.tooltip) {
             toAdd.push(node)
+          } else if (node.dataset.tooltipSrc) {
+            if (node.dataset.tooltipSrc === "next" && node.nextElementSibling) {
+              node._source = node.nextElementSibling
+            } else {
+              node._source = document.querySelector(node.dataset.tooltipSrc)
+            }
+            if (node._source) {
+              toAdd.push(node)
+            }
           }
           node = node.parentElement
         }
@@ -57,18 +82,26 @@
             
             tooltipText = document.createElement("div")
             tooltipText.className = "tooltip-text"
-            tooltipText.innerHTML = node.dataset.tooltip
+            if (node._source) {
+              tooltipText.replaceChildren(...node._source.cloneNode(true).childNodes)
+            } else {
+              tooltipText.textContent = node.dataset.tooltip
+            }
             tooltip.append(tooltipText)
             node._tooltipText = tooltipText
             
             tooltips.append(tooltip)
           } else {
-            tooltipText.innerHTML = node.dataset.tooltip
-
             if (node.dataset.tooltipId) {
               tooltip.id = node.dataset.tooltipId 
             } else {
               tooltip.id = null
+            }
+
+            if (node._source) {
+              tooltipText.replaceChildren(...node._source.cloneNode(true).childNodes)
+            } else {
+              tooltipText.textContent = node.dataset.tooltip
             }
           }
           

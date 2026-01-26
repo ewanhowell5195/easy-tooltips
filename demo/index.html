@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>easy-tooltips demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link href="https://cdn.jsdelivr.net/npm/easy-tooltips/dist/easy-tooltips.min.css" rel="stylesheet">
+
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        padding: 40px;
+        line-height: 1.5;
+      }
+
+      section {
+        margin-bottom: 48px;
+      }
+
+      h2 {
+        margin-bottom: 12px;
+      }
+
+      .row {
+        display: flex;
+        gap: 24px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      button {
+        padding: 10px 16px;
+        font-size: 14px;
+        cursor: pointer;
+      }
+
+      .box {
+        width: 120px;
+        height: 80px;
+        background: #eee;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Custom tooltip via ID */
+      #custom-tooltip {
+        --tooltip-background: #0a4446;
+        --tooltip-border-color: #0a4446;
+        --tooltip-color: #fff;
+      }
+
+      /* Slow animation + delay demo */
+      .delayed {
+        --tooltip-animation-length: 0.4s;
+        --tooltip-delay: 0.4s;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>easy-tooltips demo</h1>
+
+    <section>
+      <h2>Basic tooltips</h2>
+      <div class="row">
+        <button data-tooltip="Click to save your changes">Save</button>
+        <span data-tooltip="This field is required">Username *</span>
+      </div>
+    </section>
+
+    <section>
+      <h2>Multi-line content (HTML supported)</h2>
+      <div
+        class="box"
+        data-tooltip-src="next"
+      >
+        Hover me
+      </div>
+      <div>Multi-line tooltip<br><strong>HTML</strong> is supported<br>including line breaks</div>
+    </section>
+
+    <section>
+      <h2>Viewport-aware positioning</h2>
+      <p>
+        Tooltips automatically flip and shift to stay within the viewport.
+        Try resizing the window or hovering near the edges.
+      </p>
+      <div class="row">
+        <button data-tooltip="Top edge test">Top</button>
+        <button data-tooltip="Another tooltip near the edge">Edge</button>
+      </div>
+    </section>
+
+    <section>
+      <h2>Custom tooltip ID styling</h2>
+      <button
+        data-tooltip="This tooltip is styled via its ID"
+        data-tooltip-id="custom-tooltip"
+      >
+        Custom styled tooltip
+      </button>
+    </section>
+
+    <section>
+      <h2>Delay and non-interrupting animations</h2>
+      <p>
+        These tooltips use a longer delay and animation. Rapid hover in/out will
+        never cause flicker.
+      </p>
+      <div class="row">
+        <button
+          class="delayed"
+          data-tooltip="This tooltip has a delay and a longer animation"
+        >
+          Delayed tooltip
+        </button>
+        <button
+          class="delayed"
+          data-tooltip="Hover quickly in and out to test interruption handling"
+        >
+          No flicker
+        </button>
+      </div>
+    </section>
+
+    <section>
+      <h2>Touch support</h2>
+      <p>
+        On touch devices, tooltips open on tap and close on tap outside.
+        Delay is ignored for a responsive mobile experience.
+      </p>
+      <button data-tooltip="Tap me on mobile">Mobile tooltip</button>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/easy-tooltips/dist/easy-tooltips.min.js"></script>
+  </body>
+</html>

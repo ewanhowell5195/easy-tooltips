@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="src/easy-tooltips.css?rnd=2">
+    <link rel="stylesheet" href="src/easy-tooltips.css">
   </head>
   <body>
     <div style="display: flex; justify-content: space-between; flex-direction: column; height: 200vh;">
@@ -14,7 +14,8 @@
       </div>
       <div style="display: flex; justify-content: space-between;">
         <div data-tooltip-id="big-tooltip" data-tooltip="I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip" style="background: red;">Hello there</div>
-        <div data-tooltip="I am a tooltip I am a tooltip<br>I am a tooltip I am a tooltip" style="background: red;">Hello there</div>
+        <div data-tooltip-src="next" style="background: red;">Hello there</div>
+        <div>I am a tooltip I am a tooltip<br>I have <b>BOLD</b> text</div>
       </div>
     </div>
     <div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);">
@@ -23,6 +24,6 @@
         <div data-tooltip="I am a sub-tooltip I am a sub-tooltip" data-tooltip-id="sub-tooltip" style="background: lime;">Hello there</div>
       </div>
     </div>
-    <script type="module" src="src/easy-tooltips.js?rnd=1"></script>
+    <script type="module" src="src/easy-tooltips.js"></script>
   </body>
 </html>

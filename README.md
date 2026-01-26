@@ -1,7 +1,7 @@
 # easy-tooltips
 
 A lightweight, zero-dependency tooltip library using modern JavaScript and CSS.  
-Just add `data-tooltip` to any element — no setup, no config, no JavaScript calls.
+Just add `data-tooltip` to any element! No setup or config required.
 
 [![npm version](https://badge.fury.io/js/easy-tooltips.svg)](https://www.npmjs.com/package/easy-tooltips)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -12,6 +12,7 @@ Just add `data-tooltip` to any element — no setup, no config, no JavaScript ca
 * Works with both mouse and touch
 * Customizable via CSS variables
 * Automatically repositions and shifts to fit the screen
+* Smooth, non-interrupting animations (no flicker on rapid hover)
 * Compatible with Vue, React, Svelte, and more
 
 ## Quick Start
@@ -39,6 +40,35 @@ https://www.jsdelivr.com/package/npm/easy-tooltips
 No additional setup is needed for Vue, React, Svelte, or other frameworks! Tooltips automatically update when the element updates!
 
 ## Advanced Usage
+
+### Custom HTML
+You can render custom HTML inside a tooltip using `data-tooltip-src`. The value can be either a CSS selector or the literal keyword `next`.
+
+The matched element's content is copied into the tooltip.
+
+**Using a CSS selector**
+Point to any element in the document.
+```html
+<button data-tooltip-src="#tip-shipping">Shipping info</button>
+<template id="tip-shipping">
+  <strong>Free shipping</strong> on orders over £50<br>
+  Delivered in 2 to 4 working days
+</template>
+```
+
+**Using `next`**
+Use `next` to automatically pull content from the next DOM element.
+The source element is automatically hidden.
+```html
+<button data-tooltip-src="next">Ingredients</button>
+<div>
+  <ul>
+    <li>Oats</li>
+    <li>Honey</li>
+    <li>Sea salt</li>
+  </ul>
+</div>
+```
 
 ### Custom tooltip IDs
 For styling specific tooltips:
@@ -74,6 +104,7 @@ You can style tooltips using CSS variables (recommended) or by targeting the too
   
   /* Animation (required for JS timing) */
   --tooltip-animation-length: 0.15s;  /* Duration of fade animation */
+  --tooltip-delay: 0.15s;             /* How long before the animation starts */
 }
 ```
 

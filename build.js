@@ -2,7 +2,7 @@ import CleanCSS from "clean-css"
 import { minify } from "terser"
 import fs from "node:fs"
 
-const version = "1.2.9"
+const version = "1.3.0"
 
 fs.mkdirSync("dist", { recursive: true })
 
@@ -13,7 +13,7 @@ const banner = `/*!
  * easy-tooltips
  * Version  : ${version}
  * License  : MIT
- * Copyright: 2025 Ewan Howell
+ * Copyright: 2026 Ewan Howell
  */
 `
 
