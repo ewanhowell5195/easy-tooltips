@@ -41,6 +41,29 @@
       font-size: 1rem;
       opacity: 0.9;
     }
+
+    .header-links {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    
+    .header-links a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 8px 16px;
+      border: 1px solid white;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+    
+    .header-links a:hover {
+      background: white;
+      color: #2c3e50;
+    }
     
     .container {
       max-width: 1024px;
@@ -268,6 +291,11 @@
     <h1>easy-tooltips</h1>
     <p>A lightweight, zero-dependency tooltip library using modern JavaScript and CSS.</p>
     <p>Just add <code>data-tooltip</code> to any element! No setup or config required.</p>
+    <div class="header-links">
+      <a href="https://github.com/ewanhowell5195/easy-tooltips" target="_blank">GitHub</a>
+      <a href="https://www.npmjs.com/package/easy-tooltips" target="_blank">NPM</a>
+      <a href="https://www.jsdelivr.com/package/npm/easy-tooltips" target="_blank">JSDelivr</a>
+    </div>
   </header>
 
   <div class="container">
@@ -444,14 +472,14 @@
         
         <pre>&lt;style&gt;
   :root {
-  --tooltip-background: #fff;
-  --tooltip-border-color: #aaa;
-  --tooltip-border-size: 1px;
-  --tooltip-max-width: 100%;
-  --tooltip-arrow-size: 12px;
-  --tooltip-arrow-radius: 0;
-  --tooltip-animation-length: 0.15s;
-  --tooltip-delay: 0.15s;
+    --tooltip-background: #fff;
+    --tooltip-border-color: #aaa;
+    --tooltip-border-size: 1px;
+    --tooltip-max-width: 100%;
+    --tooltip-arrow-size: 12px;
+    --tooltip-arrow-radius: 0;
+    --tooltip-animation-length: 0.15s;
+    --tooltip-delay: 0.15s;
   }
 &lt;/style&gt;</pre>
       </div>
