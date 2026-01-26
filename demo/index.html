@@ -243,6 +243,10 @@
     footer a:hover {
       text-decoration: underline;
     }
+
+    li {
+      list-style-position: inside;
+    }
     
     @media (max-width: 600px) {
       header h1 {
@@ -314,7 +318,7 @@
           <div class="demo-card">
             <h3>CSS Selector</h3>
             <button data-tooltip-src="#tip-shipping">Shipping Info</button>
-            <div id="tip-shipping">
+            <div id="tip-shipping" hidden>
               <strong>Free shipping</strong> on orders over £50<br>
               Delivered in 2-4 working days
             </div>
@@ -323,8 +327,8 @@
           <div class="demo-card">
             <h3>From Next Element</h3>
             <button class="btn btn-success" data-tooltip-src="next">Ingredients</button>
-            <div style="display: none;">
-              <ul style="text-align: left; margin: 10px 0;">
+            <div>
+              <ul style="text-align: left; padding: 0 8px;">
                 <li>Oats</li>
                 <li>Honey</li>
                 <li>Sea salt</li>
