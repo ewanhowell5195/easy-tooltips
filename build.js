@@ -2,7 +2,7 @@ import CleanCSS from "clean-css"
 import { minify } from "terser"
 import fs from "node:fs"
 
-const version = "1.4.3"
+const version = JSON.parse(fs.readFileSync("package.json", "utf8")).version
 
 fs.mkdirSync("dist", { recursive: true })
 
@@ -13,7 +13,7 @@ const banner = `/*!
  * easy-tooltips
  * Version  : ${version}
  * License  : MIT
- * Copyright: 2026 Ewan Howell
+ * Copyright: ${new Date().getFullYear()} Ewan Howell
  */
 `
 
