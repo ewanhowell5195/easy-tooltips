@@ -4,6 +4,7 @@ A lightweight, zero-dependency tooltip library using modern JavaScript and CSS.
 Just add `data-tooltip` to any element! No setup or config required.
 
 [![npm version](https://badge.fury.io/js/easy-tooltips.svg)](https://www.npmjs.com/package/easy-tooltips)
+[![jsDelivr](https://data.jsdelivr.com/v1/package/npm/easy-tooltips/badge)](https://www.jsdelivr.com/package/npm/easy-tooltips)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 [**Live Demo**](https://easy-tooltips.ewanhowell.com/)
