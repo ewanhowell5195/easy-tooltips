@@ -1,6 +1,6 @@
 /*!
  * easy-tooltips
- * Version  : 1.4.3
+ * Version  : 1.4.4
  * License  : MIT
  * Copyright: 2026 Ewan Howell
  */
