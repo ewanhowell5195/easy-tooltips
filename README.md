@@ -121,4 +121,4 @@ Easy-tooltips uses a smart positioning system that:
 
 ## License
 
-MIT © [Ewan Howell](https://github.com/ewanhowell5195)
+MIT © [Ewan Howell](https://ewanhowell.com/)
