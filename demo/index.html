@@ -406,6 +406,32 @@
 
 
       <div class="section">
+        <h2>Dynamic Tooltips</h2>
+        <p>Tooltips automatically update when the <code>data-tooltip</code> attribute changes. Hover over the elements below to see live updates:</p>
+
+        <div class="demo-grid">
+          <div class="demo-card">
+            <h3>Live Counter</h3>
+            <button id="dynamic-counter" data-tooltip="Count: 0">Hover me</button>
+          </div>
+
+          <div class="demo-card">
+            <h3>Current Time</h3>
+            <button id="dynamic-time" data-tooltip="">Hover me</button>
+          </div>
+        </div>
+
+        <pre>&lt;button id="counter" data-tooltip="Count: 0"&gt;Hover me&lt;/button&gt;
+
+&lt;script&gt;
+  let count = 0
+  setInterval(() =&gt; {
+    document.getElementById("counter").dataset.tooltip = `Count: ${++count}`
+  }, 1000)
+&lt;/script&gt;</pre>
+      </div>
+
+      <div class="section">
         <h2>Smart Positioning</h2>
         <p>Tooltips automatically adapt to screen boundaries. Hover over the buttons at the corners of your screen to see smart positioning in action:</p>
         
@@ -584,6 +610,20 @@
   
   <script src="https://cdn.jsdelivr.net/npm/easy-tooltips/dist/easy-tooltips.min.js"></script>
   <script>
+    let count = 0
+    const dynamicCounter = document.getElementById("dynamic-counter")
+    const dynamicTime = document.getElementById("dynamic-time")
+
+    function updateTime() {
+      dynamicTime.dataset.tooltip = new Date().toLocaleTimeString()
+    }
+    updateTime()
+
+    setInterval(() => {
+      dynamicCounter.dataset.tooltip = `Count: ${++count}`
+      updateTime()
+    }, 100)
+
     const centerElement = document.getElementById("center-element")
     const edgeButtons = document.getElementById("edge-buttons")
     

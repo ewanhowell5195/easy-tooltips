@@ -6,6 +6,9 @@
 
     let lastElement
 
+    const observedNodes = new Set()
+    const observer = new MutationObserver(() => reloadTooltips())
+
     function tooltipVisibility(tooltip, visible) {
       const styles = getComputedStyle(tooltip)
       const raw = styles.getPropertyValue("--tooltip-animation-length").trim()
@@ -165,6 +168,15 @@
             if (tooltipRight - textShift > document.documentElement.clientWidth - padding) {
               tooltip.style.setProperty("translate", `-${(tooltipRight - textShift) - (document.documentElement.clientWidth - padding)}px 0`)
             }
+          }
+
+          if (!observedNodes.has(node)) {
+            observer.observe(node, { attributes: true, attributeFilter: ["data-tooltip", "data-tooltip-src"] })
+            observedNodes.add(node)
+          }
+          if (node._source && !observedNodes.has(node._source)) {
+            observer.observe(node._source, { childList: true, subtree: true, characterData: true })
+            observedNodes.add(node._source)
           }
         }
       }

@@ -4,7 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="src/easy-tooltips.css">
+    <script>
+      const link = document.createElement("link")
+      link.rel = "stylesheet"
+      link.href = `src/easy-tooltips.css?rnd=${Math.random()}`
+      document.head.append(link)
+    </script>
   </head>
   <body>
     <div style="display: flex; justify-content: space-between; flex-direction: column; height: 200vh;">
@@ -24,6 +29,15 @@
         <div data-tooltip="I am a sub-tooltip&#10;I am a sub-tooltip" data-tooltip-id="sub-tooltip" style="background: lime;">Hello there</div>
       </div>
     </div>
-    <script type="module" src="src/easy-tooltips.js"></script>
+    <div style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);">
+      <div id="changing-tooltip" data-tooltip="Count: 0" style="background: orange; padding: 10px;">Changing tooltip</div>
+    </div>
+    <script>
+      let count = 0
+      setInterval(() => {
+        document.getElementById("changing-tooltip").dataset.tooltip = `Count: ${++count}`
+      }, 1000)
+    </script>
+    <script>import(`./src/easy-tooltips.js?rnd=${Math.random()}`)</script>
   </body>
 </html>
