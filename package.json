@@ -22,6 +22,16 @@
     "url": "https://github.com/ewanhowell5195/easy-tooltips/issues"
   },
   "homepage": "https://easy-tooltips.ewanhowell.com/",
+  "keywords": [
+    "tooltip",
+    "tooltips",
+    "popover",
+    "hover",
+    "css",
+    "lightweight",
+    "zero-dependency",
+    "data-attribute"
+  ],
   "scripts": {
     "build": "node build.js"
   },
