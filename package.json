@@ -21,7 +21,7 @@
   "bugs": {
     "url": "https://github.com/ewanhowell5195/easy-tooltips/issues"
   },
-  "homepage": "https://github.com/ewanhowell5195/easy-tooltips#readme",
+  "homepage": "https://easy-tooltips.ewanhowell.com/",
   "scripts": {
     "build": "node build.js"
   },
