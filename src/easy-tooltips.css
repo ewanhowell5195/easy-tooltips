@@ -100,6 +100,19 @@
   transform: translate(calc(-100% - var(--easy-tooltip-distance)), -50%);
 }
 
+.easy-tooltip.easy-tooltip-left,
+.easy-tooltip.easy-tooltip-right {
+  min-width: 0;
+}
+
+.easy-tooltip.easy-tooltip-left .easy-tooltip-text,
+.easy-tooltip.easy-tooltip-right .easy-tooltip-text {
+  min-height: calc(var(--easy-tooltip-arrow-edge-buffer) * 2 + var(--easy-tooltip-arrow-size) * 1.41421356);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .easy-tooltip.easy-tooltip-right:not(.easy-tooltip-visible) {
   translate: -4px 0;
 }
