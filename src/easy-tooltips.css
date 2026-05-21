@@ -32,14 +32,14 @@
   initial-value: 100%;
 }
 
-#tooltips {
+#easy-tooltips {
   z-index: 99999;
   position: relative;
   pointer-events: none;
   user-select: none;
 }
 
-.tooltip {
+.easy-tooltip {
   position: fixed;
   transform: translate(-50%, calc(-100% - var(--tooltip-vertical-distance)));
   opacity: 0;
@@ -49,22 +49,22 @@
   min-width: calc(var(--tooltip-arrow-edge-buffer) * 2 + var(--tooltip-arrow-size) * 1.41421356);
 }
 
-.tooltip.visible {
+.easy-tooltip.easy-tooltip-visible {
   opacity: 1;
   translate: 0;
   transition-delay: var(--tooltip-delay);
 }
 
-.tooltip.below {
+.easy-tooltip.easy-tooltip-below {
   transform: translate(-50%, var(--tooltip-vertical-distance));
 }
 
-.tooltip.inside {
+.easy-tooltip.easy-tooltip-inside {
   top: var(--tooltip-viewport-padding) !important;
   transform: translateX(-50%);
 }
 
-.tooltip::before {
+.easy-tooltip::before {
   content: "";
   position: absolute;
   width: calc(var(--tooltip-arrow-size) + var(--tooltip-border-size));
@@ -80,13 +80,13 @@
   mask-image: linear-gradient(to bottom right, transparent 50%, var(--tooltip-border-color) 50.001%);
 }
 
-.tooltip.below::before {
+.easy-tooltip.easy-tooltip-below::before {
   bottom: initial;
   top: 0;
   transform: translate(-50%, calc(-100%)) translateY(calc((var(--tooltip-arrow-size) + var(--tooltip-border-size)) * 0.5 + var(--tooltip-border-size))) rotate(-135deg);
 }
 
-.tooltip-text {
+.easy-tooltip-text {
   width: max-content;
   max-width: 100%;
   padding: 4px 6px;
@@ -98,7 +98,7 @@
   min-width: 100%;
 }
 
-.tooltip-text:not(.tooltip-text-html) {
+.easy-tooltip-text:not(.easy-tooltip-text-html) {
   white-space: pre-line;
 }
 

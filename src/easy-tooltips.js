@@ -1,7 +1,7 @@
 {
   function initTooltips() {
     const tooltips = document.createElement("div")
-    tooltips.id = "tooltips"
+    tooltips.id = "easy-tooltips"
     document.body.append(tooltips)
 
     let lastElement
@@ -22,7 +22,7 @@
         tooltip._animation_duration = (raw.endsWith("ms") ? parseFloat(raw) : parseFloat(raw) * 1000) + delay
       } else {
         if (tooltip._delay && performance.now() < tooltip._start + tooltip._delay) {
-          tooltip.classList.remove("visible")
+          tooltip.classList.remove("easy-tooltip-visible")
           clearTimeout(tooltip._timeout)
           delete tooltip._timeout
           delete tooltip._start
@@ -32,14 +32,14 @@
         tooltip._animation_duration = raw.endsWith("ms") ? parseFloat(raw) : parseFloat(raw) * 1000
       }
 
-      if (tooltip.classList.contains("visible") === visible) {
+      if (tooltip.classList.contains("easy-tooltip-visible") === visible) {
         tooltip._next = undefined
         return
       }
 
       if (tooltip._timeout === undefined) {
         tooltip._next = undefined
-        tooltip.classList.toggle("visible", visible)
+        tooltip.classList.toggle("easy-tooltip-visible", visible)
         tooltip._timeout = setTimeout(() => {
           tooltip._timeout = undefined
           if (tooltip._next !== undefined) {
@@ -76,7 +76,7 @@
           let tooltipText = node._tooltipText
           if (!tooltip) {
             tooltip = document.createElement("div")
-            tooltip.className = "tooltip"
+            tooltip.className = "easy-tooltip"
             node._tooltip = tooltip
             
             if (node.dataset.easyTooltipId) {
@@ -84,10 +84,10 @@
             }
 
             tooltipText = document.createElement("div")
-            tooltipText.className = "tooltip-text"
+            tooltipText.className = "easy-tooltip-text"
             if (node._source) {
               tooltipText.replaceChildren(...node._source.cloneNode(true).childNodes)
-              tooltipText.classList.add("tooltip-text-html")
+              tooltipText.classList.add("easy-tooltip-text-html")
             } else {
               tooltipText.textContent = node.dataset.easyTooltip
             }
@@ -104,10 +104,10 @@
 
             if (node._source) {
               tooltipText.replaceChildren(...node._source.cloneNode(true).childNodes)
-              tooltipText.classList.add("tooltip-text-html")
+              tooltipText.classList.add("easy-tooltip-text-html")
             } else {
               tooltipText.textContent = node.dataset.easyTooltip
-              tooltipText.classList.remove("tooltip-text-html")
+              tooltipText.classList.remove("easy-tooltip-text-html")
             }
           }
           
@@ -135,16 +135,16 @@
           tooltipText.style.removeProperty("translate")
 
           if (y - totalOffset > padding) {
-            tooltip.classList.remove("below")
-            tooltip.classList.remove("inside")
+            tooltip.classList.remove("easy-tooltip-below")
+            tooltip.classList.remove("easy-tooltip-inside")
             tooltip.style.setProperty("top", `${y}px`)
           } else if (y + rect.height + tooltipHeight + verticalDistance < document.documentElement.clientHeight - padding) {
-            tooltip.classList.add("below")
-            tooltip.classList.remove("inside")
+            tooltip.classList.add("easy-tooltip-below")
+            tooltip.classList.remove("easy-tooltip-inside")
             tooltip.style.setProperty("top", `${y + rect.height}px`)
           } else {
-            tooltip.classList.remove("below")
-            tooltip.classList.add("inside")
+            tooltip.classList.remove("easy-tooltip-below")
+            tooltip.classList.add("easy-tooltip-inside")
           }
 
           const maxTextShift = (tooltipWidth / 2) - (arrowWidth / 2) - edgeBuffer
