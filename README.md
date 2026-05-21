@@ -99,13 +99,16 @@ For styling specific tooltips, add `data-easy-tooltip-class`. The value is appli
 ```
 
 ### Preferred side
-Use `data-easy-tooltip-prefer` to control which side a tooltip shows on. It still flips to the other side when there isn't room.
+Use `data-easy-tooltip-prefer` to control which side a tooltip shows on. It still flips to the opposite side when there isn't room. Using `left` or `right` switches the tooltip to horizontal mode.
 
 * `above` (default): show above, fall back to below
 * `below`: show below, fall back to above
+* `left`: show to the left, fall back to the right
+* `right`: show to the right, fall back to the left
 
 ```html
 <button data-easy-tooltip="Shows below" data-easy-tooltip-prefer="below">Hover me</button>
+<button data-easy-tooltip="Shows on the right" data-easy-tooltip-prefer="right">Hover me</button>
 ```
 
 ## Customization
@@ -122,7 +125,7 @@ You can style tooltips using CSS variables (recommended) or by targeting the too
   --easy-tooltip-max-width: 100%;          /* Maximum tooltip width */
   
   /* Positioning (required for JS positioning) */
-  --easy-tooltip-vertical-distance: 16px;  /* Distance from trigger element */
+  --easy-tooltip-distance: 16px;           /* Distance from trigger element */
   --easy-tooltip-viewport-padding: 16px;   /* Minimum distance from screen edges */
   --easy-tooltip-arrow-size: 12px;         /* Size of the arrow */
   --easy-tooltip-arrow-edge-buffer: 12px;  /* How close the arrow can get to the edge of a tooltip */

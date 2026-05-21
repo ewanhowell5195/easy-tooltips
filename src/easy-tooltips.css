@@ -1,5 +1,5 @@
 :root {
-  --easy-tooltip-vertical-distance: 16px;
+  --easy-tooltip-distance: 16px;
   --easy-tooltip-arrow-size: 12px;
   --easy-tooltip-arrow-edge-buffer: 12px;
   --easy-tooltip-viewport-padding: 16px;
@@ -47,11 +47,11 @@
 
 .easy-tooltip {
   position: fixed;
-  transform: translate(-50%, calc(-100% - var(--easy-tooltip-vertical-distance)));
+  transform: translate(-50%, calc(-100% - var(--easy-tooltip-distance)));
   opacity: 0;
   transition: opacity var(--easy-tooltip-animation-length), translate var(--easy-tooltip-animation-length);
   translate: 0 4px;
-  max-width: min(100% - var(--easy-tooltip-viewport-padding) * 2, var(--easy-tooltip-max-width, 100%));
+  max-width: min(100% - var(--easy-tooltip-viewport-padding) * 2 - var(--easy-tooltip-left-offset, 0px) - var(--easy-tooltip-right-offset, 0px), var(--easy-tooltip-max-width, 100%));
   min-width: calc(var(--easy-tooltip-arrow-edge-buffer) * 2 + var(--easy-tooltip-arrow-size) * 1.41421356);
 }
 
@@ -62,7 +62,7 @@
 }
 
 .easy-tooltip.easy-tooltip-below {
-  transform: translate(-50%, var(--easy-tooltip-vertical-distance));
+  transform: translate(-50%, var(--easy-tooltip-distance));
 }
 
 .easy-tooltip.easy-tooltip-inside {
@@ -90,6 +90,37 @@
   bottom: initial;
   top: 0;
   transform: translate(-50%, calc(-100%)) translateY(calc((var(--easy-tooltip-arrow-size) + var(--easy-tooltip-border-size)) * 0.5 + var(--easy-tooltip-border-size))) rotate(-135deg);
+}
+
+.easy-tooltip.easy-tooltip-right {
+  transform: translate(var(--easy-tooltip-distance), -50%);
+}
+
+.easy-tooltip.easy-tooltip-left {
+  transform: translate(calc(-100% - var(--easy-tooltip-distance)), -50%);
+}
+
+.easy-tooltip.easy-tooltip-right:not(.easy-tooltip-visible) {
+  translate: -4px 0;
+}
+
+.easy-tooltip.easy-tooltip-left:not(.easy-tooltip-visible) {
+  translate: 4px 0;
+}
+
+.easy-tooltip.easy-tooltip-right::before {
+  bottom: initial;
+  left: 0;
+  top: 50%;
+  transform: translate(-100%, -50%) translateX(calc((var(--easy-tooltip-arrow-size) + var(--easy-tooltip-border-size)) * 0.5 + var(--easy-tooltip-border-size))) rotate(135deg);
+}
+
+.easy-tooltip.easy-tooltip-left::before {
+  bottom: initial;
+  left: initial;
+  right: 0;
+  top: 50%;
+  transform: translate(100%, -50%) translateX(calc((var(--easy-tooltip-arrow-size) + var(--easy-tooltip-border-size)) * -0.5 - var(--easy-tooltip-border-size))) rotate(-45deg);
 }
 
 .easy-tooltip-text {
