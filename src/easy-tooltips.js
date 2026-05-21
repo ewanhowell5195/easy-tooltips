@@ -147,6 +147,8 @@
           const tooltipWidth = tooltipRect.width
           const tooltipHeight = tooltipRect.height
 
+          let placement
+
           if (prefer === "left" || prefer === "right") {
             const cy = Math.round(rect.top + rect.height / 2)
 
@@ -156,66 +158,84 @@
             tooltipText.style.removeProperty("width")
             tooltipText.style.removeProperty("min-width")
 
-            const fitsLeft = rect.left - distance - padding >= minWidth
-            const fitsRight = viewportWidth - rect.right - distance - padding >= minWidth
+            const spaceLeft = rect.left - distance - padding
+            const spaceRight = viewportWidth - rect.right - distance - padding
+            const maxHeight = viewportHeight - padding * 2
+            const order = prefer === "left" ? ["left", "right"] : ["right", "left"]
 
-            let placement
-            if (prefer === "left") {
-              placement = fitsLeft ? "left" : fitsRight ? "right" : "left"
-            } else {
-              placement = fitsRight ? "right" : fitsLeft ? "left" : "right"
+            const placeSide = (side, clamp) => {
+              tooltip.classList.remove("easy-tooltip-left", "easy-tooltip-right")
+              tooltip.classList.add("easy-tooltip-" + side)
+              tooltip.style.removeProperty("--easy-tooltip-left-offset")
+              tooltip.style.removeProperty("--easy-tooltip-right-offset")
+              tooltip.style.setProperty("top", `${cy}px`)
+              if (side === "right") {
+                tooltip.style.setProperty("left", `${Math.round(rect.right)}px`)
+                if (clamp) tooltip.style.setProperty("--easy-tooltip-left-offset", `${Math.round(rect.right + distance - padding)}px`)
+              } else {
+                tooltip.style.setProperty("left", `${Math.round(rect.left)}px`)
+                if (clamp) tooltip.style.setProperty("--easy-tooltip-right-offset", `${Math.round(viewportWidth - rect.left + distance - padding)}px`)
+              }
+              return tooltip.getBoundingClientRect().height
             }
 
-            tooltip.classList.add("easy-tooltip-" + placement)
-            tooltip.style.setProperty("top", `${cy}px`)
-
-            if (placement === "right") {
-              tooltip.style.setProperty("left", `${Math.round(rect.right)}px`)
-              tooltip.style.setProperty("--easy-tooltip-left-offset", `${Math.round(rect.right + distance - padding)}px`)
-            } else {
-              tooltip.style.setProperty("left", `${Math.round(rect.left)}px`)
-              tooltip.style.setProperty("--easy-tooltip-right-offset", `${Math.round(viewportWidth - rect.left + distance - padding)}px`)
+            // Use a side that fits min-content horizontally and whose wrapped height fits the viewport; otherwise fall back to "inside".
+            for (const side of order) {
+              if ((side === "left" ? spaceLeft : spaceRight) < minWidth) continue
+              if (placeSide(side, true) <= maxHeight) {
+                placement = side
+                break
+              }
             }
 
-            const constrainedHeight = tooltip.getBoundingClientRect().height
-            const edgeBuffer = parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-edge-buffer-y"))
-            const maxTextShift = (constrainedHeight / 2) - (arrowSize / 2) - edgeBuffer
-            const tooltipTop = cy - constrainedHeight / 2
-            const tooltipBottom = cy + constrainedHeight / 2
+            if (placement) {
+              const constrainedHeight = tooltip.getBoundingClientRect().height
+              const edgeBuffer = parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-edge-buffer-y"))
+              const maxTextShift = (constrainedHeight / 2) - (arrowSize / 2) - edgeBuffer
+              const tooltipTop = cy - constrainedHeight / 2
+              const tooltipBottom = cy + constrainedHeight / 2
 
-            if (tooltipTop < padding) {
-              const overflow = padding - tooltipTop
-              const textShift = Math.min(overflow, maxTextShift)
-              tooltipText.style.setProperty("translate", `0 ${textShift}px`)
+              if (tooltipTop < padding) {
+                const overflow = padding - tooltipTop
+                const textShift = Math.min(overflow, maxTextShift)
+                tooltipText.style.setProperty("translate", `0 ${textShift}px`)
 
-              if (tooltipTop + textShift < padding) {
-                tooltip.style.setProperty("translate", `0 ${padding - (tooltipTop + textShift)}px`)
+                if (tooltipTop + textShift < padding) {
+                  tooltip.style.setProperty("translate", `0 ${padding - (tooltipTop + textShift)}px`)
+                }
+              } else if (tooltipBottom > viewportHeight - padding) {
+                const overflow = tooltipBottom - (viewportHeight - padding)
+                const textShift = Math.min(overflow, maxTextShift)
+                tooltipText.style.setProperty("translate", `0 -${textShift}px`)
+
+                if (tooltipBottom - textShift > viewportHeight - padding) {
+                  tooltip.style.setProperty("translate", `0 -${(tooltipBottom - textShift) - (viewportHeight - padding)}px`)
+                }
               }
-            } else if (tooltipBottom > viewportHeight - padding) {
-              const overflow = tooltipBottom - (viewportHeight - padding)
-              const textShift = Math.min(overflow, maxTextShift)
-              tooltipText.style.setProperty("translate", `0 -${textShift}px`)
-
-              if (tooltipBottom - textShift > viewportHeight - padding) {
-                tooltip.style.setProperty("translate", `0 -${(tooltipBottom - textShift) - (viewportHeight - padding)}px`)
-              }
+            } else {
+              tooltip.classList.remove("easy-tooltip-left", "easy-tooltip-right")
+              tooltip.style.removeProperty("--easy-tooltip-left-offset")
+              tooltip.style.removeProperty("--easy-tooltip-right-offset")
+              placement = "inside"
             }
           } else {
-            const x = Math.round(rect.left + rect.width / 2)
             const y = Math.round(rect.top)
             const totalOffset = tooltipHeight + distance
-
-            tooltip.style.setProperty("left", `${x}px`)
-
             const fitsAbove = y - totalOffset > padding
             const fitsBelow = y + rect.height + tooltipHeight + distance < viewportHeight - padding
 
-            let placement
             if (prefer === "below") {
               placement = fitsBelow ? "below" : fitsAbove ? "above" : "inside"
             } else {
               placement = fitsAbove ? "above" : fitsBelow ? "below" : "inside"
             }
+          }
+
+          if (placement === "above" || placement === "below" || placement === "inside") {
+            const x = Math.round(rect.left + rect.width / 2)
+            const y = Math.round(rect.top)
+
+            tooltip.style.setProperty("left", `${x}px`)
 
             if (placement === "above") {
               tooltip.style.setProperty("top", `${y}px`)
