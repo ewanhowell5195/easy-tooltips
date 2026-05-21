@@ -45,12 +45,12 @@ No additional setup is needed for Vue, React, Svelte, or other frameworks! Toolt
 ## Advanced Usage
 
 ### Custom HTML
-You can render custom HTML inside a tooltip using `data-easy-tooltip-src`. The value can be either a CSS selector or the literal keyword `next`.
+You can render custom HTML inside a tooltip using `data-easy-tooltip-src`. The value can be a CSS selector or the literal keyword `next`.
 
 The matched element's content is copied into the tooltip.
 
 **Using a CSS selector**
-Point to any element in the document.
+Point to any element in the document. The value is matched by id first, then as a CSS selector, so `tip-shipping` and `#tip-shipping` both work.
 ```html
 <button data-easy-tooltip-src="#tip-shipping">Shipping info</button>
 <template id="tip-shipping">

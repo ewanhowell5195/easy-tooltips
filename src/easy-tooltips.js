@@ -59,10 +59,16 @@
           if (node.dataset.easyTooltip) {
             toAdd.push(node)
           } else if (node.dataset.easyTooltipSrc) {
-            if (node.dataset.easyTooltipSrc === "next" && node.nextElementSibling) {
+            const src = node.dataset.easyTooltipSrc
+            if (src === "next" && node.nextElementSibling) {
               node._source = node.nextElementSibling
             } else {
-              node._source = document.querySelector(node.dataset.easyTooltipSrc)
+              node._source = document.getElementById(src)
+              if (!node._source) {
+                try {
+                  node._source = document.querySelector(src)
+                } catch {}
+              }
             }
             if (node._source) {
               toAdd.push(node)
