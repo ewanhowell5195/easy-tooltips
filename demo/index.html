@@ -441,6 +441,26 @@
       </div>
 
       <div class="section">
+        <h2>Preferred Side</h2>
+        <p>Tooltips show above by default. Use <code>data-easy-tooltip-prefer="below"</code> to show below first, falling back to above when there isn't room:</p>
+
+        <div class="demo-grid">
+          <div class="demo-card">
+            <h3>Above (default)</h3>
+            <button data-easy-tooltip="I show above">Hover me</button>
+          </div>
+
+          <div class="demo-card">
+            <h3>Below</h3>
+            <button data-easy-tooltip="I show below" data-easy-tooltip-prefer="below">Hover me</button>
+          </div>
+        </div>
+
+        <pre>&lt;button data-easy-tooltip="I show above"&gt;Hover me&lt;/button&gt;
+&lt;button data-easy-tooltip="I show below" data-easy-tooltip-prefer="below"&gt;Hover me&lt;/button&gt;</pre>
+      </div>
+
+      <div class="section">
         <h2>Custom Colors</h2>
         <p>Style specific tooltips using <code>data-easy-tooltip-class</code> and CSS variables:</p>
         

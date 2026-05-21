@@ -98,6 +98,16 @@ For styling specific tooltips, add `data-easy-tooltip-class`. The value is appli
 }
 ```
 
+### Preferred side
+Use `data-easy-tooltip-prefer` to control which side a tooltip shows on. It still flips to the other side when there isn't room.
+
+* `above` (default): show above, fall back to below
+* `below`: show below, fall back to above
+
+```html
+<button data-easy-tooltip="Shows below" data-easy-tooltip-prefer="below">Hover me</button>
+```
+
 ## Customization
 
 You can style tooltips using CSS variables (recommended) or by targeting the tooltip classes directly. Note that some CSS variables are required for proper positioning:

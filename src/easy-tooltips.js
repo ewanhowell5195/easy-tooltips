@@ -147,11 +147,22 @@
           tooltip.style.removeProperty("translate")
           tooltipText.style.removeProperty("translate")
 
-          if (y - totalOffset > padding) {
+          const fitsAbove = y - totalOffset > padding
+          const fitsBelow = y + rect.height + tooltipHeight + verticalDistance < document.documentElement.clientHeight - padding
+          const prefer = node.dataset.easyTooltipPrefer
+
+          let placement
+          if (prefer === "below") {
+            placement = fitsBelow ? "below" : fitsAbove ? "above" : "inside"
+          } else {
+            placement = fitsAbove ? "above" : fitsBelow ? "below" : "inside"
+          }
+
+          if (placement === "above") {
             tooltip.classList.remove("easy-tooltip-below")
             tooltip.classList.remove("easy-tooltip-inside")
             tooltip.style.setProperty("top", `${y}px`)
-          } else if (y + rect.height + tooltipHeight + verticalDistance < document.documentElement.clientHeight - padding) {
+          } else if (placement === "below") {
             tooltip.classList.add("easy-tooltip-below")
             tooltip.classList.remove("easy-tooltip-inside")
             tooltip.style.setProperty("top", `${y + rect.height}px`)
