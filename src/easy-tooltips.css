@@ -83,7 +83,7 @@
   box-sizing: border-box;
   border-radius: var(--tooltip-arrow-radius);
   z-index: 1;
-  mask-image: linear-gradient(to bottom right, transparent 50%, var(--tooltip-border-color) 50.001%);
+  mask-image: linear-gradient(to bottom right, transparent 49.5%, var(--tooltip-border-color) 49.5%);
 }
 
 .easy-tooltip.easy-tooltip-below::before {
