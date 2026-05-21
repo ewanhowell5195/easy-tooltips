@@ -82,15 +82,15 @@ For styling specific tooltips, add `data-easy-tooltip-class`. The value is appli
 
 ```css
 .success-tooltip {
-  --tooltip-background-color: #f0fdf4;
-  --tooltip-border-color: #27ae60;
-  --tooltip-text-color: #27ae60;
+  --easy-tooltip-background-color: #f0fdf4;
+  --easy-tooltip-border-color: #27ae60;
+  --easy-tooltip-text-color: #27ae60;
 }
 
 .danger-tooltip {
-  --tooltip-background-color: #fef2f2;
-  --tooltip-border-color: #e74c3c;
-  --tooltip-text-color: #e74c3c;
+  --easy-tooltip-background-color: #fef2f2;
+  --easy-tooltip-border-color: #e74c3c;
+  --easy-tooltip-text-color: #e74c3c;
 }
 
 .bold-tooltip {
@@ -105,22 +105,22 @@ You can style tooltips using CSS variables (recommended) or by targeting the too
 ```css
 :root {
   /* Tooltip appearance */
-  --tooltip-background-color: #fff;   /* Background color */
-  --tooltip-text-color: #000;         /* Text color */
-  --tooltip-border-color: #aaa;       /* Border color */
-  --tooltip-border-size: 1px;         /* Border thickness */
-  --tooltip-max-width: 100%;          /* Maximum tooltip width */
+  --easy-tooltip-background-color: #fff;   /* Background color */
+  --easy-tooltip-text-color: #000;         /* Text color */
+  --easy-tooltip-border-color: #aaa;       /* Border color */
+  --easy-tooltip-border-size: 1px;         /* Border thickness */
+  --easy-tooltip-max-width: 100%;          /* Maximum tooltip width */
   
   /* Positioning (required for JS positioning) */
-  --tooltip-vertical-distance: 16px;  /* Distance from trigger element */
-  --tooltip-viewport-padding: 16px;   /* Minimum distance from screen edges */
-  --tooltip-arrow-size: 12px;         /* Size of the arrow */
-  --tooltip-arrow-edge-buffer: 12px;  /* How close the arrow can get to the edge of a tooltip */
-  --tooltip-arrow-radius: 0;          /* Border radius of the arrow */
+  --easy-tooltip-vertical-distance: 16px;  /* Distance from trigger element */
+  --easy-tooltip-viewport-padding: 16px;   /* Minimum distance from screen edges */
+  --easy-tooltip-arrow-size: 12px;         /* Size of the arrow */
+  --easy-tooltip-arrow-edge-buffer: 12px;  /* How close the arrow can get to the edge of a tooltip */
+  --easy-tooltip-arrow-radius: 0;          /* Border radius of the arrow */
   
   /* Animation (required for JS timing) */
-  --tooltip-animation-length: 0.15s;  /* Duration of fade animation */
-  --tooltip-delay: 0.15s;             /* How long before the animation starts */
+  --easy-tooltip-animation-length: 0.15s;  /* Duration of fade animation */
+  --easy-tooltip-delay: 0.15s;             /* How long before the animation starts */
 }
 ```
 

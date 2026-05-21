@@ -1,38 +1,38 @@
 :root {
-  --tooltip-vertical-distance: 16px;
-  --tooltip-arrow-size: 12px;
-  --tooltip-arrow-edge-buffer: 12px;
-  --tooltip-viewport-padding: 16px;
-  --tooltip-border-size: 1px;
-  --tooltip-animation-length: .15s;
-  --tooltip-delay: .15s;
+  --easy-tooltip-vertical-distance: 16px;
+  --easy-tooltip-arrow-size: 12px;
+  --easy-tooltip-arrow-edge-buffer: 12px;
+  --easy-tooltip-viewport-padding: 16px;
+  --easy-tooltip-border-size: 1px;
+  --easy-tooltip-animation-length: .15s;
+  --easy-tooltip-delay: .15s;
 }
 
-@property --tooltip-background-color {
+@property --easy-tooltip-background-color {
   syntax: "<color>";
   inherits: true;
   initial-value: #fff;
 }
 
-@property --tooltip-text-color {
+@property --easy-tooltip-text-color {
   syntax: "<color>";
   inherits: true;
   initial-value: #000;
 }
 
-@property --tooltip-border-color {
+@property --easy-tooltip-border-color {
   syntax: "<color>";
   inherits: true;
   initial-value: #aaa;
 }
 
-@property --tooltip-arrow-radius {
+@property --easy-tooltip-arrow-radius {
   syntax: "<length-percentage>";
   inherits: true;
   initial-value: 0;
 }
 
-@property --tooltip-max-width {
+@property --easy-tooltip-max-width {
   syntax: "<length-percentage> | auto";
   inherits: true;
   initial-value: 100%;
@@ -47,49 +47,49 @@
 
 .easy-tooltip {
   position: fixed;
-  transform: translate(-50%, calc(-100% - var(--tooltip-vertical-distance)));
+  transform: translate(-50%, calc(-100% - var(--easy-tooltip-vertical-distance)));
   opacity: 0;
-  transition: opacity var(--tooltip-animation-length), translate var(--tooltip-animation-length);
+  transition: opacity var(--easy-tooltip-animation-length), translate var(--easy-tooltip-animation-length);
   translate: 0 4px;
-  max-width: min(100% - var(--tooltip-viewport-padding) * 2, var(--tooltip-max-width, 100%));
-  min-width: calc(var(--tooltip-arrow-edge-buffer) * 2 + var(--tooltip-arrow-size) * 1.41421356);
+  max-width: min(100% - var(--easy-tooltip-viewport-padding) * 2, var(--easy-tooltip-max-width, 100%));
+  min-width: calc(var(--easy-tooltip-arrow-edge-buffer) * 2 + var(--easy-tooltip-arrow-size) * 1.41421356);
 }
 
 .easy-tooltip.easy-tooltip-visible {
   opacity: 1;
   translate: 0;
-  transition-delay: var(--tooltip-delay);
+  transition-delay: var(--easy-tooltip-delay);
 }
 
 .easy-tooltip.easy-tooltip-below {
-  transform: translate(-50%, var(--tooltip-vertical-distance));
+  transform: translate(-50%, var(--easy-tooltip-vertical-distance));
 }
 
 .easy-tooltip.easy-tooltip-inside {
-  top: var(--tooltip-viewport-padding) !important;
+  top: var(--easy-tooltip-viewport-padding) !important;
   transform: translateX(-50%);
 }
 
 .easy-tooltip::before {
   content: "";
   position: absolute;
-  width: calc(var(--tooltip-arrow-size) + var(--tooltip-border-size));
-  height: calc(var(--tooltip-arrow-size) + var(--tooltip-border-size));
-  background: var(--tooltip-background-color);
+  width: calc(var(--easy-tooltip-arrow-size) + var(--easy-tooltip-border-size));
+  height: calc(var(--easy-tooltip-arrow-size) + var(--easy-tooltip-border-size));
+  background: var(--easy-tooltip-background-color);
   left: 50%;
-  bottom: var(--tooltip-border-size);
-  transform: translate(-50%, calc(100%)) translateY(calc((var(--tooltip-arrow-size) + var(--tooltip-border-size)) * -0.5)) rotate(45deg);
-  border: var(--tooltip-border-size) solid var(--tooltip-border-color);
+  bottom: var(--easy-tooltip-border-size);
+  transform: translate(-50%, calc(100%)) translateY(calc((var(--easy-tooltip-arrow-size) + var(--easy-tooltip-border-size)) * -0.5)) rotate(45deg);
+  border: var(--easy-tooltip-border-size) solid var(--easy-tooltip-border-color);
   box-sizing: border-box;
-  border-radius: var(--tooltip-arrow-radius);
+  border-radius: var(--easy-tooltip-arrow-radius);
   z-index: 1;
-  mask-image: linear-gradient(to bottom right, transparent 49.5%, var(--tooltip-border-color) 49.5%);
+  mask-image: linear-gradient(to bottom right, transparent 49.5%, var(--easy-tooltip-border-color) 49.5%);
 }
 
 .easy-tooltip.easy-tooltip-below::before {
   bottom: initial;
   top: 0;
-  transform: translate(-50%, calc(-100%)) translateY(calc((var(--tooltip-arrow-size) + var(--tooltip-border-size)) * 0.5 + var(--tooltip-border-size))) rotate(-135deg);
+  transform: translate(-50%, calc(-100%)) translateY(calc((var(--easy-tooltip-arrow-size) + var(--easy-tooltip-border-size)) * 0.5 + var(--easy-tooltip-border-size))) rotate(-135deg);
 }
 
 .easy-tooltip-text {
@@ -97,9 +97,9 @@
   max-width: 100%;
   padding: 4px 6px;
   border-radius: 4px;
-  background: var(--tooltip-background-color);
-  color: var(--tooltip-text-color);
-  border: var(--tooltip-border-size) solid var(--tooltip-border-color);
+  background: var(--easy-tooltip-background-color);
+  color: var(--easy-tooltip-text-color);
+  border: var(--easy-tooltip-border-size) solid var(--easy-tooltip-border-color);
   text-align: center;
   box-sizing: border-box;
   min-width: 100%;

@@ -11,9 +11,9 @@
 
     function tooltipVisibility(tooltip, visible) {
       const styles = getComputedStyle(tooltip)
-      const raw = styles.getPropertyValue("--tooltip-animation-length").trim()
+      const raw = styles.getPropertyValue("--easy-tooltip-animation-length").trim()
       if (visible) {
-        const delayStr = styles.getPropertyValue("--tooltip-delay").trim()
+        const delayStr = styles.getPropertyValue("--easy-tooltip-delay").trim()
         const delay = delayStr.endsWith("ms") ? parseFloat(delayStr) : parseFloat(delayStr) * 1000
         if (delay) {
           tooltip._start = performance.now()
@@ -131,10 +131,10 @@
 
           const tooltipRect = tooltip.getBoundingClientRect()
           const styles = getComputedStyle(tooltip)
-          const verticalDistance = parseFloat(styles.getPropertyValue("--tooltip-vertical-distance"))
-          const arrowWidth = parseFloat(styles.getPropertyValue("--tooltip-arrow-size"))
-          const edgeBuffer = parseFloat(styles.getPropertyValue("--tooltip-arrow-edge-buffer"))
-          const padding = parseFloat(styles.getPropertyValue("--tooltip-viewport-padding"))
+          const verticalDistance = parseFloat(styles.getPropertyValue("--easy-tooltip-vertical-distance"))
+          const arrowWidth = parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-size"))
+          const edgeBuffer = parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-edge-buffer"))
+          const padding = parseFloat(styles.getPropertyValue("--easy-tooltip-viewport-padding"))
 
           tooltipVisibility(tooltip, true)
 
