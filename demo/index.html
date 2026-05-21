@@ -524,14 +524,18 @@
         
         <pre>&lt;style&gt;
   :root {
-    --tooltip-background-color: #fff;
-    --tooltip-border-color: #aaa;
-    --tooltip-border-size: 1px;
-    --tooltip-max-width: 100%;
-    --tooltip-arrow-size: 12px;
-    --tooltip-arrow-radius: 0;
-    --tooltip-animation-length: 0.15s;
-    --tooltip-delay: 0.15s;
+    --tooltip-background-color: #fff;   /* Background color */
+    --tooltip-text-color: #000;         /* Text color */
+    --tooltip-border-color: #aaa;       /* Border color */
+    --tooltip-border-size: 1px;         /* Border thickness */
+    --tooltip-max-width: 100%;          /* Maximum tooltip width */
+    --tooltip-vertical-distance: 16px;  /* Distance from trigger element */
+    --tooltip-viewport-padding: 16px;   /* Minimum distance from screen edges */
+    --tooltip-arrow-size: 12px;         /* Size of the arrow */
+    --tooltip-arrow-edge-buffer: 12px;  /* How close the arrow can get to the edge of a tooltip */
+    --tooltip-arrow-radius: 0;          /* Border radius of the arrow */
+    --tooltip-animation-length: 0.15s;  /* Duration of fade animation */
+    --tooltip-delay: 0.15s;             /* How long before the animation starts */
   }
 &lt;/style&gt;</pre>
       </div>
