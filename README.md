@@ -81,7 +81,7 @@ For styling specific tooltips:
 
 ```css
 #save-button {
-  --tooltip-background: #28a745;
+  --tooltip-background-color: #28a745;
   --tooltip-border-color: #1e7e34;
 }
 ```
@@ -93,7 +93,8 @@ You can style tooltips using CSS variables (recommended) or by targeting the too
 ```css
 :root {
   /* Tooltip appearance */
-  --tooltip-background: #fff;         /* Background color */
+  --tooltip-background-color: #fff;   /* Background color */
+  --tooltip-text-color: #000;         /* Text color */
   --tooltip-border-color: #aaa;       /* Border color */
   --tooltip-border-size: 1px;         /* Border thickness */
   --tooltip-max-width: 100%;          /* Maximum tooltip width */

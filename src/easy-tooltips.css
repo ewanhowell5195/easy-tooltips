@@ -8,10 +8,16 @@
   --tooltip-delay: .15s;
 }
 
-@property --tooltip-background {
+@property --tooltip-background-color {
   syntax: "<color>";
   inherits: true;
   initial-value: #fff;
+}
+
+@property --tooltip-text-color {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #000;
 }
 
 @property --tooltip-border-color {
@@ -69,7 +75,7 @@
   position: absolute;
   width: calc(var(--tooltip-arrow-size) + var(--tooltip-border-size));
   height: calc(var(--tooltip-arrow-size) + var(--tooltip-border-size));
-  background: var(--tooltip-background);
+  background: var(--tooltip-background-color);
   left: 50%;
   bottom: var(--tooltip-border-size);
   transform: translate(-50%, calc(100%)) translateY(calc((var(--tooltip-arrow-size) + var(--tooltip-border-size)) * -0.5)) rotate(45deg);
@@ -91,7 +97,8 @@
   max-width: 100%;
   padding: 4px 6px;
   border-radius: 4px;
-  background: var(--tooltip-background);
+  background: var(--tooltip-background-color);
+  color: var(--tooltip-text-color);
   border: var(--tooltip-border-size) solid var(--tooltip-border-color);
   text-align: center;
   box-sizing: border-box;
