@@ -73,16 +73,28 @@ The source element is automatically hidden.
 </div>
 ```
 
-### Custom tooltip IDs
-For styling specific tooltips:
+### Custom tooltip classes
+For styling specific tooltips, add `data-easy-tooltip-class`. The value is applied as a class on the generated tooltip:
 ```html
-<button data-easy-tooltip="Special tooltip" data-easy-tooltip-id="save-button">Save</button>
+<button data-easy-tooltip="Saved!" data-easy-tooltip-class="success-tooltip">Save</button>
+<button data-easy-tooltip="This cannot be undone!" data-easy-tooltip-class="danger-tooltip bold-tooltip">Delete</button>
 ```
 
 ```css
-#save-button {
-  --tooltip-background-color: #28a745;
-  --tooltip-border-color: #1e7e34;
+.success-tooltip {
+  --tooltip-background-color: #f0fdf4;
+  --tooltip-border-color: #27ae60;
+  --tooltip-text-color: #27ae60;
+}
+
+.danger-tooltip {
+  --tooltip-background-color: #fef2f2;
+  --tooltip-border-color: #e74c3c;
+  --tooltip-text-color: #e74c3c;
+}
+
+.bold-tooltip {
+  font-weight: bold;
 }
 ```
 

@@ -442,46 +442,46 @@
 
       <div class="section">
         <h2>Custom Colors</h2>
-        <p>Style specific tooltips using <code>data-easy-tooltip-id</code> and CSS variables:</p>
+        <p>Style specific tooltips using <code>data-easy-tooltip-class</code> and CSS variables:</p>
         
         <div class="demo-grid">
           <div class="demo-card">
             <h3>Success</h3>
-            <button class="btn btn-success" data-easy-tooltip="Saved!" data-easy-tooltip-id="success-tooltip">Save</button>
+            <button class="btn btn-success" data-easy-tooltip="Saved!" data-easy-tooltip-class="success-tooltip">Save</button>
           </div>
           
           <div class="demo-card">
             <h3>Danger</h3>
-            <button class="btn btn-danger" data-easy-tooltip="This cannot be undone!" data-easy-tooltip-id="danger-tooltip">Delete</button>
+            <button class="btn btn-danger" data-easy-tooltip="This cannot be undone!" data-easy-tooltip-class="danger-tooltip">Delete</button>
           </div>
           
           <div class="demo-card">
             <h3>Info</h3>
-            <div class="icon info" data-easy-tooltip="Get help" data-easy-tooltip-id="info-tooltip">?</div>
+            <div class="icon info" data-easy-tooltip="Get help" data-easy-tooltip-class="info-tooltip">?</div>
           </div>
         </div>
         
-        <pre>&lt;button data-easy-tooltip="Saved!" data-easy-tooltip-id="success-tooltip"&gt;Save&lt;/button&gt;
-&lt;button data-easy-tooltip="This cannot be undone!" data-easy-tooltip-id="danger-tooltip"&gt;Delete&lt;/button&gt;
-&lt;div data-easy-tooltip="Get help" data-easy-tooltip-id="info-tooltip"&gt;?&lt;/div&gt;
+        <pre>&lt;button data-easy-tooltip="Saved!" data-easy-tooltip-class="success-tooltip"&gt;Save&lt;/button&gt;
+&lt;button data-easy-tooltip="This cannot be undone!" data-easy-tooltip-class="danger-tooltip"&gt;Delete&lt;/button&gt;
+&lt;div data-easy-tooltip="Get help" data-easy-tooltip-class="info-tooltip"&gt;?&lt;/div&gt;
 
 &lt;style&gt;
-  #success-tooltip {
+  .success-tooltip {
     --tooltip-background-color: #f0fdf4;
     --tooltip-border-color: #27ae60;
-    color: #27ae60;
+    --tooltip-text-color: #27ae60;
   }
-  
-  #danger-tooltip {
+
+  .danger-tooltip {
     --tooltip-background-color: #fef2f2;
     --tooltip-border-color: #e74c3c;
-    color: #e74c3c;
+    --tooltip-text-color: #e74c3c;
   }
-  
-  #info-tooltip {
+
+  .info-tooltip {
     --tooltip-background-color: #faf5ff;
     --tooltip-border-color: #9b59b6;
-    color: #9b59b6;
+    --tooltip-text-color: #9b59b6;
   }
 &lt;/style&gt;</pre>
       </div>
@@ -493,32 +493,32 @@
         <div class="demo-grid">
           <div class="demo-card">
             <h3>Custom Border</h3>
-            <button data-easy-tooltip="Custom border" data-easy-tooltip-id="border-color">Hover me</button>
+            <button data-easy-tooltip="Custom border" data-easy-tooltip-class="border-color">Hover me</button>
           </div>
           
           <div class="demo-card">
             <h3>Max Width</h3>
-            <button data-easy-tooltip="This tooltip has a constrained maximum width and will wrap text accordingly" data-easy-tooltip-id="narrow-tooltip">Hover me</button>
+            <button data-easy-tooltip="This tooltip has a constrained maximum width and will wrap text accordingly" data-easy-tooltip-class="narrow-tooltip">Hover me</button>
           </div>
           
           <div class="demo-card">
             <h3>Large Arrow</h3>
-            <button data-easy-tooltip="Larger arrow pointer" data-easy-tooltip-id="large-arrow">Hover me</button>
+            <button data-easy-tooltip="Larger arrow pointer" data-easy-tooltip-class="large-arrow">Hover me</button>
           </div>
           
           <div class="demo-card">
             <h3>Rounded Arrow Point</h3>
-            <button data-easy-tooltip="Rounded arrow corners" data-easy-tooltip-id="arrow-radius">Hover me</button>
+            <button data-easy-tooltip="Rounded arrow corners" data-easy-tooltip-class="arrow-radius">Hover me</button>
           </div>
           
           <div class="demo-card">
             <h3>Delay</h3>
-            <button data-easy-tooltip="Waits before appearing" data-easy-tooltip-id="with-delay">Hover me</button>
+            <button data-easy-tooltip="Waits before appearing" data-easy-tooltip-class="with-delay">Hover me</button>
           </div>
           
           <div class="demo-card">
             <h3>Longer Animation</h3>
-            <button data-easy-tooltip="Smooth fade in" data-easy-tooltip-id="long-animation">Hover me</button>
+            <button data-easy-tooltip="Smooth fade in" data-easy-tooltip-class="long-animation">Hover me</button>
           </div>
         </div>
         
@@ -537,48 +537,48 @@
       </div>
 
       <style>
-        #success-tooltip {
+        .success-tooltip {
           --tooltip-background-color: #f0fdf4;
           --tooltip-border-color: #27ae60;
-          color: #27ae60;
+          --tooltip-text-color: #27ae60;
         }
-        
-        #danger-tooltip {
+
+        .danger-tooltip {
           --tooltip-background-color: #fef2f2;
           --tooltip-border-color: #e74c3c;
-          color: #e74c3c;
+          --tooltip-text-color: #e74c3c;
         }
-        
-        #info-tooltip {
+
+        .info-tooltip {
           --tooltip-background-color: #faf5ff;
           --tooltip-border-color: #9b59b6;
-          color: #9b59b6;
+          --tooltip-text-color: #9b59b6;
         }
-        
-        #border-color {
+
+        .border-color {
           --tooltip-border-color: #e74c3c;
           --tooltip-border-size: 3px;
         }
-        
-        #narrow-tooltip {
+
+        .narrow-tooltip {
           --tooltip-max-width: 120px;
         }
-        
-        #large-arrow {
+
+        .large-arrow {
           --tooltip-arrow-size: 20px;
           --tooltip-vertical-distance: 20px;
         }
-        
-        #arrow-radius {
+
+        .arrow-radius {
           --tooltip-arrow-size: 16px;
           --tooltip-arrow-radius: 6px;
         }
-        
-        #with-delay {
+
+        .with-delay {
           --tooltip-delay: 1s;
         }
-        
-        #long-animation {
+
+        .long-animation {
           --tooltip-animation-length: 1s;
         }
       </style>

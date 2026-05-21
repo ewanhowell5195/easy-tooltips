@@ -79,8 +79,10 @@
             tooltip.className = "easy-tooltip"
             node._tooltip = tooltip
             
-            if (node.dataset.easyTooltipId) {
-              tooltip.id = node.dataset.easyTooltipId
+            const customClass = node.dataset.easyTooltipClass
+            if (customClass) {
+              tooltip.classList.add(...customClass.trim().split(/\s+/))
+              node._tooltipClass = customClass
             }
 
             tooltipText = document.createElement("div")
@@ -96,10 +98,15 @@
             
             tooltips.append(tooltip)
           } else {
-            if (node.dataset.easyTooltipId) {
-              tooltip.id = node.dataset.easyTooltipId
-            } else {
-              tooltip.id = null
+            const customClass = node.dataset.easyTooltipClass
+            if (node._tooltipClass !== customClass) {
+              if (node._tooltipClass) {
+                tooltip.classList.remove(...node._tooltipClass.trim().split(/\s+/))
+              }
+              if (customClass) {
+                tooltip.classList.add(...customClass.trim().split(/\s+/))
+              }
+              node._tooltipClass = customClass
             }
 
             if (node._source) {
