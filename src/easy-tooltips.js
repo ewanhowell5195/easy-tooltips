@@ -129,7 +129,6 @@
           const styles = getComputedStyle(tooltip)
           const distance = parseFloat(styles.getPropertyValue("--easy-tooltip-distance"))
           const arrowSize = parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-size"))
-          const edgeBuffer = parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-edge-buffer"))
           const padding = parseFloat(styles.getPropertyValue("--easy-tooltip-viewport-padding"))
 
           const viewportWidth = document.documentElement.clientWidth
@@ -179,6 +178,7 @@
             }
 
             const constrainedHeight = tooltip.getBoundingClientRect().height
+            const edgeBuffer = parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-edge-buffer-y"))
             const maxTextShift = (constrainedHeight / 2) - (arrowSize / 2) - edgeBuffer
             const tooltipTop = cy - constrainedHeight / 2
             const tooltipBottom = cy + constrainedHeight / 2
@@ -226,6 +226,7 @@
               tooltip.classList.add("easy-tooltip-inside")
             }
 
+            const edgeBuffer = parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-edge-buffer-x"))
             const maxTextShift = (tooltipWidth / 2) - (arrowSize / 2) - edgeBuffer
             const tooltipLeft = x - tooltipWidth / 2
             const tooltipRight = x + tooltipWidth / 2

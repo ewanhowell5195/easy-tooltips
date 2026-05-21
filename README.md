@@ -118,22 +118,23 @@ You can style tooltips using CSS variables (recommended) or by targeting the too
 ```css
 :root {
   /* Tooltip appearance */
-  --easy-tooltip-background-color: #fff;   /* Background color */
-  --easy-tooltip-text-color: #000;         /* Text color */
-  --easy-tooltip-border-color: #aaa;       /* Border color */
-  --easy-tooltip-border-size: 1px;         /* Border thickness */
-  --easy-tooltip-max-width: 100%;          /* Maximum tooltip width */
+  --easy-tooltip-background-color: #fff;     /* Background color */
+  --easy-tooltip-text-color: #000;           /* Text color */
+  --easy-tooltip-border-color: #aaa;         /* Border color */
+  --easy-tooltip-border-size: 1px;           /* Border thickness */
+  --easy-tooltip-max-width: 100%;            /* Maximum tooltip width */
   
   /* Positioning (required for JS positioning) */
-  --easy-tooltip-distance: 16px;           /* Distance from trigger element */
-  --easy-tooltip-viewport-padding: 16px;   /* Minimum distance from screen edges */
-  --easy-tooltip-arrow-size: 12px;         /* Size of the arrow */
-  --easy-tooltip-arrow-edge-buffer: 12px;  /* How close the arrow can get to the edge of a tooltip */
-  --easy-tooltip-arrow-radius: 0;          /* Border radius of the arrow */
+  --easy-tooltip-distance: 16px;             /* Distance from trigger element */
+  --easy-tooltip-viewport-padding: 16px;     /* Minimum distance from screen edges */
+  --easy-tooltip-arrow-size: 12px;           /* Size of the arrow */
+  --easy-tooltip-arrow-edge-buffer-x: 12px;  /* Arrow gap from corner (for above or below tooltips) */
+  --easy-tooltip-arrow-edge-buffer-y: 6px;   /* Arrow gap from corner (for left or right tooltips) */
+  --easy-tooltip-arrow-radius: 0;            /* Border radius of the arrow */
   
   /* Animation (required for JS timing) */
-  --easy-tooltip-animation-length: 0.15s;  /* Duration of fade animation */
-  --easy-tooltip-delay: 0.15s;             /* How long before the animation starts */
+  --easy-tooltip-animation-length: 0.15s;    /* Duration of fade animation */
+  --easy-tooltip-delay: 0.15s;               /* How long before the animation starts */
 }
 ```
 
