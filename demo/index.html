@@ -8,7 +8,7 @@
   <link rel="icon" type="image/webp" sizes="32x32" href="https://ewanhowell.com/assets/images/logo/logo_32.webp">
   <meta property="og:type" content="website">
   <meta property="og:title" content="easy-tooltips">
-  <meta property="og:description" content="A lightweight, zero-dependency tooltip library using modern JavaScript and CSS. Just add &quot;data-tooltip&quot; to any element! No setup or config required.">
+  <meta property="og:description" content="A lightweight, zero-dependency tooltip library using modern JavaScript and CSS. Just add &quot;data-easy-tooltip&quot; to any element! No setup or config required.">
   <link href="https://cdn.jsdelivr.net/npm/easy-tooltips/dist/easy-tooltips.min.css" rel="stylesheet">
   <style>
     * {
@@ -307,7 +307,7 @@
   <header>
     <h1>easy-tooltips</h1>
     <p>A lightweight, zero-dependency tooltip library using modern JavaScript and CSS.</p>
-    <p>Just add <code>data-tooltip</code> to any element! No setup or config required.</p>
+    <p>Just add <code>data-easy-tooltip</code> to any element! No setup or config required.</p>
     <div class="header-links">
       <a href="https://github.com/ewanhowell5195/easy-tooltips" target="_blank">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
@@ -340,38 +340,38 @@
 
       <div class="section">
         <h2>Basic Usage</h2>
-        <p>Simply add the <code>data-tooltip</code> attribute to any element:</p>
+        <p>Simply add the <code>data-easy-tooltip</code> attribute to any element:</p>
         
         <div class="demo-grid">
           <div class="demo-card">
             <h3>Button</h3>
-            <button data-tooltip="Click to save your changes">Save Document</button>
+            <button data-easy-tooltip="Click to save your changes">Save Document</button>
           </div>
           
           <div class="demo-card">
             <h3>Text Element</h3>
-            <p>Hover over <span data-tooltip="This field is required for login" style="cursor: help; text-decoration: underline;">username</span></p>
+            <p>Hover over <span data-easy-tooltip="This field is required for login" style="cursor: help; text-decoration: underline;">username</span></p>
           </div>
           
           <div class="demo-card">
             <h3>Icon</h3>
-            <div class="icon" data-tooltip="Multi-line tooltips&#10;are supported too">i</div>
+            <div class="icon" data-easy-tooltip="Multi-line tooltips&#10;are supported too">i</div>
           </div>
         </div>
         
-        <pre>&lt;button data-tooltip="Click to save your changes"&gt;Save&lt;/button&gt;
-&lt;span data-tooltip="This field is required"&gt;username&lt;/span&gt;
-&lt;div data-tooltip="Multi-line tooltips&amp;#10;are supported"&gt;Info&lt;/div&gt;</pre>
+        <pre>&lt;button data-easy-tooltip="Click to save your changes"&gt;Save&lt;/button&gt;
+&lt;span data-easy-tooltip="This field is required"&gt;username&lt;/span&gt;
+&lt;div data-easy-tooltip="Multi-line tooltips&amp;#10;are supported"&gt;Info&lt;/div&gt;</pre>
       </div>
 
       <div class="section">
         <h2>Custom HTML</h2>
-        <p>Use <code>data-tooltip-src</code> to pull content from another element:</p>
+        <p>Use <code>data-easy-tooltip-src</code> to pull content from another element:</p>
         
         <div class="demo-grid">
           <div class="demo-card">
             <h3>CSS Selector</h3>
-            <button data-tooltip-src="#tip-shipping">Shipping Info</button>
+            <button data-easy-tooltip-src="#tip-shipping">Shipping Info</button>
             <div id="tip-shipping" hidden>
               <strong>Free shipping</strong> on orders over £50<br>
               Delivered in 2-4 working days
@@ -380,7 +380,7 @@
           
           <div class="demo-card">
             <h3>From Next Element</h3>
-            <button class="btn btn-success" data-tooltip-src="next">Ingredients</button>
+            <button class="btn btn-success" data-easy-tooltip-src="next">Ingredients</button>
             <div>
               <ul style="text-align: left; padding: 0 8px;">
                 <li>Oats</li>
@@ -391,13 +391,13 @@
           </div>
         </div>
         
-        <pre>&lt;button data-tooltip-src="#tip-shipping"&gt;Shipping Info&lt;/button&gt;
+        <pre>&lt;button data-easy-tooltip-src="#tip-shipping"&gt;Shipping Info&lt;/button&gt;
 &lt;template id="tip-shipping"&gt;
   &lt;strong&gt;Free shipping&lt;/strong&gt; on orders over £50&lt;br&gt;
   Delivered in 2-4 working days
 &lt;/template&gt;
 
-&lt;button class="btn btn-success" data-tooltip-src="next"&gt;Ingredients&lt;/button&gt;
+&lt;button class="btn btn-success" data-easy-tooltip-src="next"&gt;Ingredients&lt;/button&gt;
 &lt;div style="display: none;"&gt;
   &lt;ul&gt;&lt;li&gt;Oats&lt;/li&gt;&lt;li&gt;Honey&lt;/li&gt;&lt;li&gt;Sea salt&lt;/li&gt;&lt;/ul&gt;
 &lt;/div&gt;</pre>
@@ -407,26 +407,26 @@
 
       <div class="section">
         <h2>Dynamic Tooltips</h2>
-        <p>Tooltips automatically update when the <code>data-tooltip</code> attribute changes. Hover over the elements below to see live updates:</p>
+        <p>Tooltips automatically update when the <code>data-easy-tooltip</code> attribute changes. Hover over the elements below to see live updates:</p>
 
         <div class="demo-grid">
           <div class="demo-card">
             <h3>Live Counter</h3>
-            <button id="dynamic-counter" data-tooltip="Count: 0">Hover me</button>
+            <button id="dynamic-counter" data-easy-tooltip="Count: 0">Hover me</button>
           </div>
 
           <div class="demo-card">
             <h3>Current Time</h3>
-            <button id="dynamic-time" data-tooltip="">Hover me</button>
+            <button id="dynamic-time" data-easy-tooltip="">Hover me</button>
           </div>
         </div>
 
-        <pre>&lt;button id="counter" data-tooltip="Count: 0"&gt;Hover me&lt;/button&gt;
+        <pre>&lt;button id="counter" data-easy-tooltip="Count: 0"&gt;Hover me&lt;/button&gt;
 
 &lt;script&gt;
   let count = 0
   setInterval(() =&gt; {
-    document.getElementById("counter").dataset.tooltip = `Count: ${++count}`
+    document.getElementById("counter").dataset.easyTooltip = `Count: ${++count}`
   }, 1000)
 &lt;/script&gt;</pre>
       </div>
@@ -436,34 +436,34 @@
         <p>Tooltips automatically adapt to screen boundaries. Hover over the buttons at the corners of your screen to see smart positioning in action:</p>
         
         <div class="positioning-demo">
-          <button id="center-element" data-tooltip="I adapt to screen boundaries automatically">Center Element</button>
+          <button id="center-element" data-easy-tooltip="I adapt to screen boundaries automatically">Center Element</button>
         </div>
       </div>
 
       <div class="section">
         <h2>Custom Colors</h2>
-        <p>Style specific tooltips using <code>data-tooltip-id</code> and CSS variables:</p>
+        <p>Style specific tooltips using <code>data-easy-tooltip-id</code> and CSS variables:</p>
         
         <div class="demo-grid">
           <div class="demo-card">
             <h3>Success</h3>
-            <button class="btn btn-success" data-tooltip="Saved!" data-tooltip-id="success-tooltip">Save</button>
+            <button class="btn btn-success" data-easy-tooltip="Saved!" data-easy-tooltip-id="success-tooltip">Save</button>
           </div>
           
           <div class="demo-card">
             <h3>Danger</h3>
-            <button class="btn btn-danger" data-tooltip="This cannot be undone!" data-tooltip-id="danger-tooltip">Delete</button>
+            <button class="btn btn-danger" data-easy-tooltip="This cannot be undone!" data-easy-tooltip-id="danger-tooltip">Delete</button>
           </div>
           
           <div class="demo-card">
             <h3>Info</h3>
-            <div class="icon info" data-tooltip="Get help" data-tooltip-id="info-tooltip">?</div>
+            <div class="icon info" data-easy-tooltip="Get help" data-easy-tooltip-id="info-tooltip">?</div>
           </div>
         </div>
         
-        <pre>&lt;button data-tooltip="Saved!" data-tooltip-id="success-tooltip"&gt;Save&lt;/button&gt;
-&lt;button data-tooltip="This cannot be undone!" data-tooltip-id="danger-tooltip"&gt;Delete&lt;/button&gt;
-&lt;div data-tooltip="Get help" data-tooltip-id="info-tooltip"&gt;?&lt;/div&gt;
+        <pre>&lt;button data-easy-tooltip="Saved!" data-easy-tooltip-id="success-tooltip"&gt;Save&lt;/button&gt;
+&lt;button data-easy-tooltip="This cannot be undone!" data-easy-tooltip-id="danger-tooltip"&gt;Delete&lt;/button&gt;
+&lt;div data-easy-tooltip="Get help" data-easy-tooltip-id="info-tooltip"&gt;?&lt;/div&gt;
 
 &lt;style&gt;
   #success-tooltip {
@@ -493,32 +493,32 @@
         <div class="demo-grid">
           <div class="demo-card">
             <h3>Custom Border</h3>
-            <button data-tooltip="Custom border" data-tooltip-id="border-color">Hover me</button>
+            <button data-easy-tooltip="Custom border" data-easy-tooltip-id="border-color">Hover me</button>
           </div>
           
           <div class="demo-card">
             <h3>Max Width</h3>
-            <button data-tooltip="This tooltip has a constrained maximum width and will wrap text accordingly" data-tooltip-id="narrow-tooltip">Hover me</button>
+            <button data-easy-tooltip="This tooltip has a constrained maximum width and will wrap text accordingly" data-easy-tooltip-id="narrow-tooltip">Hover me</button>
           </div>
           
           <div class="demo-card">
             <h3>Large Arrow</h3>
-            <button data-tooltip="Larger arrow pointer" data-tooltip-id="large-arrow">Hover me</button>
+            <button data-easy-tooltip="Larger arrow pointer" data-easy-tooltip-id="large-arrow">Hover me</button>
           </div>
           
           <div class="demo-card">
             <h3>Rounded Arrow Point</h3>
-            <button data-tooltip="Rounded arrow corners" data-tooltip-id="arrow-radius">Hover me</button>
+            <button data-easy-tooltip="Rounded arrow corners" data-easy-tooltip-id="arrow-radius">Hover me</button>
           </div>
           
           <div class="demo-card">
             <h3>Delay</h3>
-            <button data-tooltip="Waits before appearing" data-tooltip-id="with-delay">Hover me</button>
+            <button data-easy-tooltip="Waits before appearing" data-easy-tooltip-id="with-delay">Hover me</button>
           </div>
           
           <div class="demo-card">
             <h3>Longer Animation</h3>
-            <button data-tooltip="Smooth fade in" data-tooltip-id="long-animation">Hover me</button>
+            <button data-easy-tooltip="Smooth fade in" data-easy-tooltip-id="long-animation">Hover me</button>
           </div>
         </div>
         
@@ -586,19 +586,19 @@
     
     <div id="edge-buttons" style="display: none;">
       <div style="position: fixed; top: 20px; left: 20px; z-index: 1000;">
-        <button data-tooltip="Tooltips shift and adjust to stay fully visible" style="background: #e74c3c;">Top Left</button>
+        <button data-easy-tooltip="Tooltips shift and adjust to stay fully visible" style="background: #e74c3c;">Top Left</button>
       </div>
       
       <div style="position: fixed; top: 20px; right: 20px; z-index: 1000;">
-        <button data-tooltip="Tooltips shift and adjust to stay fully visible" style="background: #f39c12;">Top Right</button>
+        <button data-easy-tooltip="Tooltips shift and adjust to stay fully visible" style="background: #f39c12;">Top Right</button>
       </div>
       
       <div style="position: fixed; bottom: 20px; left: 20px; z-index: 1000;">
-        <button data-tooltip="Tooltips shift and adjust to stay fully visible" style="background: #27ae60;">Bottom Left</button>
+        <button data-easy-tooltip="Tooltips shift and adjust to stay fully visible" style="background: #27ae60;">Bottom Left</button>
       </div>
       
       <div style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
-        <button data-tooltip="Tooltips shift and adjust to stay fully visible" style="background: #9b59b6;">Bottom Right</button>
+        <button data-easy-tooltip="Tooltips shift and adjust to stay fully visible" style="background: #9b59b6;">Bottom Right</button>
       </div>
     </div>
   </div>
@@ -615,12 +615,12 @@
     const dynamicTime = document.getElementById("dynamic-time")
 
     function updateTime() {
-      dynamicTime.dataset.tooltip = new Date().toLocaleTimeString()
+      dynamicTime.dataset.easyTooltip = new Date().toLocaleTimeString()
     }
     updateTime()
 
     setInterval(() => {
-      dynamicCounter.dataset.tooltip = `Count: ${++count}`
+      dynamicCounter.dataset.easyTooltip = `Count: ${++count}`
       updateTime()
     }, 100)
 

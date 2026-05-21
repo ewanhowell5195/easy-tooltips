@@ -56,13 +56,13 @@
         const toAdd = []
         let node = lastElement
         while (node && node !== document.body) {
-          if (node.dataset.tooltip) {
+          if (node.dataset.easyTooltip) {
             toAdd.push(node)
-          } else if (node.dataset.tooltipSrc) {
-            if (node.dataset.tooltipSrc === "next" && node.nextElementSibling) {
+          } else if (node.dataset.easyTooltipSrc) {
+            if (node.dataset.easyTooltipSrc === "next" && node.nextElementSibling) {
               node._source = node.nextElementSibling
             } else {
-              node._source = document.querySelector(node.dataset.tooltipSrc)
+              node._source = document.querySelector(node.dataset.easyTooltipSrc)
             }
             if (node._source) {
               toAdd.push(node)
@@ -79,25 +79,25 @@
             tooltip.className = "tooltip"
             node._tooltip = tooltip
             
-            if (node.dataset.tooltipId) {
-              tooltip.id = node.dataset.tooltipId 
+            if (node.dataset.easyTooltipId) {
+              tooltip.id = node.dataset.easyTooltipId
             }
-            
+
             tooltipText = document.createElement("div")
             tooltipText.className = "tooltip-text"
             if (node._source) {
               tooltipText.replaceChildren(...node._source.cloneNode(true).childNodes)
               tooltipText.classList.add("tooltip-text-html")
             } else {
-              tooltipText.textContent = node.dataset.tooltip
+              tooltipText.textContent = node.dataset.easyTooltip
             }
             tooltip.append(tooltipText)
             node._tooltipText = tooltipText
             
             tooltips.append(tooltip)
           } else {
-            if (node.dataset.tooltipId) {
-              tooltip.id = node.dataset.tooltipId 
+            if (node.dataset.easyTooltipId) {
+              tooltip.id = node.dataset.easyTooltipId
             } else {
               tooltip.id = null
             }
@@ -106,7 +106,7 @@
               tooltipText.replaceChildren(...node._source.cloneNode(true).childNodes)
               tooltipText.classList.add("tooltip-text-html")
             } else {
-              tooltipText.textContent = node.dataset.tooltip
+              tooltipText.textContent = node.dataset.easyTooltip
               tooltipText.classList.remove("tooltip-text-html")
             }
           }
@@ -171,7 +171,7 @@
           }
 
           if (!observedNodes.has(node)) {
-            observer.observe(node, { attributes: true, attributeFilter: ["data-tooltip", "data-tooltip-src"] })
+            observer.observe(node, { attributes: true, attributeFilter: ["data-easy-tooltip", "data-easy-tooltip-src"] })
             observedNodes.add(node)
           }
           if (node._source && !observedNodes.has(node._source)) {

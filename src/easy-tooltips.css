@@ -102,6 +102,6 @@
   white-space: pre-line;
 }
 
-[data-tooltip-src="next"] + * {
+[data-easy-tooltip-src="next"] + * {
   display: none !important;
 }

@@ -1,7 +1,7 @@
 # easy-tooltips
 
 A lightweight, zero-dependency tooltip library using modern JavaScript and CSS.  
-Just add `data-tooltip` to any element! No setup or config required.
+Just add `data-easy-tooltip` to any element! No setup or config required.
 
 [![npm version](https://badge.fury.io/js/easy-tooltips.svg)](https://www.npmjs.com/package/easy-tooltips)
 [![jsDelivr](https://data.jsdelivr.com/v1/package/npm/easy-tooltips/badge)](https://www.jsdelivr.com/package/npm/easy-tooltips)
@@ -35,9 +35,9 @@ https://www.jsdelivr.com/package/npm/easy-tooltips
 
 ### Add tooltips to your HTML
 ```html
-<button data-tooltip="Click to save your changes">Save</button>
-<span data-tooltip="This field is required">Username *</span>
-<div data-tooltip="Multi-line tooltips<br>are supported too">Info</div>
+<button data-easy-tooltip="Click to save your changes">Save</button>
+<span data-easy-tooltip="This field is required">Username *</span>
+<div data-easy-tooltip="Multi-line tooltips<br>are supported too">Info</div>
 ```
 
 No additional setup is needed for Vue, React, Svelte, or other frameworks! Tooltips automatically update when the element updates!
@@ -45,14 +45,14 @@ No additional setup is needed for Vue, React, Svelte, or other frameworks! Toolt
 ## Advanced Usage
 
 ### Custom HTML
-You can render custom HTML inside a tooltip using `data-tooltip-src`. The value can be either a CSS selector or the literal keyword `next`.
+You can render custom HTML inside a tooltip using `data-easy-tooltip-src`. The value can be either a CSS selector or the literal keyword `next`.
 
 The matched element's content is copied into the tooltip.
 
 **Using a CSS selector**
 Point to any element in the document.
 ```html
-<button data-tooltip-src="#tip-shipping">Shipping info</button>
+<button data-easy-tooltip-src="#tip-shipping">Shipping info</button>
 <template id="tip-shipping">
   <strong>Free shipping</strong> on orders over £50<br>
   Delivered in 2 to 4 working days
@@ -63,7 +63,7 @@ Point to any element in the document.
 Use `next` to automatically pull content from the next DOM element.
 The source element is automatically hidden.
 ```html
-<button data-tooltip-src="next">Ingredients</button>
+<button data-easy-tooltip-src="next">Ingredients</button>
 <div>
   <ul>
     <li>Oats</li>
@@ -76,7 +76,7 @@ The source element is automatically hidden.
 ### Custom tooltip IDs
 For styling specific tooltips:
 ```html
-<button data-tooltip="Special tooltip" data-tooltip-id="save-button">Save</button>
+<button data-easy-tooltip="Special tooltip" data-easy-tooltip-id="save-button">Save</button>
 ```
 
 ```css

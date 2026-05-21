@@ -14,28 +14,28 @@
   <body>
     <div style="display: flex; justify-content: space-between; flex-direction: column; height: 200vh;">
       <div style="display: flex; justify-content: space-between;">
-        <div data-tooltip="I am a tooltip I am a tooltip" style="background: red;">Hello there</div>
-        <div data-tooltip="I am a tooltip I am a tooltip<br>I am a tooltip I am a tooltip" style="background: red;">Hello there</div>
+        <div data-easy-tooltip="I am a tooltip I am a tooltip" style="background: red;">Hello there</div>
+        <div data-easy-tooltip="I am a tooltip I am a tooltip<br>I am a tooltip I am a tooltip" style="background: red;">Hello there</div>
       </div>
       <div style="display: flex; justify-content: space-between;">
-        <div data-tooltip-id="big-tooltip" data-tooltip="I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip" style="background: red;">Hello there</div>
-        <div data-tooltip-src="next" style="background: red;">Hello there</div>
+        <div data-easy-tooltip-id="big-tooltip" data-easy-tooltip="I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip I am a tooltip" style="background: red;">Hello there</div>
+        <div data-easy-tooltip-src="next" style="background: red;">Hello there</div>
         <div>I am a tooltip I am a tooltip<br>I have <b>BOLD</b> text</div>
       </div>
     </div>
     <div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);">
-      <div data-tooltip="I am a tooltip I am a tooltip" style="background: red; padding: 20px;">
+      <div data-easy-tooltip="I am a tooltip I am a tooltip" style="background: red; padding: 20px;">
         Hello there<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-        <div data-tooltip="I am a sub-tooltip&#10;I am a sub-tooltip" data-tooltip-id="sub-tooltip" style="background: lime;">Hello there</div>
+        <div data-easy-tooltip="I am a sub-tooltip&#10;I am a sub-tooltip" data-easy-tooltip-id="sub-tooltip" style="background: lime;">Hello there</div>
       </div>
     </div>
     <div style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);">
-      <div id="changing-tooltip" data-tooltip="Count: 0" style="background: orange; padding: 10px;">Changing tooltip</div>
+      <div id="changing-tooltip" data-easy-tooltip="Count: 0" style="background: orange; padding: 10px;">Changing tooltip</div>
     </div>
     <script>
       let count = 0
       setInterval(() => {
-        document.getElementById("changing-tooltip").dataset.tooltip = `Count: ${++count}`
+        document.getElementById("changing-tooltip").dataset.easyTooltip = `Count: ${++count}`
       }, 1000)
     </script>
     <script>import(`./src/easy-tooltips.js?rnd=${Math.random()}`)</script>
