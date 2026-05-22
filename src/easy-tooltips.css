@@ -175,3 +175,9 @@
 [data-easy-tooltip-src="next"] + * {
   display: none !important;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    --easy-tooltip-animation-distance: 0px !important;
+  }
+}
