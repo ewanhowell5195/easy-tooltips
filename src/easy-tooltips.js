@@ -51,17 +51,21 @@
     })
     removalObserver.observe(document.body, { childList: true, subtree: true })
 
+    function ms(value) {
+      value = value.trim()
+      return value.endsWith("ms") ? parseFloat(value) : parseFloat(value) * 1000
+    }
+
     function tooltipVisibility(tooltip, visible) {
       const styles = getComputedStyle(tooltip)
-      const raw = styles.getPropertyValue("--easy-tooltip-animation-length").trim()
+      const length = ms(styles.getPropertyValue("--easy-tooltip-animation-length"))
       if (visible) {
-        const delayStr = styles.getPropertyValue("--easy-tooltip-delay").trim()
-        const delay = delayStr.endsWith("ms") ? parseFloat(delayStr) : parseFloat(delayStr) * 1000
+        const delay = ms(styles.getPropertyValue("--easy-tooltip-delay"))
         if (delay) {
           tooltip._start = performance.now()
           tooltip._delay = delay
         }
-        tooltip._animation_duration = (raw.endsWith("ms") ? parseFloat(raw) : parseFloat(raw) * 1000) + delay
+        tooltip._animation_duration = length + delay
       } else {
         if (tooltip._delay && performance.now() < tooltip._start + tooltip._delay) {
           tooltip.classList.remove("easy-tooltip-visible")
@@ -71,7 +75,7 @@
           delete tooltip._delay
           return
         }
-        tooltip._animation_duration = raw.endsWith("ms") ? parseFloat(raw) : parseFloat(raw) * 1000
+        tooltip._animation_duration = length
       }
 
       if (tooltip.classList.contains("easy-tooltip-visible") === visible) {
@@ -176,6 +180,8 @@
           const viewportWidth = document.documentElement.clientWidth
           const viewportHeight = document.documentElement.clientHeight
           const prefer = node.dataset.easyTooltipPrefer
+          const rightPlacementOffset = Math.round(rect.right + distance - padding)
+          const leftPlacementOffset = Math.round(viewportWidth - rect.left + distance - padding)
 
           tooltipVisibility(tooltip, true)
 
@@ -211,10 +217,10 @@
               tooltip.classList.remove("easy-tooltip-left", "easy-tooltip-right")
               tooltip.classList.add("easy-tooltip-" + side)
               if (side === "right") {
-                tooltip.style.setProperty("--easy-tooltip-left-offset", `${Math.round(rect.right + distance - padding)}px`)
+                tooltip.style.setProperty("--easy-tooltip-left-offset", `${rightPlacementOffset}px`)
                 tooltip.style.removeProperty("--easy-tooltip-right-offset")
               } else {
-                tooltip.style.setProperty("--easy-tooltip-right-offset", `${Math.round(viewportWidth - rect.left + distance - padding)}px`)
+                tooltip.style.setProperty("--easy-tooltip-right-offset", `${leftPlacementOffset}px`)
                 tooltip.style.removeProperty("--easy-tooltip-left-offset")
               }
               if (tooltip.getBoundingClientRect().height <= maxHeight) {
@@ -257,10 +263,10 @@
             if (!inside) {
               if (dir === "right") {
                 tooltip.style.setProperty("left", `${Math.round(rect.right)}px`)
-                tooltip.style.setProperty("--easy-tooltip-left-offset", `${Math.round(rect.right + distance - padding)}px`)
+                tooltip.style.setProperty("--easy-tooltip-left-offset", `${rightPlacementOffset}px`)
               } else {
                 tooltip.style.setProperty("left", `${Math.round(rect.left)}px`)
-                tooltip.style.setProperty("--easy-tooltip-right-offset", `${Math.round(viewportWidth - rect.left + distance - padding)}px`)
+                tooltip.style.setProperty("--easy-tooltip-right-offset", `${leftPlacementOffset}px`)
               }
             }
 
@@ -365,9 +371,7 @@
     }
 
     function reloadTooltips() {
-      queueTooltipUpdate(() => {
-        addTooltips()
-      })
+      queueTooltipUpdate(addTooltips)
     }
 
     function updateTooltipTarget(e, forceRemove = false) {
