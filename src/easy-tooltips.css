@@ -102,7 +102,7 @@
   transform: translate(-50%, calc(100%)) translateY(calc((var(--easy-tooltip-arrow-size) + var(--easy-tooltip-border-size)) * -0.5)) rotate(45deg);
   border: var(--easy-tooltip-border-size) solid var(--easy-tooltip-border-color);
   box-sizing: border-box;
-  border-radius: var(--easy-tooltip-arrow-radius);
+  border-radius: 0 0 var(--easy-tooltip-arrow-radius) 0;
   z-index: 1;
   mask-image: linear-gradient(to bottom right, transparent 49.5%, var(--easy-tooltip-border-color) 49.5%);
 }
