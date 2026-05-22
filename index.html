@@ -38,11 +38,20 @@
     <div style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);">
       <div tabindex="0" id="changing-tooltip" data-easy-tooltip="Count: 0" style="background: orange; padding: 10px;">Changing tooltip</div>
     </div>
+    <div style="position: fixed; bottom: 20px; left: 20px;">
+      <div tabindex="0" id="auto-release" data-easy-tooltip="Hover me, I delete myself in 5s" style="background: violet; padding: 10px;">Auto release</div>
+    </div>
     <script>
       let count = 0
       setInterval(() => {
         document.getElementById("changing-tooltip").dataset.easyTooltip = `Count: ${++count}`
       }, 1000)
+
+      let autoReleaseTimer
+      document.getElementById("auto-release").addEventListener("mouseover", function () {
+        if (autoReleaseTimer) return
+        autoReleaseTimer = setTimeout(() => this.remove(), 5000)
+      })
     </script>
     <script>import(`./src/easy-tooltips.js?rnd=${Math.random()}`)</script>
   </body>

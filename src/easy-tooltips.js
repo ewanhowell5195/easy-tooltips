@@ -7,7 +7,49 @@
     let lastElement
 
     const observedNodes = new Set()
+    const triggers = new Set()
     const observer = new MutationObserver(() => reloadTooltips())
+
+    function releaseTooltip(node) {
+      if (node._tooltip) {
+        clearTimeout(node._tooltip._timeout)
+        node._tooltip.remove()
+      }
+      observer.unobserve(node)
+      observedNodes.delete(node)
+      if (node._source) {
+        observer.unobserve(node._source)
+        observedNodes.delete(node._source)
+      }
+      triggers.delete(node)
+      delete node._tooltip
+      delete node._tooltipText
+      delete node._tooltipClass
+      delete node._source
+      if (node === lastElement) lastElement = undefined
+    }
+
+    let releaseScheduled
+    function scheduleRelease() {
+      if (releaseScheduled) return
+      releaseScheduled = true
+      queueMicrotask(() => {
+        releaseScheduled = false
+        for (const node of triggers) {
+          if (!node.isConnected) releaseTooltip(node)
+        }
+      })
+    }
+
+    const removalObserver = new MutationObserver(records => {
+      for (const record of records) {
+        if (record.removedNodes.length) {
+          scheduleRelease()
+          return
+        }
+      }
+    })
+    removalObserver.observe(document.body, { childList: true, subtree: true })
 
     function tooltipVisibility(tooltip, visible) {
       const styles = getComputedStyle(tooltip)
@@ -281,6 +323,7 @@
             observer.observe(node, { attributes: true, attributeFilter: ["data-easy-tooltip", "data-easy-tooltip-src"] })
             observedNodes.add(node)
           }
+          triggers.add(node)
           if (node._source && !observedNodes.has(node._source)) {
             observer.observe(node._source, { childList: true, subtree: true, characterData: true })
             observedNodes.add(node._source)
