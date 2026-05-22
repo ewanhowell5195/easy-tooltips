@@ -130,44 +130,32 @@
             tooltip = document.createElement("div")
             tooltip.className = "easy-tooltip"
             node._tooltip = tooltip
-            
-            const customClass = node.dataset.easyTooltipClass
-            if (customClass) {
-              tooltip.classList.add(...customClass.trim().split(/\s+/))
-              node._tooltipClass = customClass
-            }
 
             tooltipText = document.createElement("div")
             tooltipText.className = "easy-tooltip-text"
-            if (node._source) {
-              tooltipText.replaceChildren(...node._source.cloneNode(true).childNodes)
-              tooltipText.classList.add("easy-tooltip-text-html")
-            } else {
-              tooltipText.textContent = node.dataset.easyTooltip
-            }
             tooltip.append(tooltipText)
             node._tooltipText = tooltipText
-            
-            tooltips.append(tooltip)
-          } else {
-            const customClass = node.dataset.easyTooltipClass
-            if (node._tooltipClass !== customClass) {
-              if (node._tooltipClass) {
-                tooltip.classList.remove(...node._tooltipClass.trim().split(/\s+/))
-              }
-              if (customClass) {
-                tooltip.classList.add(...customClass.trim().split(/\s+/))
-              }
-              node._tooltipClass = customClass
-            }
 
-            if (node._source) {
-              tooltipText.replaceChildren(...node._source.cloneNode(true).childNodes)
-              tooltipText.classList.add("easy-tooltip-text-html")
-            } else {
-              tooltipText.textContent = node.dataset.easyTooltip
-              tooltipText.classList.remove("easy-tooltip-text-html")
+            tooltips.append(tooltip)
+          }
+
+          const customClass = node.dataset.easyTooltipClass
+          if (node._tooltipClass !== customClass) {
+            if (node._tooltipClass) {
+              tooltip.classList.remove(...node._tooltipClass.trim().split(/\s+/))
             }
+            if (customClass) {
+              tooltip.classList.add(...customClass.trim().split(/\s+/))
+            }
+            node._tooltipClass = customClass
+          }
+
+          if (node._source) {
+            tooltipText.replaceChildren(...node._source.cloneNode(true).childNodes)
+            tooltipText.classList.add("easy-tooltip-text-html")
+          } else {
+            tooltipText.textContent = node.dataset.easyTooltip
+            tooltipText.classList.remove("easy-tooltip-text-html")
           }
           
           const rect = node.getBoundingClientRect()
@@ -199,8 +187,6 @@
           let inside = false
 
           if (prefer === "left" || prefer === "right") {
-            const cy = Math.round(rect.top + rect.height / 2)
-
             tooltipText.style.setProperty("width", "min-content")
             tooltipText.style.setProperty("min-width", "0")
             const minWidth = tooltip.getBoundingClientRect().width
@@ -257,6 +243,21 @@
           else if (dir === "right") tooltip.classList.add("easy-tooltip-right")
           if (inside) tooltip.classList.add("easy-tooltip-inside")
 
+          const shift = (before, after, size, viewportSize, edgeBuffer, vertical) => {
+            const maxTextShift = size / 2 - arrowSize / 2 - edgeBuffer
+            let text = 0
+            let tip = 0
+            if (before < padding) {
+              text = Math.min(padding - before, maxTextShift)
+              if (before + text < padding) tip = padding - (before + text)
+            } else if (after > viewportSize - padding) {
+              text = -Math.min(after - (viewportSize - padding), maxTextShift)
+              if (after + text > viewportSize - padding) tip = -(after + text - (viewportSize - padding))
+            }
+            if (text) tooltipText.style.setProperty("translate", vertical ? `0 ${text}px` : `${text}px`)
+            if (tip) tooltip.style.setProperty("translate", vertical ? `0 ${tip}px` : `${tip}px 0`)
+          }
+
           if (dir === "left" || dir === "right") {
             const cy = Math.round(rect.top + rect.height / 2)
             tooltip.style.setProperty("top", `${cy}px`)
@@ -270,29 +271,9 @@
               }
             }
 
-            const constrainedHeight = tooltip.getBoundingClientRect().height
+            const height = tooltip.getBoundingClientRect().height
             const edgeBuffer = parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-edge-buffer-y"))
-            const maxTextShift = (constrainedHeight / 2) - (arrowSize / 2) - edgeBuffer
-            const tooltipTop = cy - constrainedHeight / 2
-            const tooltipBottom = cy + constrainedHeight / 2
-
-            if (tooltipTop < padding) {
-              const overflow = padding - tooltipTop
-              const textShift = Math.min(overflow, maxTextShift)
-              tooltipText.style.setProperty("translate", `0 ${textShift}px`)
-
-              if (tooltipTop + textShift < padding) {
-                tooltip.style.setProperty("translate", `0 ${padding - (tooltipTop + textShift)}px`)
-              }
-            } else if (tooltipBottom > viewportHeight - padding) {
-              const overflow = tooltipBottom - (viewportHeight - padding)
-              const textShift = Math.min(overflow, maxTextShift)
-              tooltipText.style.setProperty("translate", `0 -${textShift}px`)
-
-              if (tooltipBottom - textShift > viewportHeight - padding) {
-                tooltip.style.setProperty("translate", `0 -${(tooltipBottom - textShift) - (viewportHeight - padding)}px`)
-              }
-            }
+            shift(cy - height / 2, cy + height / 2, height, viewportHeight, edgeBuffer, true)
           } else {
             const x = Math.round(rect.left + rect.width / 2)
             const y = Math.round(rect.top)
@@ -302,27 +283,7 @@
             }
 
             const edgeBuffer = parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-edge-buffer-x"))
-            const maxTextShift = (tooltipWidth / 2) - (arrowSize / 2) - edgeBuffer
-            const tooltipLeft = x - tooltipWidth / 2
-            const tooltipRight = x + tooltipWidth / 2
-
-            if (tooltipLeft < padding) {
-              const overflow = padding - tooltipLeft
-              const textShift = Math.min(overflow, maxTextShift)
-              tooltipText.style.setProperty("translate", `${textShift}px`)
-
-              if (tooltipLeft + textShift < padding) {
-                tooltip.style.setProperty("translate", `${padding - (tooltipLeft + textShift)}px 0`)
-              }
-            } else if (tooltipRight > viewportWidth - padding) {
-              const overflow = tooltipRight - (viewportWidth - padding)
-              const textShift = Math.min(overflow, maxTextShift)
-              tooltipText.style.setProperty("translate", `-${textShift}px`)
-
-              if (tooltipRight - textShift > viewportWidth - padding) {
-                tooltip.style.setProperty("translate", `-${(tooltipRight - textShift) - (viewportWidth - padding)}px 0`)
-              }
-            }
+            shift(x - tooltipWidth / 2, x + tooltipWidth / 2, tooltipWidth, viewportWidth, edgeBuffer, false)
           }
 
           if (!observedNodes.has(node)) {
