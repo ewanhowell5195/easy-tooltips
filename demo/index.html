@@ -9,7 +9,7 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="easy-tooltips">
   <meta property="og:description" content="A lightweight, zero-dependency tooltip library using modern JavaScript and CSS. Just add &quot;data-easy-tooltip&quot; to any element! No setup or config required.">
-  <link href="https://cdn.jsdelivr.net/npm/easy-tooltips/dist/easy-tooltips.min.css" rel="stylesheet">
+  <link href="../src/easy-tooltips.css" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -423,13 +423,11 @@
       display: flex;
       align-items: center;
       gap: 14px;
-      width: 300px;
-      padding: 14px;
+      padding: 16px 20px;
       border-radius: 16px;
       color: #fff;
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
       box-shadow:
         inset 1px 1px 0.5px 0 rgba(255, 255, 255, 0.5),
         inset -1px -1px 0.5px 0 rgba(255, 255, 255, 0.25);
@@ -442,9 +440,19 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.6rem;
       background: rgba(255, 255, 255, 0.2);
       flex-shrink: 0;
+    }
+
+    .player-art svg {
+      width: 26px;
+      height: 26px;
+    }
+
+    .player-btn svg {
+      width: 18px;
+      height: 18px;
+      display: block;
     }
 
     .player-info {
@@ -723,15 +731,23 @@
           <div class="tab-panel">
             <div class="demo-scene scene-glass">
               <div class="player-card">
-                <div class="player-art">🎵</div>
+                <div class="player-art">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>
+                </div>
                 <div class="player-info">
-                  <div class="player-track">Midnight City</div>
-                  <div class="player-artist">M83</div>
+                  <div class="player-track">Never Gonna Give You Up</div>
+                  <div class="player-artist">Rick Astley</div>
                 </div>
                 <div class="player-controls">
-                  <span class="player-btn" tabindex="0" data-easy-tooltip="Previous" data-easy-tooltip-class="glass-tooltip">⏮</span>
-                  <span class="player-btn player-play" tabindex="0" data-easy-tooltip="Play" data-easy-tooltip-class="glass-tooltip">▶</span>
-                  <span class="player-btn" tabindex="0" data-easy-tooltip="Next" data-easy-tooltip-class="glass-tooltip">⏭</span>
+                  <span class="player-btn" tabindex="0" data-easy-tooltip="Previous" data-easy-tooltip-class="glass-tooltip">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+                  </span>
+                  <span class="player-btn player-play" tabindex="0" data-easy-tooltip="Play" data-easy-tooltip-class="glass-tooltip">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                  </span>
+                  <span class="player-btn" tabindex="0" data-easy-tooltip="Next" data-easy-tooltip-class="glass-tooltip">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+                  </span>
                 </div>
               </div>
             </div>
@@ -1094,14 +1110,13 @@
 
         .glass-tooltip {
           --easy-tooltip-text-color: #fff;
-          --easy-tooltip-distance: 0px;
+          --easy-tooltip-animation-distance: 0px;
+          --easy-tooltip-distance: 8px;
           background: rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.4);
           border-radius: 12px;
           backdrop-filter: blur(3px);
-          box-shadow:
-            0 8px 20px rgba(0, 0, 0, 0.25),
-            inset 1px 1px 0.5px 0 rgba(255, 255, 255, 0.5),
-            inset -1px -1px 0.5px 0 rgba(255, 255, 255, 0.25);
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
         }
 
         .glass-tooltip::before {
@@ -1168,6 +1183,19 @@
       } else {
         edgeButtons.style.display = "none"
       }
+    })
+
+    document.querySelectorAll(".tabs").forEach(tabs => {
+      const buttons = tabs.querySelectorAll(".tab-button")
+      const panels = tabs.querySelectorAll(".tab-panel")
+      buttons.forEach((button, i) => {
+        button.addEventListener("click", () => {
+          buttons.forEach(b => b.classList.remove("active"))
+          panels.forEach(p => p.classList.remove("active"))
+          button.classList.add("active")
+          panels[i].classList.add("active")
+        })
+      })
     })
   </script>
 </body>
