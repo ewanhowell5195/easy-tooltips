@@ -175,6 +175,316 @@
       overflow-x: auto;
       line-height: 1.4;
     }
+
+    .tab-buttons {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .tab-button {
+      background: #e0e0e0;
+      color: #2c3e50;
+      padding: 8px 16px;
+      border-radius: 6px 6px 0 0;
+      font-size: 0.9rem;
+    }
+
+    .tab-button:hover {
+      background: #d0d0d0;
+    }
+
+    .tab-button.active {
+      background: #2c3e50;
+      color: white;
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    .tab-panel pre {
+      border-top-left-radius: 0;
+    }
+
+    .demo-scene {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      justify-content: center;
+      min-height: 220px;
+      padding: 40px 24px;
+      border-radius: 0 8px 8px 8px;
+    }
+
+    .scene-premium {
+      background: radial-gradient(circle at 30% 20%, #302b63, #0f0c29);
+    }
+
+    .scene-bubbly {
+      background: #eaf4fc;
+    }
+
+    .scene-alert {
+      background: #eef1f5;
+    }
+
+    .scene-glass {
+      background: linear-gradient(135deg, #1e3c72, #6a3093 55%, #b06ab3);
+    }
+
+    .demo-scene * {
+      user-select: none;
+    }
+
+    /* Premium: pricing card */
+    .price-card {
+      width: 240px;
+      padding: 24px;
+      border-radius: 14px;
+      text-align: left;
+      color: #fff;
+      background: linear-gradient(160deg, #2a2550, #15122e);
+      border: 1px solid rgba(240, 192, 64, 0.3);
+    }
+
+    .price-card-tag {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: #f0c040;
+      color: #1a1a2e;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .price-card-price {
+      margin: 14px 0 18px;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .price-card-price span {
+      font-size: 0.9rem;
+      font-weight: 400;
+      opacity: 0.6;
+    }
+
+    .price-card-features {
+      list-style: none;
+      margin: 0 0 20px;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-size: 0.9rem;
+    }
+
+    .price-card-features li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      list-style: none;
+    }
+
+    .info-dot {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: rgba(240, 192, 64, 0.2);
+      color: #f0c040;
+      font-size: 0.7rem;
+      font-weight: 700;
+      font-style: italic;
+      cursor: pointer;
+    }
+
+    .price-card-cta {
+      display: block;
+      text-align: center;
+      padding: 12px;
+      border-radius: 8px;
+      background: #f0c040;
+      color: #1a1a2e;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* Bubbly: social post */
+    .post-card {
+      width: 280px;
+      padding: 18px;
+      border-radius: 16px;
+      background: #fff;
+      text-align: left;
+      box-shadow: 0 6px 20px rgba(52, 152, 219, 0.15);
+    }
+
+    .post-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .post-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #3498db;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .post-name {
+      font-weight: 700;
+      color: #2c3e50;
+    }
+
+    .post-time {
+      font-size: 0.8rem;
+      color: #999;
+    }
+
+    .post-body {
+      color: #444;
+      margin-bottom: 14px;
+    }
+
+    .post-reactions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .reaction {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      cursor: pointer;
+      background: #f0f6fc;
+    }
+
+    /* Alert: danger zone */
+    .settings-card {
+      width: 320px;
+      padding: 20px;
+      border-radius: 12px;
+      background: #fff;
+      border: 1px solid #f1d0d0;
+      text-align: left;
+    }
+
+    .settings-title {
+      font-weight: 700;
+      color: #c0392b;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #f1d0d0;
+    }
+
+    .settings-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+      color: #444;
+      font-size: 0.9rem;
+    }
+
+    .danger-btn {
+      padding: 6px 14px;
+      border-radius: 6px;
+      background: #fff5f5;
+      color: #c0392b;
+      border: 1px solid #e7a9a3;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    /* Glass: music player */
+    .player-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      width: 300px;
+      padding: 14px;
+      border-radius: 16px;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow:
+        inset 1px 1px 0.5px 0 rgba(255, 255, 255, 0.5),
+        inset -1px -1px 0.5px 0 rgba(255, 255, 255, 0.25);
+    }
+
+    .player-art {
+      width: 52px;
+      height: 52px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      background: rgba(255, 255, 255, 0.2);
+      flex-shrink: 0;
+    }
+
+    .player-info {
+      flex: 1;
+      text-align: left;
+      min-width: 0;
+    }
+
+    .player-track {
+      font-weight: 700;
+    }
+
+    .player-artist {
+      font-size: 0.85rem;
+      opacity: 0.8;
+    }
+
+    .player-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .player-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      cursor: pointer;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .player-btn.player-play {
+      background: rgba(255, 255, 255, 0.9);
+      color: #1e3c72;
+    }
     
     .input-group {
       margin: 15px 0;
@@ -340,6 +650,93 @@
           <li>Smooth animations with no flicker</li>
           <li>Works in Vue, React, Svelte, and more</li>
         </ul>
+      </div>
+
+      <div class="section">
+        <h2>Demos</h2>
+        <p>Themed tooltips built by combining variables with a little custom CSS. Hover or focus the elements in each scene.</p>
+
+        <div class="tabs">
+          <div class="tab-buttons">
+            <button class="tab-button active">Premium</button>
+            <button class="tab-button">Bubbly</button>
+            <button class="tab-button">Alert</button>
+            <button class="tab-button">Glass</button>
+          </div>
+
+          <div class="tab-panel active">
+            <div class="demo-scene scene-premium">
+              <div class="price-card">
+                <span class="price-card-tag">PRO</span>
+                <div class="price-card-price">$12<span>/mo</span></div>
+                <ul class="price-card-features">
+                  <li>Unlimited projects <span class="info-dot" tabindex="0" data-easy-tooltip="No monthly cap, create as many as you need" data-easy-tooltip-class="premium-tooltip">i</span></li>
+                  <li>Priority support <span class="info-dot" tabindex="0" data-easy-tooltip="Answers from our team within the hour" data-easy-tooltip-class="premium-tooltip">i</span></li>
+                  <li>Advanced analytics <span class="info-dot" tabindex="0" data-easy-tooltip="Deep insights with exportable reports" data-easy-tooltip-class="premium-tooltip">i</span></li>
+                </ul>
+                <span class="price-card-cta" tabindex="0" data-easy-tooltip="Unlock everything, cancel anytime" data-easy-tooltip-class="premium-tooltip">Upgrade</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-panel">
+            <div class="demo-scene scene-bubbly">
+              <div class="post-card">
+                <div class="post-head">
+                  <div class="post-avatar">A</div>
+                  <div>
+                    <div class="post-name">Ava Chen</div>
+                    <div class="post-time">2h ago</div>
+                  </div>
+                </div>
+                <div class="post-body">Just shipped the new release! 🚀</div>
+                <div class="post-reactions">
+                  <span class="reaction" tabindex="0" data-easy-tooltip="Like" data-easy-tooltip-class="bubbly-tooltip">👍</span>
+                  <span class="reaction" tabindex="0" data-easy-tooltip="Love" data-easy-tooltip-class="bubbly-tooltip">❤️</span>
+                  <span class="reaction" tabindex="0" data-easy-tooltip="Haha" data-easy-tooltip-class="bubbly-tooltip">😂</span>
+                  <span class="reaction" tabindex="0" data-easy-tooltip="Celebrate" data-easy-tooltip-class="bubbly-tooltip">🎉</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-panel">
+            <div class="demo-scene scene-alert">
+              <div class="settings-card">
+                <div class="settings-title">Danger Zone</div>
+                <div class="settings-row">
+                  <span>Delete account</span>
+                  <span class="danger-btn" tabindex="0" data-easy-tooltip="Permanently deletes your account and all data, this cannot be undone" data-easy-tooltip-class="alert-tooltip">Delete</span>
+                </div>
+                <div class="settings-row">
+                  <span>Reset settings</span>
+                  <span class="danger-btn" tabindex="0" data-easy-tooltip="Restores every setting to its default" data-easy-tooltip-class="alert-tooltip">Reset</span>
+                </div>
+                <div class="settings-row">
+                  <span>Sign out everywhere</span>
+                  <span class="danger-btn" tabindex="0" data-easy-tooltip="Revokes all active sessions immediately" data-easy-tooltip-class="alert-tooltip">Sign out</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-panel">
+            <div class="demo-scene scene-glass">
+              <div class="player-card">
+                <div class="player-art">🎵</div>
+                <div class="player-info">
+                  <div class="player-track">Midnight City</div>
+                  <div class="player-artist">M83</div>
+                </div>
+                <div class="player-controls">
+                  <span class="player-btn" tabindex="0" data-easy-tooltip="Previous" data-easy-tooltip-class="glass-tooltip">⏮</span>
+                  <span class="player-btn player-play" tabindex="0" data-easy-tooltip="Play" data-easy-tooltip-class="glass-tooltip">▶</span>
+                  <span class="player-btn" tabindex="0" data-easy-tooltip="Next" data-easy-tooltip-class="glass-tooltip">⏭</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="section">
@@ -556,6 +953,21 @@
             <h3>Longer Animation</h3>
             <button data-easy-tooltip="Smooth fade in" data-easy-tooltip-class="long-animation">Hover me</button>
           </div>
+
+          <div class="demo-card">
+            <h3>Dark Theme</h3>
+            <button data-easy-tooltip="Dark background, light text" data-easy-tooltip-class="dark-tooltip">Hover me</button>
+          </div>
+
+          <div class="demo-card">
+            <h3>Slide Distance</h3>
+            <button data-easy-tooltip="Slides in from further away" data-easy-tooltip-class="long-slide">Hover me</button>
+          </div>
+
+          <div class="demo-card">
+            <h3>Far From Element</h3>
+            <button data-easy-tooltip="Sits further from the element" data-easy-tooltip-class="far-tooltip">Hover me</button>
+          </div>
         </div>
         
         <pre>&lt;style&gt;
@@ -564,6 +976,8 @@
     --easy-tooltip-text-color: #000;           /* Text color */
     --easy-tooltip-border-color: #aaa;         /* Border color */
     --easy-tooltip-border-size: 1px;           /* Border thickness */
+    --easy-tooltip-border-radius: 4px;         /* Corner radius of the tooltip */
+    --easy-tooltip-padding: 8px 12px;          /* Inner padding */
     --easy-tooltip-max-width: 100%;            /* Maximum tooltip width */
     --easy-tooltip-animation-distance: 4px;    /* Distance the tooltip slides in */
     --easy-tooltip-distance: 16px;             /* Distance from trigger element */
@@ -623,6 +1037,81 @@
         .long-animation {
           --easy-tooltip-animation-length: 1s;
         }
+
+        .dark-tooltip {
+          --easy-tooltip-background-color: #2c3e50;
+          --easy-tooltip-border-color: #2c3e50;
+          --easy-tooltip-text-color: #fff;
+        }
+
+        .long-slide {
+          --easy-tooltip-animation-distance: 16px;
+        }
+
+        .far-tooltip {
+          --easy-tooltip-distance: 32px;
+        }
+
+        .premium-tooltip {
+          --easy-tooltip-background-color: #1a1a2e;
+          --easy-tooltip-border-color: #f0c040;
+          --easy-tooltip-text-color: #f0c040;
+          --easy-tooltip-border-size: 2px;
+          --easy-tooltip-arrow-radius: 4px;
+          filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+        }
+
+        .premium-tooltip .easy-tooltip-text {
+          letter-spacing: 0.5px;
+          box-shadow: inset 0 1px 0 rgba(240, 192, 64, 0.35);
+        }
+
+        .bubbly-tooltip {
+          --easy-tooltip-background-color: #3498db;
+          --easy-tooltip-border-color: #3498db;
+          --easy-tooltip-text-color: #fff;
+          --easy-tooltip-arrow-size: 14px;
+          --easy-tooltip-arrow-radius: 3px;
+          --easy-tooltip-border-radius: 12px;
+          --easy-tooltip-animation-distance: 12px;
+          --easy-tooltip-animation-length: 0.3s;
+          filter: drop-shadow(0 6px 12px rgba(52, 152, 219, 0.5));
+        }
+
+        .bubbly-tooltip .easy-tooltip-text {
+          box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.4);
+        }
+
+        .alert-tooltip {
+          --easy-tooltip-background-color: #fff5f5;
+          --easy-tooltip-border-color: #e74c3c;
+          --easy-tooltip-text-color: #c0392b;
+          --easy-tooltip-border-size: 2px;
+          --easy-tooltip-distance: 24px;
+          --easy-tooltip-max-width: 200px;
+          filter: drop-shadow(0 4px 10px rgba(231, 76, 60, 0.3));
+        }
+
+        .glass-tooltip {
+          --easy-tooltip-text-color: #fff;
+          --easy-tooltip-distance: 0px;
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 12px;
+          backdrop-filter: blur(3px);
+          box-shadow:
+            0 8px 20px rgba(0, 0, 0, 0.25),
+            inset 1px 1px 0.5px 0 rgba(255, 255, 255, 0.5),
+            inset -1px -1px 0.5px 0 rgba(255, 255, 255, 0.25);
+        }
+
+        .glass-tooltip::before {
+          display: none;
+        }
+
+        .glass-tooltip .easy-tooltip-text {
+          background: transparent;
+          border: none;
+        }
       </style>
     </div>
     
@@ -650,7 +1139,7 @@
     <p style="margin-top: 10px;">MIT License © <a href="https://ewanhowell.com/" target="_blank">Ewan Howell</a></p>
   </footer>
   
-  <script src="https://cdn.jsdelivr.net/npm/easy-tooltips/dist/easy-tooltips.min.js"></script>
+  <script src="../src/easy-tooltips.js"></script>
   <script>
     let count = 0
     const dynamicCounter = document.getElementById("dynamic-counter")
