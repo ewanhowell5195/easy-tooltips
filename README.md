@@ -124,6 +124,8 @@ You can style tooltips using CSS variables (recommended) or by targeting the too
   --easy-tooltip-text-color: #000;           /* Text color */
   --easy-tooltip-border-color: #aaa;         /* Border color */
   --easy-tooltip-border-size: 1px;           /* Border thickness */
+  --easy-tooltip-border-radius: 4px;         /* Corner radius of the tooltip */
+  --easy-tooltip-padding: 8px 12px;          /* Inner padding */
   --easy-tooltip-max-width: 100%;            /* Maximum tooltip width */
   --easy-tooltip-animation-distance: 4px;    /* Distance the tooltip slides in */
   

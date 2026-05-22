@@ -5,6 +5,8 @@
   --easy-tooltip-arrow-edge-buffer-y: 6px;
   --easy-tooltip-viewport-padding: 16px;
   --easy-tooltip-border-size: 1px;
+  --easy-tooltip-border-radius: 4px;
+  --easy-tooltip-padding: 8px 12px;
   --easy-tooltip-animation-length: .15s;
   --easy-tooltip-animation-distance: 4px;
   --easy-tooltip-delay: .15s;
@@ -158,8 +160,8 @@
 .easy-tooltip-text {
   width: max-content;
   max-width: 100%;
-  padding: 8px 12px;
-  border-radius: 4px;
+  padding: var(--easy-tooltip-padding);
+  border-radius: var(--easy-tooltip-border-radius);
   background: var(--easy-tooltip-background-color);
   color: var(--easy-tooltip-text-color);
   border: var(--easy-tooltip-border-size) solid var(--easy-tooltip-border-color);
