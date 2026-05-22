@@ -123,6 +123,7 @@ You can style tooltips using CSS variables (recommended) or by targeting the too
   --easy-tooltip-border-color: #aaa;         /* Border color */
   --easy-tooltip-border-size: 1px;           /* Border thickness */
   --easy-tooltip-max-width: 100%;            /* Maximum tooltip width */
+  --easy-tooltip-animation-distance: 4px;    /* Distance the tooltip slides in */
   
   /* Positioning (required for JS positioning) */
   --easy-tooltip-distance: 16px;             /* Distance from trigger element */

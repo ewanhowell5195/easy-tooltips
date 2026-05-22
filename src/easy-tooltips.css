@@ -6,6 +6,7 @@
   --easy-tooltip-viewport-padding: 16px;
   --easy-tooltip-border-size: 1px;
   --easy-tooltip-animation-length: .15s;
+  --easy-tooltip-animation-distance: 4px;
   --easy-tooltip-delay: .15s;
 }
 
@@ -51,7 +52,7 @@
   transform: translate(-50%, calc(-100% - var(--easy-tooltip-distance)));
   opacity: 0;
   transition: opacity var(--easy-tooltip-animation-length), translate var(--easy-tooltip-animation-length);
-  translate: 0 4px;
+  translate: 0 var(--easy-tooltip-animation-distance);
   max-width: min(100% - var(--easy-tooltip-viewport-padding) * 2 - var(--easy-tooltip-left-offset, 0px) - var(--easy-tooltip-right-offset, 0px), var(--easy-tooltip-max-width, 100%));
   min-width: calc(var(--easy-tooltip-arrow-edge-buffer-x) * 2 + var(--easy-tooltip-arrow-size) * 1.41421356);
 }
@@ -132,11 +133,11 @@
 }
 
 .easy-tooltip.easy-tooltip-right:not(.easy-tooltip-visible) {
-  translate: -4px 0;
+  translate: calc(var(--easy-tooltip-animation-distance) * -1) 0;
 }
 
 .easy-tooltip.easy-tooltip-left:not(.easy-tooltip-visible) {
-  translate: 4px 0;
+  translate: var(--easy-tooltip-animation-distance) 0;
 }
 
 .easy-tooltip.easy-tooltip-right::before {
