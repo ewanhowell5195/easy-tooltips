@@ -67,8 +67,25 @@
 }
 
 .easy-tooltip.easy-tooltip-inside {
-  top: var(--easy-tooltip-viewport-padding) !important;
+  top: var(--easy-tooltip-viewport-padding);
   transform: translateX(-50%);
+}
+
+.easy-tooltip.easy-tooltip-inside.easy-tooltip-below {
+  top: auto;
+  bottom: var(--easy-tooltip-viewport-padding);
+}
+
+.easy-tooltip.easy-tooltip-inside.easy-tooltip-left {
+  left: var(--easy-tooltip-viewport-padding);
+  right: auto;
+  transform: translateY(-50%);
+}
+
+.easy-tooltip.easy-tooltip-inside.easy-tooltip-right {
+  left: auto;
+  right: var(--easy-tooltip-viewport-padding);
+  transform: translateY(-50%);
 }
 
 .easy-tooltip::before {
