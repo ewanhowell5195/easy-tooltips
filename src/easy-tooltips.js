@@ -41,15 +41,14 @@
       })
     }
 
-    const removalObserver = new MutationObserver(records => {
+    new MutationObserver(records => {
       for (const record of records) {
         if (record.removedNodes.length) {
           scheduleRelease()
           return
         }
       }
-    })
-    removalObserver.observe(document.body, { childList: true, subtree: true })
+    }).observe(document.body, { childList: true, subtree: true })
 
     function ms(value) {
       value = value.trim()
@@ -162,7 +161,6 @@
 
           const styles = getComputedStyle(tooltip)
           const distance = parseFloat(styles.getPropertyValue("--easy-tooltip-distance"))
-          const arrowSize = parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-size"))
           const padding = parseFloat(styles.getPropertyValue("--easy-tooltip-viewport-padding"))
 
           const viewportWidth = document.documentElement.clientWidth
@@ -193,13 +191,8 @@
             tooltipText.style.removeProperty("width")
             tooltipText.style.removeProperty("min-width")
 
-            const spaceLeft = rect.left - distance - padding
-            const spaceRight = viewportWidth - rect.right - distance - padding
-            const maxHeight = viewportHeight - padding * 2
-            const order = prefer === "left" ? ["left", "right"] : ["right", "left"]
-
-            for (const side of order) {
-              if ((side === "left" ? spaceLeft : spaceRight) < minWidth) continue
+            for (const side of (prefer === "left" ? ["left", "right"] : ["right", "left"])) {
+              if ((side === "left" ? rect.left - distance - padding : viewportWidth - rect.right - distance - padding) < minWidth) continue
               tooltip.classList.remove("easy-tooltip-left", "easy-tooltip-right")
               tooltip.classList.add("easy-tooltip-" + side)
               if (side === "right") {
@@ -209,7 +202,7 @@
                 tooltip.style.setProperty("--easy-tooltip-right-offset", `${leftPlacementOffset}px`)
                 tooltip.style.removeProperty("--easy-tooltip-left-offset")
               }
-              if (tooltip.getBoundingClientRect().height <= maxHeight) {
+              if (tooltip.getBoundingClientRect().height <= viewportHeight - padding * 2) {
                 dir = side
                 break
               }
@@ -220,8 +213,7 @@
             }
           } else {
             const y = Math.round(rect.top)
-            const totalOffset = tooltipHeight + distance
-            const fitsAbove = y - totalOffset > padding
+            const fitsAbove = y - tooltipHeight - distance > padding
             const fitsBelow = y + rect.height + tooltipHeight + distance < viewportHeight - padding
 
             if (prefer === "below") {
@@ -243,8 +235,8 @@
           else if (dir === "right") tooltip.classList.add("easy-tooltip-right")
           if (inside) tooltip.classList.add("easy-tooltip-inside")
 
-          const shift = (before, after, size, viewportSize, edgeBuffer, vertical) => {
-            const maxTextShift = size / 2 - arrowSize / 2 - edgeBuffer
+          function shift(before, after, size, viewportSize, edgeBuffer, vertical) {
+            const maxTextShift = size / 2 - parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-size")) / 2 - edgeBuffer
             let text = 0
             let tip = 0
             if (before < padding) {
@@ -272,8 +264,7 @@
             }
 
             const height = tooltip.getBoundingClientRect().height
-            const edgeBuffer = parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-edge-buffer-y"))
-            shift(cy - height / 2, cy + height / 2, height, viewportHeight, edgeBuffer, true)
+            shift(cy - height / 2, cy + height / 2, height, viewportHeight, parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-edge-buffer-y")), true)
           } else {
             const x = Math.round(rect.left + rect.width / 2)
             const y = Math.round(rect.top)
@@ -282,8 +273,7 @@
               tooltip.style.setProperty("top", dir === "above" ? `${y}px` : `${y + rect.height}px`)
             }
 
-            const edgeBuffer = parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-edge-buffer-x"))
-            shift(x - tooltipWidth / 2, x + tooltipWidth / 2, tooltipWidth, viewportWidth, edgeBuffer, false)
+            shift(x - tooltipWidth / 2, x + tooltipWidth / 2, tooltipWidth, viewportWidth, parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-edge-buffer-x")), false)
           }
 
           if (!observedNodes.has(node)) {
