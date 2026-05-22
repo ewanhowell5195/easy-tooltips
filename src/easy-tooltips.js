@@ -351,6 +351,14 @@
       updateTooltipTarget(e)
     })
 
+    document.addEventListener("focusin", e => {
+      updateTooltipTarget(e)
+    })
+
+    document.addEventListener("focusout", e => {
+      queueTooltipUpdate(() => removeTooltips([e.target]))
+    })
+
     window.addEventListener("resize", reloadTooltips)
     window.addEventListener("scroll", reloadTooltips)
   }

@@ -12,7 +12,7 @@ Just add `data-easy-tooltip` to any element! No setup or config required.
 ## Features
 
 * No dependencies
-* Works with both mouse and touch
+* Works with mouse, touch, and keyboard focus
 * Customizable via CSS variables
 * Automatically repositions and shifts to fit the screen
 * Smooth, non-interrupting animations (no flicker on rapid hover)
@@ -41,6 +41,8 @@ https://www.jsdelivr.com/package/npm/easy-tooltips
 ```
 
 No additional setup is needed for Vue, React, Svelte, or other frameworks! Tooltips automatically update when the element updates!
+
+Tooltips also show on keyboard focus. Natively focusable elements (buttons, links, inputs) work automatically; for other elements (such as a `<div>` or `<span>`), add `tabindex="0"` so they can receive focus.
 
 ## Advanced Usage
 

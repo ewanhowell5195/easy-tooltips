@@ -334,7 +334,7 @@
         <h2>Features</h2>
         <ul class="feature-list">
           <li>No dependencies or frameworks required</li>
-          <li>Works with mouse and touch events</li>
+          <li>Works with mouse, touch, and keyboard focus</li>
           <li>Customizable via CSS variables</li>
           <li>Smart positioning and viewport detection</li>
           <li>Smooth animations with no flicker</li>
@@ -354,12 +354,12 @@
           
           <div class="demo-card">
             <h3>Text Element</h3>
-            <p>Hover over <span data-easy-tooltip="This field is required for login" style="cursor: help; text-decoration: underline;">username</span></p>
+            <p>Hover over <span tabindex="0" data-easy-tooltip="This field is required for login" style="cursor: help; text-decoration: underline;">username</span></p>
           </div>
           
           <div class="demo-card">
             <h3>Icon</h3>
-            <div class="icon" data-easy-tooltip="Multi-line tooltips&#10;are supported too">i</div>
+            <div class="icon" tabindex="0" data-easy-tooltip="Multi-line tooltips&#10;are supported too">i</div>
           </div>
         </div>
         
@@ -493,7 +493,7 @@
           
           <div class="demo-card">
             <h3>Info</h3>
-            <div class="icon info" data-easy-tooltip="Get help" data-easy-tooltip-class="info-tooltip">?</div>
+            <div class="icon info" tabindex="0" data-easy-tooltip="Get help" data-easy-tooltip-class="info-tooltip">?</div>
           </div>
         </div>
         
