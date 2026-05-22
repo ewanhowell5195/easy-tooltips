@@ -227,15 +227,56 @@
     }
 
     .scene-bubbly {
-      background: #eaf4fc;
+      background: #bcd8ff;
     }
 
     .scene-alert {
-      background: #eef1f5;
+      background: linear-gradient(135deg, #ffe1de, #ffcbc4);
     }
 
     .scene-glass {
-      background: linear-gradient(135deg, #1e3c72, #6a3093 55%, #b06ab3);
+      position: relative;
+      overflow: hidden;
+      background: #15122e;
+    }
+
+    .scene-glass::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(circle at 20% 30%, #1e3c72, transparent 45%),
+        radial-gradient(circle at 80% 70%, #6a3093, transparent 50%),
+        radial-gradient(circle at 55% 25%, #b06ab3, transparent 40%);
+      background-size: 160% 160%;
+      animation: glass-drift 22s ease-in-out infinite alternate, glass-hue 30s linear infinite;
+    }
+
+    .scene-glass .player-card {
+      position: relative;
+      z-index: 1;
+    }
+
+    @keyframes glass-drift {
+      0% {
+        background-position: 0% 20%, 100% 80%, 40% 0%;
+        background-size: 150% 150%;
+      }
+      50% {
+        background-position: 65% 70%, 45% 20%, 85% 60%;
+        background-size: 210% 190%;
+      }
+      100% {
+        background-position: 30% 100%, 80% 35%, 10% 90%;
+        background-size: 170% 160%;
+      }
+    }
+
+    @keyframes glass-hue {
+      to {
+        filter: hue-rotate(360deg);
+      }
     }
 
     .demo-scene * {
