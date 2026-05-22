@@ -30,7 +30,14 @@
     "css",
     "lightweight",
     "zero-dependency",
-    "data-attribute"
+    "data-attribute",
+    "vanilla-js",
+    "javascript",
+    "title",
+    "ui",
+    "framework-agnostic",
+    "keyboard",
+    "positioning"
   ],
   "scripts": {
     "build": "node build.js"
