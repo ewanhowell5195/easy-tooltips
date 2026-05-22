@@ -147,9 +147,11 @@ You can style tooltips using CSS variables (recommended) or by targeting the too
 
 Easy-tooltips uses a smart positioning system that:
 
-1. **Detects viewport boundaries** - Automatically positions tooltips above or below elements
-2. **Handles edge cases** - Shifts tooltips horizontally when they would overflow the screen
-3. **Manages animations** - Queues tooltip updates to prevent conflicts
+1. **Picks a side** - Shows on the preferred side (above by default, or below/left/right) and flips to the opposite side when there isn't room
+2. **Keeps it on screen** - Shifts the tooltip along its edge (horizontally for above/below, vertically for left/right) so it stays within the viewport while the arrow keeps pointing at the element
+3. **Falls back gracefully** - When a tooltip can't fit on either side, it pins inside the viewport instead of overflowing
+4. **Manages animations** - Queues tooltip updates to prevent conflicts and flicker on rapid hover
+5. **Cleans up** - Removes a tooltip automatically when its trigger element leaves the DOM
 
 ## License
 
