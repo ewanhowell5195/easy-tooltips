@@ -4,15 +4,8 @@
     tooltips.id = "easy-tooltips"
     document.body.append(tooltips)
 
-    let lastElement
-    let lastByPointer = false
-    let cursorX = 0
-    let cursorY = 0
-    let cursorAnchorActive = false
-    let cursorRafQueued = false
-    let activeCount = 0
-    let cooldownTimer
-    let zIndexCounter = 0
+    let lastElement, lastByPointer, cursorX, cursorY, cursorAnchorActive, cursorRafQueued, cooldownTimer
+    let activeCount = 0, zIndexCounter = 0
 
     function activateTooltip(tooltip) {
       if (tooltip._activated) return
@@ -264,12 +257,9 @@
           tooltipText.style.removeProperty("translate")
           tooltip.classList.remove("easy-tooltip-below", "easy-tooltip-inside", "easy-tooltip-left", "easy-tooltip-right")
 
-          const tooltipRect = tooltip.getBoundingClientRect()
-          const tooltipWidth = tooltipRect.width
-          const tooltipHeight = tooltipRect.height
+          const { width: tooltipWidth, height: tooltipHeight } = tooltip.getBoundingClientRect()
 
-          let dir
-          let inside = false
+          let dir, inside
 
           if (prefer === "left" || prefer === "right") {
             tooltipText.style.setProperty("width", "min-content")
@@ -328,8 +318,7 @@
 
           function shift(before, after, size, viewportSize, edgeBuffer, vertical) {
             const maxTextShift = size / 2 - parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-size")) / 2 - edgeBuffer
-            let text = 0
-            let tip = 0
+            let text = 0, tip = 0
             if (before < padding) {
               text = Math.min(padding - before, maxTextShift)
               if (before + text < padding) tip = padding - (before + text)
@@ -361,7 +350,7 @@
             return `M${r} 0H${w-r}A${r} ${r} 0 0 1 ${w} ${r}V${ay-ahb}${tip}L${w} ${ay+ahb}V${h-r}A${r} ${r} 0 0 1 ${w-r} ${h}H${r}A${r} ${r} 0 0 1 0 ${h-r}V${r}A${r} ${r} 0 0 1 ${r} 0Z`
           }
 
-          let textShift = 0
+          let textShift
 
           if (dir === "left" || dir === "right") {
             const cy = Math.round(rect.top + rect.height / 2)
@@ -389,17 +378,14 @@
             textShift = shift(x - tooltipWidth / 2, x + tooltipWidth / 2, tooltipWidth, viewportWidth, parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-edge-buffer-x")), false)
           }
 
-          const bodyRect = tooltipText.getBoundingClientRect()
-          const bw = bodyRect.width
-          const bh = bodyRect.height
+          const { width: bw, height: bh } = tooltipText.getBoundingClientRect()
           const br = parseFloat(styles.getPropertyValue("--easy-tooltip-border-radius")) || 0
-          const ab = arrowBase
-          const ah = arrowSizeParts[1] ? parseFloat(arrowSizeParts[1]) : ab / 2
+          const ah = arrowSizeParts[1] ? parseFloat(arrowSizeParts[1]) : arrowBase / 2
           const ar = parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-radius")) || 0
           const vertical = dir === "left" || dir === "right"
           const ax = vertical ? bw / 2 : bw / 2 - textShift
           const ay = vertical ? bh / 2 - textShift : bh / 2
-          node._svgPath.setAttribute("d", arrowPath(dir, bw, bh, br, ab, ah, ax, ay, ar))
+          node._svgPath.setAttribute("d", arrowPath(dir, bw, bh, br, arrowBase, ah, ax, ay, ar))
           if (textShift) {
             node._svgPath.setAttribute("transform", vertical ? `translate(0 ${textShift})` : `translate(${textShift} 0)`)
           } else {
@@ -419,7 +405,7 @@
       }
     }
 
-    function removeTooltips(nodes, force = false) {
+    function removeTooltips(nodes, force) {
       for (let node of nodes) {
         while (node && node !== document.body) {
           if (node._tooltip && (force || !node.matches(":hover"))) {
@@ -455,7 +441,7 @@
       queueTooltipUpdate(addTooltips)
     }
 
-    function updateTooltipTarget(e, forceRemove = false) {
+    function updateTooltipTarget(e, forceRemove) {
       queueTooltipUpdate(() => {
         removeTooltips([lastElement], forceRemove)
         lastElement = e.target
@@ -463,7 +449,7 @@
       })
     }
 
-    let touched = false
+    let touched
 
     document.addEventListener("touchstart", e => {
       touched = true
@@ -491,6 +477,8 @@
         return
       }
       lastByPointer = true
+      cursorX = e.clientX
+      cursorY = e.clientY
       updateTooltipTarget(e)
     })
 
