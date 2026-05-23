@@ -10,6 +10,32 @@
     let cursorY = 0
     let cursorAnchorActive = false
     let cursorRafQueued = false
+    let activeCount = 0
+    let cooldownTimer
+
+    function activateTooltip(tooltip) {
+      if (tooltip._activated) return
+      tooltip._activated = true
+      activeCount++
+      clearTimeout(cooldownTimer)
+      tooltips.classList.add("easy-tooltips-active")
+    }
+
+    function deactivateTooltip(tooltip) {
+      if (!tooltip._activated) return
+      tooltip._activated = false
+      activeCount--
+      if (activeCount <= 0) {
+        activeCount = 0
+        clearTimeout(cooldownTimer)
+        const cooldown = ms(getComputedStyle(document.documentElement).getPropertyValue("--easy-tooltip-cooldown"))
+        if (cooldown > 0) {
+          cooldownTimer = setTimeout(() => tooltips.classList.remove("easy-tooltips-active"), cooldown)
+        } else {
+          tooltips.classList.remove("easy-tooltips-active")
+        }
+      }
+    }
 
     const observedNodes = new Set()
     const triggers = new Set()
@@ -18,6 +44,8 @@
     function releaseTooltip(node) {
       if (node._tooltip) {
         clearTimeout(node._tooltip._timeout)
+        clearTimeout(node._tooltip._activateTimer)
+        deactivateTooltip(node._tooltip)
         node._tooltip.remove()
       }
       observer.unobserve(node)
@@ -66,7 +94,7 @@
       const styles = getComputedStyle(tooltip)
       const length = ms(styles.getPropertyValue("--easy-tooltip-animation-length"))
       if (visible) {
-        const delay = ms(styles.getPropertyValue("--easy-tooltip-delay"))
+        const delay = ms(styles.getPropertyValue("--easy-tooltip-delay")) + ms(styles.getPropertyValue("--easy-tooltip-inactive-delay"))
         if (delay) {
           tooltip._start = performance.now()
           tooltip._delay = delay
@@ -76,7 +104,9 @@
         if (tooltip._delay && performance.now() < tooltip._start + tooltip._delay) {
           tooltip.classList.remove("easy-tooltip-visible")
           clearTimeout(tooltip._timeout)
+          clearTimeout(tooltip._activateTimer)
           delete tooltip._timeout
+          delete tooltip._activateTimer
           delete tooltip._start
           delete tooltip._delay
           return
@@ -92,6 +122,22 @@
       if (tooltip._timeout === undefined) {
         tooltip._next = undefined
         tooltip.classList.toggle("easy-tooltip-visible", visible)
+
+        clearTimeout(tooltip._activateTimer)
+        tooltip._activateTimer = undefined
+        if (visible) {
+          if (tooltip._delay) {
+            tooltip._activateTimer = setTimeout(() => {
+              tooltip._activateTimer = undefined
+              activateTooltip(tooltip)
+            }, tooltip._delay)
+          } else {
+            activateTooltip(tooltip)
+          }
+        } else {
+          deactivateTooltip(tooltip)
+        }
+
         tooltip._timeout = setTimeout(() => {
           tooltip._timeout = undefined
           if (tooltip._next !== undefined) {

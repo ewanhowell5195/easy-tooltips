@@ -7,9 +7,11 @@
   --easy-tooltip-border-size: 1px;
   --easy-tooltip-border-radius: 4px;
   --easy-tooltip-padding: 8px 12px;
-  --easy-tooltip-animation-length: .15s;
+  --easy-tooltip-animation-length: 1s;
   --easy-tooltip-animation-distance: 4px;
-  --easy-tooltip-delay: .15s;
+  --easy-tooltip-delay: 0s;
+  --easy-tooltip-inactive-delay: .15s;
+  --easy-tooltip-cooldown: .15s;
 }
 
 @property --easy-tooltip-background-color {
@@ -61,7 +63,11 @@
 .easy-tooltip.easy-tooltip-visible {
   opacity: 1;
   translate: 0;
-  transition-delay: var(--easy-tooltip-delay);
+  transition-delay: calc(var(--easy-tooltip-delay) + var(--easy-tooltip-inactive-delay));
+}
+
+#easy-tooltips.easy-tooltips-active {
+  --easy-tooltip-inactive-delay: 0s;
 }
 
 .easy-tooltip.easy-tooltip-below {
