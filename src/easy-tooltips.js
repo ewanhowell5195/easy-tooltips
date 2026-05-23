@@ -421,13 +421,7 @@
       if (!t) return
       cursorX = t.clientX
       cursorY = t.clientY
-      if (cursorAnchorActive && !cursorRafQueued) {
-        cursorRafQueued = true
-        requestAnimationFrame(() => {
-          cursorRafQueued = false
-          reloadTooltips()
-        })
-      }
+      followCursor()
     })
 
     document.addEventListener("mouseover", e => {
@@ -439,9 +433,12 @@
       updateTooltipTarget(e)
     })
 
-    document.addEventListener("mousemove", e => {
-      cursorX = e.clientX
-      cursorY = e.clientY
+    function followCursor() {
+      for (const node of triggers) {
+        if (node.dataset.easyTooltipAnchor !== "cursor" || !node._tooltip) continue
+        node._tooltip.style.top = `${cursorY}px`
+        node._tooltip.style.left = `${cursorX}px`
+      }
       if (cursorAnchorActive && !cursorRafQueued) {
         cursorRafQueued = true
         requestAnimationFrame(() => {
@@ -449,6 +446,12 @@
           reloadTooltips()
         })
       }
+    }
+
+    document.addEventListener("mousemove", e => {
+      cursorX = e.clientX
+      cursorY = e.clientY
+      followCursor()
     })
 
     document.addEventListener("focusin", e => {
