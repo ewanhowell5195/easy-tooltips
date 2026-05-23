@@ -1180,6 +1180,22 @@
       </div>
 
       <div class="section">
+        <h2>Cursor Anchor</h2>
+        <p>By default a tooltip anchors to its trigger element. Set <code>data-easy-tooltip-anchor="cursor"</code> to anchor it to the cursor (or touch point) instead, so it follows the cursor as it moves around the element. On touch, the tooltip appears at the tap point and tracks the finger if you drag. Keyboard focus falls back to element anchoring automatically.</p>
+
+        <div class="demo-grid">
+          <div class="demo-card">
+            <h3>Cursor anchor</h3>
+            <div data-easy-tooltip="I follow your cursor" data-easy-tooltip-anchor="cursor" style="padding: 32px 24px; border: 1px dashed #aaa; border-radius: 6px; text-align: center;">Move your cursor or tap across me</div>
+          </div>
+        </div>
+
+        <pre>&lt;div data-easy-tooltip="I follow your cursor" data-easy-tooltip-anchor="cursor"&gt;
+  Hover anywhere on me
+&lt;/div&gt;</pre>
+      </div>
+
+      <div class="section">
         <h2>Custom Colors</h2>
         <p>Style specific tooltips using <code>data-easy-tooltip-class</code> and CSS variables:</p>
         

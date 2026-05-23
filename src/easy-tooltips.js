@@ -5,6 +5,11 @@
     document.body.append(tooltips)
 
     let lastElement
+    let lastByPointer = false
+    let cursorX = 0
+    let cursorY = 0
+    let cursorAnchorActive = false
+    let cursorRafQueued = false
 
     const observedNodes = new Set()
     const triggers = new Set()
@@ -98,6 +103,7 @@
     }
 
     function addTooltips() {
+      cursorAnchorActive = false
       if (lastElement) {
         const toAdd = []
         let node = lastElement
@@ -166,7 +172,11 @@
             tooltipText.classList.remove("easy-tooltip-text-html")
           }
           
-          const rect = node.getBoundingClientRect()
+          const useCursor = node.dataset.easyTooltipAnchor === "cursor" && lastByPointer
+          if (useCursor) cursorAnchorActive = true
+          const rect = useCursor
+            ? { left: cursorX, right: cursorX, top: cursorY, bottom: cursorY, width: 0, height: 0 }
+            : node.getBoundingClientRect()
 
           const styles = getComputedStyle(tooltip)
           const distance = parseFloat(styles.getPropertyValue("--easy-tooltip-distance"))
@@ -396,8 +406,28 @@
 
     document.addEventListener("touchstart", e => {
       touched = true
+      lastByPointer = true
+      const t = e.touches[0]
+      if (t) {
+        cursorX = t.clientX
+        cursorY = t.clientY
+      }
       if (e.target === lastElement) return
       updateTooltipTarget(e, true)
+    })
+
+    document.addEventListener("touchmove", e => {
+      const t = e.touches[0]
+      if (!t) return
+      cursorX = t.clientX
+      cursorY = t.clientY
+      if (cursorAnchorActive && !cursorRafQueued) {
+        cursorRafQueued = true
+        requestAnimationFrame(() => {
+          cursorRafQueued = false
+          reloadTooltips()
+        })
+      }
     })
 
     document.addEventListener("mouseover", e => {
@@ -405,10 +435,24 @@
         touched = false
         return
       }
+      lastByPointer = true
       updateTooltipTarget(e)
     })
 
+    document.addEventListener("mousemove", e => {
+      cursorX = e.clientX
+      cursorY = e.clientY
+      if (cursorAnchorActive && !cursorRafQueued) {
+        cursorRafQueued = true
+        requestAnimationFrame(() => {
+          cursorRafQueued = false
+          reloadTooltips()
+        })
+      }
+    })
+
     document.addEventListener("focusin", e => {
+      lastByPointer = false
       updateTooltipTarget(e)
     })
 
