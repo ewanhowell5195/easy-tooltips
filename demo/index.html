@@ -181,10 +181,15 @@
     .tab-buttons {
       display: flex;
       gap: 4px;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scrollbar-width: thin;
+      -webkit-overflow-scrolling: touch;
     }
 
     .tab-button {
+      flex-shrink: 0;
+      white-space: nowrap;
       background: #e0e0e0;
       color: #2c3e50;
       padding: 8px 16px;
@@ -282,6 +287,109 @@
       position: relative;
       overflow: hidden;
       background: #15122e;
+    }
+
+    .scene-sketch {
+      background: #fdfbf3;
+      padding: 32px 24px;
+    }
+
+    .sketch-cols {
+      display: flex;
+      gap: 32px;
+      width: 100%;
+      max-width: 420px;
+      justify-content: space-between;
+    }
+
+    .sketch-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    .sketch-col-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #6b6b6b;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
+    .sketch-pill {
+      padding: 10px 14px;
+      border-radius: 6px;
+      background: #fff;
+      border: 1.5px dashed #2a2a2a;
+      color: #2a2a2a;
+      text-align: center;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .scene-neon {
+      background: #0b0f1f;
+      background-image:
+        radial-gradient(ellipse 70% 60% at 15% 0%, rgba(74, 222, 128, 0.35), transparent 60%),
+        radial-gradient(ellipse 60% 70% at 85% 30%, rgba(167, 139, 250, 0.4), transparent 60%),
+        radial-gradient(ellipse 80% 60% at 50% 100%, rgba(34, 211, 238, 0.3), transparent 60%);
+    }
+
+    .neon-cols {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+      max-width: 380px;
+      justify-content: space-between;
+    }
+
+    .neon-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .neon-tile {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      padding: 14px 16px;
+      color: #fff;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+    }
+
+    .neon-tile:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .neon-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 6px;
+    }
+
+    .neon-value {
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .neon-delta {
+      font-size: 0.8rem;
+      color: #4ade80;
+      margin-top: 4px;
+    }
+
+    .neon-delta-down {
+      color: #f472b6;
     }
 
     .scene-glass::before {
@@ -555,10 +663,17 @@
       opacity: 0.8;
     }
 
+    .player-card {
+      flex-wrap: wrap;
+    }
+
     .player-controls {
       display: flex;
       align-items: center;
       gap: 6px;
+      flex: 1 1 100%;
+      justify-content: center;
+      padding-top: 4px;
     }
 
     .player-btn {
@@ -756,6 +871,8 @@
             <button class="tab-button">Bubbly</button>
             <button class="tab-button">Alert</button>
             <button class="tab-button">Glass</button>
+            <button class="tab-button">Sketch</button>
+            <button class="tab-button">Neon</button>
           </div>
 
           <div class="tab-panel active">
@@ -859,6 +976,70 @@
                   </span>
                 </div>
               </div>
+            </div>
+          </div>
+
+          <div class="tab-panel">
+            <div class="demo-scene scene-sketch">
+              <div class="sketch-cols">
+                <div class="sketch-col">
+                  <div class="sketch-col-label">Frontend</div>
+                  <div class="sketch-pill" tabindex="0" data-easy-tooltip="Structure and content" data-easy-tooltip-class="sketch-tooltip" data-easy-tooltip-prefer="left">HTML</div>
+                  <div class="sketch-pill" tabindex="0" data-easy-tooltip="Styling and layout" data-easy-tooltip-class="sketch-tooltip" data-easy-tooltip-prefer="left">CSS</div>
+                  <div class="sketch-pill" tabindex="0" data-easy-tooltip="Behaviour and interactivity" data-easy-tooltip-class="sketch-tooltip" data-easy-tooltip-prefer="left">JavaScript</div>
+                </div>
+                <div class="sketch-col">
+                  <div class="sketch-col-label">Backend</div>
+                  <div class="sketch-pill" tabindex="0" data-easy-tooltip="Server runtime" data-easy-tooltip-class="sketch-tooltip" data-easy-tooltip-prefer="right">Node</div>
+                  <div class="sketch-pill" tabindex="0" data-easy-tooltip="Persistent data storage" data-easy-tooltip-class="sketch-tooltip" data-easy-tooltip-prefer="right">Database</div>
+                  <div class="sketch-pill" tabindex="0" data-easy-tooltip="Exposes endpoints to the client" data-easy-tooltip-class="sketch-tooltip" data-easy-tooltip-prefer="right">API</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-panel">
+            <div class="demo-scene scene-neon">
+              <div class="neon-cols">
+                <div class="neon-col">
+                  <div class="neon-tile" tabindex="0" data-easy-tooltip="Unique visitors in the last 24 hours" data-easy-tooltip-class="neon-tooltip" data-easy-tooltip-prefer="left">
+                    <div class="neon-label">Active Users</div>
+                    <div class="neon-value">24,891</div>
+                    <div class="neon-delta">+12.4%</div>
+                  </div>
+                  <div class="neon-tile" tabindex="0" data-easy-tooltip="Share of visitors who completed checkout" data-easy-tooltip-class="neon-tooltip" data-easy-tooltip-prefer="left">
+                    <div class="neon-label">Conversion</div>
+                    <div class="neon-value">3.8%</div>
+                    <div class="neon-delta neon-delta-down">−0.3%</div>
+                  </div>
+                </div>
+                <div class="neon-col">
+                  <div class="neon-tile" tabindex="0" data-easy-tooltip="Total revenue this month, net of refunds" data-easy-tooltip-class="neon-tooltip" data-easy-tooltip-prefer="right">
+                    <div class="neon-label">Revenue</div>
+                    <div class="neon-value">$48.2k</div>
+                    <div class="neon-delta">+5.1%</div>
+                  </div>
+                  <div class="neon-tile" tabindex="0" data-easy-tooltip="Average time a user spends per session" data-easy-tooltip-class="neon-tooltip" data-easy-tooltip-prefer="right">
+                    <div class="neon-label">Avg. Session</div>
+                    <div class="neon-value">4m 12s</div>
+                    <div class="neon-delta">+0.6%</div>
+                  </div>
+                </div>
+              </div>
+              <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+                <defs>
+                  <filter id="neon-inner-glow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feFlood flood-color="#22d3ee" flood-opacity="0.6" result="flood"/>
+                    <feComposite in="flood" in2="SourceGraphic" operator="out" result="outside"/>
+                    <feGaussianBlur in="outside" stdDeviation="3" result="blurred"/>
+                    <feComposite in="blurred" in2="SourceGraphic" operator="in" result="innerGlow"/>
+                    <feMerge>
+                      <feMergeNode in="SourceGraphic"/>
+                      <feMergeNode in="innerGlow"/>
+                    </feMerge>
+                  </filter>
+                </defs>
+              </svg>
             </div>
           </div>
         </div>
@@ -1063,7 +1244,22 @@
             <h3>Large Arrow</h3>
             <button data-easy-tooltip="Larger arrow pointer" data-easy-tooltip-class="large-arrow">Hover me</button>
           </div>
-          
+
+          <div class="demo-card">
+            <h3>Wide Arrow</h3>
+            <button data-easy-tooltip="Wide and shallow arrow" data-easy-tooltip-class="wide-arrow">Hover me</button>
+          </div>
+
+          <div class="demo-card">
+            <h3>Thin Arrow</h3>
+            <button data-easy-tooltip="Narrow and tall arrow" data-easy-tooltip-class="thin-arrow">Hover me</button>
+          </div>
+
+          <div class="demo-card">
+            <h3>No Arrow</h3>
+            <button data-easy-tooltip="Arrow disabled entirely" data-easy-tooltip-class="no-arrow">Hover me</button>
+          </div>
+
           <div class="demo-card">
             <h3>Rounded Arrow Point</h3>
             <button data-easy-tooltip="Rounded arrow corners" data-easy-tooltip-class="arrow-radius">Hover me</button>
@@ -1107,7 +1303,8 @@
     --easy-tooltip-animation-distance: 4px;    /* Distance the tooltip slides in */
     --easy-tooltip-distance: 16px;             /* Distance from trigger element */
     --easy-tooltip-viewport-padding: 16px;     /* Minimum distance from screen edges */
-    --easy-tooltip-arrow-size: 12px;           /* Size of the arrow */
+    --easy-tooltip-arrow-size: 16px;           /* Arrow size (height defaults to width / 2; 0 to disable) */
+    --easy-tooltip-arrow-size: 16px 8px;       /* Or specify arrow width and height separately */
     --easy-tooltip-arrow-edge-buffer-x: 12px;  /* Arrow gap from corner (for above or below tooltips) */
     --easy-tooltip-arrow-edge-buffer-y: 6px;   /* Arrow gap from corner (for left or right tooltips) */
     --easy-tooltip-arrow-radius: 0;            /* Border radius of the arrow */
@@ -1148,6 +1345,19 @@
         .large-arrow {
           --easy-tooltip-arrow-size: 20px;
           --easy-tooltip-distance: 20px;
+        }
+
+        .wide-arrow {
+          --easy-tooltip-arrow-size: 28px 6px;
+        }
+
+        .thin-arrow {
+          --easy-tooltip-arrow-size: 8px 14px;
+          --easy-tooltip-distance: 20px;
+        }
+
+        .no-arrow {
+          --easy-tooltip-arrow-size: 0;
         }
 
         .arrow-radius {
@@ -1231,6 +1441,49 @@
 
         .glass-tooltip .easy-tooltip-bg {
           filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.25));
+        }
+
+        .sketch-tooltip {
+          --easy-tooltip-background-color: #fff;
+          --easy-tooltip-border-color: #2a2a2a;
+          --easy-tooltip-text-color: #2a2a2a;
+          --easy-tooltip-border-size: 1.5px;
+          --easy-tooltip-border-radius: 6px;
+          --easy-tooltip-arrow-size: 14px 10px;
+          --easy-tooltip-arrow-radius: 2px;
+        }
+
+        .sketch-tooltip .easy-tooltip-bg path {
+          stroke-dasharray: 5 3;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+        }
+
+        .sketch-tooltip .easy-tooltip-bg {
+          filter: drop-shadow(2px 3px 0 rgba(42, 42, 42, 0.15));
+        }
+
+        .neon-tooltip {
+          --easy-tooltip-background-color: #0a0a1e;
+          --easy-tooltip-text-color: #fff;
+          --easy-tooltip-border-color: #22d3ee;
+          --easy-tooltip-border-size: 1px;
+          --easy-tooltip-border-radius: 10px;
+          --easy-tooltip-arrow-size: 18px 9px;
+          --easy-tooltip-max-width: 220px;
+          --easy-tooltip-padding: 10px 14px;
+          font-weight: 500;
+          text-shadow: 0 0 6px rgba(34, 211, 238, 0.35);
+        }
+
+        .neon-tooltip .easy-tooltip-bg path {
+          filter: url(#neon-inner-glow);
+        }
+
+        .neon-tooltip .easy-tooltip-bg {
+          filter:
+            drop-shadow(0 0 4px rgba(34, 211, 238, 0.4))
+            drop-shadow(0 0 14px rgba(34, 211, 238, 0.25));
         }
       </style>
     </div>
