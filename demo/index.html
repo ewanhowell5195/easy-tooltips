@@ -1221,20 +1221,16 @@
           --easy-tooltip-text-color: #fff;
           --easy-tooltip-animation-distance: 0px;
           --easy-tooltip-distance: 8px;
-          background: rgba(255, 255, 255, 0.1);
-          border: 1px solid rgba(255, 255, 255, 0.4);
-          border-radius: 12px;
+          --easy-tooltip-arrow-size: 0;
+          --easy-tooltip-background-color: rgba(255, 255, 255, 0.1);
+          --easy-tooltip-border-color: rgba(255, 255, 255, 0.4);
+          --easy-tooltip-border-radius: 12px;
           backdrop-filter: blur(3px);
-          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+          border-radius: 12px;
         }
 
-        .glass-tooltip::before {
-          display: none;
-        }
-
-        .glass-tooltip .easy-tooltip-text {
-          background: transparent;
-          border: none;
+        .glass-tooltip .easy-tooltip-bg {
+          filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.25));
         }
       </style>
     </div>
