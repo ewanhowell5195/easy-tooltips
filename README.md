@@ -132,14 +132,62 @@ You can style tooltips using CSS variables (recommended) or by targeting the too
   /* Positioning (required for JS positioning) */
   --easy-tooltip-distance: 16px;             /* Distance from trigger element */
   --easy-tooltip-viewport-padding: 16px;     /* Minimum distance from screen edges */
-  --easy-tooltip-arrow-size: 12px;           /* Size of the arrow */
+  --easy-tooltip-arrow-size: 16px;           /* Arrow size (height defaults to width / 2; 0 to disable) */
+  --easy-tooltip-arrow-size: 16px 8px;       /* Or specify arrow width and height separately */
   --easy-tooltip-arrow-edge-buffer-x: 12px;  /* Arrow gap from corner (for above or below tooltips) */
   --easy-tooltip-arrow-edge-buffer-y: 6px;   /* Arrow gap from corner (for left or right tooltips) */
-  --easy-tooltip-arrow-radius: 0;            /* Border radius of the arrow */
+  --easy-tooltip-arrow-radius: 0;            /* Border radius of the arrow tip */
   
   /* Animation (required for JS timing) */
   --easy-tooltip-animation-length: 0.15s;    /* Duration of fade animation */
   --easy-tooltip-delay: 0.15s;               /* How long before the animation starts */
+}
+```
+
+### Advanced customization
+
+The tooltip body and arrow are drawn as a single SVG path, so anything beyond the variables can be done by targeting the path directly with SVG-flavored CSS. `.easy-tooltip-bg` is the SVG element; `.easy-tooltip-bg path` is the path that draws the outline and fill.
+
+#### Borders
+
+The border is the SVG path's `stroke`, so any stroke property works:
+
+```css
+/* Dashed border */
+.dashed-tooltip .easy-tooltip-bg path {
+  stroke-dasharray: 5 3;
+  stroke-linecap: round;
+}
+```
+
+#### Backgrounds
+
+`fill` on the SVG path only accepts a `<paint>` value, so CSS gradients (`linear-gradient`, etc.) won't apply directly. To use a gradient (or any other SVG paint server), declare it once in the document and reference it by id:
+
+```html
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="brand-gradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#3498db"/>
+      <stop offset="100%" stop-color="#9b59b6"/>
+    </linearGradient>
+  </defs>
+</svg>
+```
+
+```css
+.gradient-tooltip .easy-tooltip-bg path {
+  fill: url(#brand-gradient);
+}
+```
+
+The same approach works for `stroke` (gradient borders), and for radial, conic, or pattern paint servers.
+
+For a drop shadow that follows the full body + arrow shape, apply a filter to the SVG element:
+
+```css
+.shadow-tooltip .easy-tooltip-bg {
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.25));
 }
 ```
 
