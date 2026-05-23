@@ -12,6 +12,7 @@
     let cursorRafQueued = false
     let activeCount = 0
     let cooldownTimer
+    let zIndexCounter = 0
 
     function activateTooltip(tooltip) {
       if (tooltip._activated) return
@@ -19,6 +20,7 @@
       activeCount++
       clearTimeout(cooldownTimer)
       tooltips.classList.add("easy-tooltips-active")
+      tooltip.style.zIndex = ++zIndexCounter
     }
 
     function deactivateTooltip(tooltip) {
