@@ -11,7 +11,7 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="easy-tooltips">
   <meta property="og:description" content="A lightweight, zero-dependency tooltip library using modern JavaScript and CSS. Just add &quot;data-easy-tooltip&quot; to any element! No setup or config required.">
-  <link href="https://cdn.jsdelivr.net/npm/easy-tooltips/dist/easy-tooltips.min.css" rel="stylesheet">
+  <link href="../src/easy-tooltips.css" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -456,6 +456,177 @@
       user-select: none;
     }
 
+    .demo-scene {
+      position: relative;
+    }
+
+    .demo-code-button {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 5;
+      width: 32px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.55);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      cursor: pointer;
+      user-select: none;
+      padding: 0;
+    }
+
+    .demo-code-button:hover {
+      background: rgba(0, 0, 0, 0.8);
+    }
+
+    .demo-code-button svg {
+      display: block;
+    }
+
+    body:has(#code-modal:not([hidden])) {
+      overflow: hidden;
+    }
+
+    #code-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      background-color: rgba(0, 0, 0, 0);
+      transition: background-color 150ms, backdrop-filter 150ms;
+    }
+
+    #code-modal[hidden] {
+      display: none !important;
+    }
+
+    #code-modal.open {
+      background-color: rgba(15, 23, 42, 0.35);
+      backdrop-filter: blur(4px);
+      pointer-events: auto;
+    }
+
+    .code-modal-element {
+      margin: auto;
+      background: #fff;
+      color: #1f2937;
+      border-radius: 12px;
+      overflow: hidden;
+      width: min(720px, 100svw - 32px);
+      max-height: calc(100svh - 64px);
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 150ms, transform 150ms;
+      box-shadow: 0 20px 60px rgba(15, 23, 42, 0.25);
+    }
+
+    #code-modal.open .code-modal-element {
+      opacity: 1;
+      transform: none;
+    }
+
+    .code-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 16px;
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+      flex-shrink: 0;
+    }
+
+    .code-modal-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    .code-modal-close {
+      all: unset;
+      width: 32px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 120ms, border-color 120ms;
+    }
+
+    .code-modal-close:hover {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+    }
+
+    .code-modal-close svg {
+      width: 14px;
+      height: 14px;
+      fill: #475569;
+    }
+
+    .code-modal-close:hover svg {
+      fill: #0f172a;
+    }
+
+    .code-modal-contents {
+      overflow: auto;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .code-modal-description {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #475569;
+      line-height: 1.5;
+    }
+
+    .code-modal-description[hidden] {
+      display: none;
+    }
+
+    .code-modal-section[hidden] {
+      display: none;
+    }
+
+    .code-modal-section h4 {
+      margin: 0 0 6px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #64748b;
+    }
+
+    .code-modal-contents pre {
+      margin: 0;
+      padding: 12px 14px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      overflow: visible;
+      color: #1e293b;
+    }
+
     /* Premium: pricing card */
     .price-card {
       width: 240px;
@@ -636,7 +807,7 @@
     .player-card {
       display: flex;
       align-items: center;
-      gap: 14px;
+      column-gap: 14px;
       padding: 16px 20px;
       border-radius: 16px;
       color: #fff;
@@ -694,7 +865,6 @@
       gap: 6px;
       flex: 1 1 100%;
       justify-content: center;
-      padding-top: 4px;
     }
 
     .player-btn {
@@ -1573,8 +1743,34 @@
     <p><strong>Easy Tooltips</strong> - <a href="https://github.com/ewanhowell5195/easy-tooltips" target="_blank">GitHub</a> | <a href="https://www.npmjs.com/package/easy-tooltips" target="_blank">NPM</a> | <a href="https://www.jsdelivr.com/package/npm/easy-tooltips" target="_blank">JSDelivr</a></p>
     <p style="margin-top: 10px;">MIT License © <a href="https://ewanhowell.com/" target="_blank">Ewan Howell</a></p>
   </footer>
+
+  <div id="code-modal" hidden tabindex="-1">
+    <div class="code-modal-element">
+      <div class="code-modal-header">
+        <div class="code-modal-title" id="code-modal-title">Code</div>
+        <button class="code-modal-close" type="button" aria-label="Close">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.46,12L19,17.54V19H17.54L12,13.46L6.46,19H5V17.54L10.54,12L5,6.46V5H6.46L12,10.54L17.54,5H19V6.46L13.46,12Z"/></svg>
+        </button>
+      </div>
+      <div class="code-modal-contents">
+        <p class="code-modal-description" id="code-modal-description" hidden></p>
+        <div class="code-modal-section" id="code-modal-section-html" hidden>
+          <h4>HTML</h4>
+          <pre id="code-modal-html"></pre>
+        </div>
+        <div class="code-modal-section" id="code-modal-section-style" hidden>
+          <h4>CSS</h4>
+          <pre id="code-modal-style"></pre>
+        </div>
+        <div class="code-modal-section" id="code-modal-section-script" hidden>
+          <h4>JavaScript</h4>
+          <pre id="code-modal-script"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
   
-  <script src="https://cdn.jsdelivr.net/npm/easy-tooltips/dist/easy-tooltips.min.js"></script>
+  <script src="../src/easy-tooltips.js"></script>
   <script>
     let count = 0
     const dynamicCounter = document.getElementById("dynamic-counter")
@@ -1616,6 +1812,291 @@
           panels[i].classList.add("active")
         })
       })
+    })
+
+    const demoCode = {
+      "scene-default": {
+        title: "Default",
+        description: "The minimum setup. Add data-easy-tooltip to any element and a tooltip appears on hover or focus, with no class and no CSS overrides.",
+        html: `<span data-easy-tooltip="Bold">B</span>
+<span data-easy-tooltip="Italic">I</span>
+<span data-easy-tooltip="Underline">U</span>`,
+      },
+      "scene-premium": {
+        title: "Premium",
+        description: "Dark navy background with a gold border and matching text, set entirely through CSS variables. A drop-shadow filter and inset highlight on the text element give it a glossy, raised feel.",
+        html: `<span data-easy-tooltip="No monthly cap, create as many as you need" data-easy-tooltip-class="premium-tooltip">i</span>`,
+        style: `.premium-tooltip {
+  --easy-tooltip-background-color: #1a1a2e;
+  --easy-tooltip-border-color: #f0c040;
+  --easy-tooltip-text-color: #f0c040;
+  --easy-tooltip-border-size: 2px;
+  --easy-tooltip-arrow-radius: 4px;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+}
+
+.premium-tooltip .easy-tooltip-text {
+  letter-spacing: 0.5px;
+  box-shadow: inset 0 1px 0 rgba(240, 192, 64, 0.35);
+}`,
+      },
+      "scene-bubbly": {
+        title: "Bubbly",
+        description: "Bigger animation distance and a slower transition make the tooltip pop in with a bouncy feel. A large border-radius and inset highlight on the text element give it a glossy bubble look.",
+        html: `<span data-easy-tooltip="Like" data-easy-tooltip-class="bubbly-tooltip">👍</span>`,
+        style: `.bubbly-tooltip {
+  --easy-tooltip-background-color: #3498db;
+  --easy-tooltip-border-color: #3498db;
+  --easy-tooltip-text-color: #fff;
+  --easy-tooltip-arrow-size: 14px;
+  --easy-tooltip-arrow-radius: 3px;
+  --easy-tooltip-border-radius: 12px;
+  --easy-tooltip-animation-distance: 12px;
+  --easy-tooltip-animation-length: 0.3s;
+  filter: drop-shadow(0 6px 12px rgba(52, 152, 219, 0.5));
+}
+
+.bubbly-tooltip .easy-tooltip-text {
+  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.4);
+}`,
+      },
+      "scene-alert": {
+        title: "Alert",
+        description: "Soft red palette for warnings. Distance from the trigger is increased and max-width is constrained so the wording reads as a deliberate callout rather than a passing hint.",
+        html: `<span data-easy-tooltip="Permanently deletes your account" data-easy-tooltip-class="alert-tooltip">Delete</span>`,
+        style: `.alert-tooltip {
+  --easy-tooltip-background-color: #fff5f5;
+  --easy-tooltip-border-color: #e74c3c;
+  --easy-tooltip-text-color: #c0392b;
+  --easy-tooltip-border-size: 2px;
+  --easy-tooltip-distance: 24px;
+  --easy-tooltip-max-width: 200px;
+  filter: drop-shadow(0 4px 10px rgba(231, 76, 60, 0.3));
+}`,
+      },
+      "scene-glass": {
+        title: "Glass",
+        description: "Translucent white background with backdrop-filter blur on the outer element so whatever is behind the tooltip gets frosted. Arrow is disabled with --easy-tooltip-arrow-size: 0, and a drop-shadow on the SVG wrapper adds depth.",
+        html: `<span data-easy-tooltip="Play" data-easy-tooltip-class="glass-tooltip">▶</span>`,
+        style: `.glass-tooltip {
+  --easy-tooltip-text-color: #fff;
+  --easy-tooltip-animation-distance: 0px;
+  --easy-tooltip-distance: 8px;
+  --easy-tooltip-arrow-size: 0;
+  --easy-tooltip-background-color: rgba(255, 255, 255, 0.1);
+  --easy-tooltip-border-color: rgba(255, 255, 255, 0.4);
+  --easy-tooltip-border-radius: 12px;
+  backdrop-filter: blur(3px);
+  border-radius: 12px;
+}
+
+.glass-tooltip .easy-tooltip-bg {
+  filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.25));
+}`,
+      },
+      "scene-sketch": {
+        title: "Sketch",
+        description: "Dashed border applied directly to the SVG path via stroke-dasharray. Hand-drawn shadow comes from filter: drop-shadow on the .easy-tooltip-bg wrapper.",
+        html: `<div data-easy-tooltip="Structure and content" data-easy-tooltip-class="sketch-tooltip" data-easy-tooltip-prefer="left">HTML</div>`,
+        style: `.sketch-tooltip {
+  --easy-tooltip-background-color: #fff;
+  --easy-tooltip-border-color: #2a2a2a;
+  --easy-tooltip-text-color: #2a2a2a;
+  --easy-tooltip-border-size: 1.5px;
+  --easy-tooltip-border-radius: 6px;
+  --easy-tooltip-arrow-size: 14px 10px;
+  --easy-tooltip-arrow-radius: 2px;
+}
+
+.sketch-tooltip .easy-tooltip-bg path {
+  stroke-dasharray: 5 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sketch-tooltip .easy-tooltip-bg {
+  filter: drop-shadow(2px 3px 0 rgba(42, 42, 42, 0.15));
+}`,
+      },
+      "scene-neon": {
+        title: "Neon",
+        description: "Inner glow is an SVG filter (feFlood + feComposite + feGaussianBlur) referenced from the path. Outer halo is stacked CSS drop-shadow filters on the .easy-tooltip-bg element.",
+        html: `<div data-easy-tooltip="Unique visitors in the last 24 hours" data-easy-tooltip-class="neon-tooltip" data-easy-tooltip-prefer="left">…</div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="neon-inner-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feFlood flood-color="#22d3ee" flood-opacity="0.6" result="flood"/>
+      <feComposite in="flood" in2="SourceGraphic" operator="out" result="outside"/>
+      <feGaussianBlur in="outside" stdDeviation="3" result="blurred"/>
+      <feComposite in="blurred" in2="SourceGraphic" operator="in" result="innerGlow"/>
+      <feMerge>
+        <feMergeNode in="SourceGraphic"/>
+        <feMergeNode in="innerGlow"/>
+      </feMerge>
+    </filter>
+  </defs>
+</svg>`,
+        style: `.neon-tooltip {
+  --easy-tooltip-background-color: #0a0a1e;
+  --easy-tooltip-text-color: #fff;
+  --easy-tooltip-border-color: #22d3ee;
+  --easy-tooltip-border-size: 1px;
+  --easy-tooltip-border-radius: 10px;
+  --easy-tooltip-arrow-size: 18px 9px;
+  --easy-tooltip-max-width: 220px;
+  --easy-tooltip-padding: 10px 14px;
+  font-weight: 500;
+  text-shadow: 0 0 6px rgba(34, 211, 238, 0.35);
+}
+
+.neon-tooltip .easy-tooltip-bg path {
+  filter: url(#neon-inner-glow);
+}
+
+.neon-tooltip .easy-tooltip-bg {
+  filter:
+    drop-shadow(0 0 4px rgba(34, 211, 238, 0.4))
+    drop-shadow(0 0 14px rgba(34, 211, 238, 0.25));
+}`,
+      },
+      "scene-photo": {
+        title: "Photo",
+        description: "Tooltip text updates based on cursor position over the image. The script samples a low-res color-coded mask aligned to the photo's aspect ratio; the closest palette colour decides the label.",
+        html: `<div class="photo-region" data-easy-tooltip="Norway" data-easy-tooltip-anchor="cursor" data-easy-tooltip-class="photo-tooltip">
+  <img src="photo.webp" alt="Preikestolen">
+</div>`,
+        style: `.photo-tooltip {
+  --easy-tooltip-background-color: rgba(15, 23, 42, 0.92);
+  --easy-tooltip-border-color: rgba(255, 255, 255, 0.2);
+  --easy-tooltip-text-color: #fff;
+  --easy-tooltip-border-radius: 8px;
+  --easy-tooltip-padding: 8px 14px;
+  font-weight: 500;
+}
+
+.photo-tooltip .easy-tooltip-bg {
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.5));
+}`,
+        script: `const photoRegion = document.querySelector(".photo-region")
+const palette = [
+  { r: 144, g: 206, b: 255, label: "Sky over Lysefjord" },
+  { r: 1,   g: 98,  b: 175, label: "Lysefjord" },
+  { r: 76,  g: 166, b: 87,  label: "Eastern fjord wall" },
+  { r: 60,  g: 102, b: 65,  label: "Western fjord wall" },
+  { r: 173, g: 220, b: 133, label: "Preikestolen surroundings" },
+  { r: 204, g: 204, b: 193, label: "Preikestolen (Pulpit Rock)" },
+  { r: 255, g: 0,   b: 4,   label: "Tourists at the viewpoint" },
+]
+
+let maskData, maskW, maskH
+const mask = new Image()
+mask.src = "photo-regions.png"
+mask.onload = () => {
+  const c = document.createElement("canvas")
+  c.width = mask.naturalWidth
+  c.height = mask.naturalHeight
+  c.getContext("2d").drawImage(mask, 0, 0)
+  maskData = c.getContext("2d").getImageData(0, 0, c.width, c.height).data
+  maskW = c.width
+  maskH = c.height
+}
+
+photoRegion.addEventListener("mousemove", e => {
+  if (!maskData) return
+  const r = photoRegion.getBoundingClientRect()
+  const mx = Math.floor((e.clientX - r.left) / r.width * maskW)
+  const my = Math.floor((e.clientY - r.top) / r.height * maskH)
+  const i = (my * maskW + mx) * 4
+  let best = "Norway", bestDist = Infinity
+  for (const c of palette) {
+    const d = (maskData[i] - c.r) ** 2 + (maskData[i+1] - c.g) ** 2 + (maskData[i+2] - c.b) ** 2
+    if (d < bestDist) { bestDist = d; best = c.label }
+  }
+  if (photoRegion.dataset.easyTooltip !== best) {
+    photoRegion.dataset.easyTooltip = best
+  }
+})`,
+      },
+    }
+
+    const codeModal = document.getElementById("code-modal")
+    const codeModalTitle = document.getElementById("code-modal-title")
+    const codeModalDescription = document.getElementById("code-modal-description")
+    const codeSections = {
+      html: {
+        section: document.getElementById("code-modal-section-html"),
+        pre: document.getElementById("code-modal-html"),
+      },
+      style: {
+        section: document.getElementById("code-modal-section-style"),
+        pre: document.getElementById("code-modal-style"),
+      },
+      script: {
+        section: document.getElementById("code-modal-section-script"),
+        pre: document.getElementById("code-modal-script"),
+      },
+    }
+
+    function setSection(key, text) {
+      const { section, pre } = codeSections[key]
+      if (text) {
+        pre.textContent = text
+        section.hidden = false
+      } else {
+        pre.textContent = ""
+        section.hidden = true
+      }
+    }
+
+    function openCodeModal(code) {
+      codeModalTitle.textContent = code.title || "Code"
+      if (code.description) {
+        codeModalDescription.textContent = code.description
+        codeModalDescription.hidden = false
+      } else {
+        codeModalDescription.hidden = true
+      }
+      setSection("html", code.html)
+      setSection("style", code.style)
+      setSection("script", code.script)
+      codeModal.hidden = false
+      requestAnimationFrame(() => {
+        codeModal.classList.add("open")
+        codeModal.focus()
+      })
+    }
+
+    function closeCodeModal() {
+      if (codeModal.hidden) return
+      codeModal.classList.remove("open")
+      setTimeout(() => {
+        codeModal.hidden = true
+      }, 150)
+    }
+
+    codeModal.querySelector(".code-modal-close").addEventListener("click", closeCodeModal)
+    let codeModalDown
+    codeModal.addEventListener("mousedown", e => codeModalDown = e.target)
+    codeModal.addEventListener("mouseup", e => {
+      if (codeModalDown === e.target && e.target === codeModal) closeCodeModal()
+    })
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape" && !codeModal.hidden) closeCodeModal()
+    })
+
+    const codeIcon = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5c0 1.1.9 2 2 2h1"/><path d="M16 21h1a2 2 0 0 0 2-2v-5c0-1.1.9-2 2-2a2 2 0 0 1-2-2V5a2 2 0 0 0-2-2h-1"/></svg>`
+
+    document.querySelectorAll(".demo-scene").forEach(scene => {
+      const sceneClass = [...scene.classList].find(c => c.startsWith("scene-"))
+      if (!sceneClass || !demoCode[sceneClass]) return
+      const button = document.createElement("button")
+      button.className = "demo-code-button"
+      button.type = "button"
+      button.setAttribute("aria-label", "View code")
+      button.innerHTML = codeIcon
+      button.addEventListener("click", () => openCodeModal(demoCode[sceneClass]))
+      scene.appendChild(button)
     })
 
     const photoRegion = document.querySelector(".photo-region")
