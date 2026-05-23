@@ -233,12 +233,13 @@
           }
 
           const styles = getComputedStyle(tooltip)
-          const distance = parseFloat(styles.getPropertyValue("--easy-tooltip-distance"))
-          const padding = parseFloat(styles.getPropertyValue("--easy-tooltip-viewport-padding"))
+          const px = name => parseFloat(styles.getPropertyValue(name))
+          const distance = px("--easy-tooltip-distance")
+          const padding = px("--easy-tooltip-viewport-padding")
           const arrowSizeParts = styles.getPropertyValue("--easy-tooltip-arrow-size").trim().split(/\s+/)
           const arrowBase = parseFloat(arrowSizeParts[0])
-          const edgeBufferX = parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-edge-buffer-x"))
-          const edgeBufferY = parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-edge-buffer-y"))
+          const edgeBufferX = px("--easy-tooltip-arrow-edge-buffer-x")
+          const edgeBufferY = px("--easy-tooltip-arrow-edge-buffer-y")
 
           tooltip.style.minWidth = `${edgeBufferX * 2 + arrowBase}px`
           tooltipText.style.removeProperty("min-height")
@@ -307,9 +308,7 @@
           tooltip.style.removeProperty("top")
           tooltip.style.removeProperty("left")
 
-          if (dir === "below") tooltip.classList.add("easy-tooltip-below")
-          else if (dir === "left") tooltip.classList.add("easy-tooltip-left")
-          else if (dir === "right") tooltip.classList.add("easy-tooltip-right")
+          if (dir !== "above") tooltip.classList.add("easy-tooltip-" + dir)
           if (inside) tooltip.classList.add("easy-tooltip-inside")
 
           if (dir === "left" || dir === "right") {
@@ -317,7 +316,7 @@
           }
 
           function shift(before, after, size, viewportSize, edgeBuffer, vertical) {
-            const maxTextShift = size / 2 - parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-size")) / 2 - edgeBuffer
+            const maxTextShift = size / 2 - arrowBase / 2 - edgeBuffer
             let text = 0, tip = 0
             if (before < padding) {
               text = Math.min(padding - before, maxTextShift)
@@ -366,7 +365,7 @@
             }
 
             const height = tooltip.getBoundingClientRect().height
-            textShift = shift(cy - height / 2, cy + height / 2, height, viewportHeight, parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-edge-buffer-y")), true)
+            textShift = shift(cy - height / 2, cy + height / 2, height, viewportHeight, edgeBufferY, true)
           } else {
             const x = Math.round(rect.left + rect.width / 2)
             const y = Math.round(rect.top)
@@ -375,13 +374,13 @@
               tooltip.style.setProperty("top", dir === "above" ? `${y}px` : `${y + rect.height}px`)
             }
 
-            textShift = shift(x - tooltipWidth / 2, x + tooltipWidth / 2, tooltipWidth, viewportWidth, parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-edge-buffer-x")), false)
+            textShift = shift(x - tooltipWidth / 2, x + tooltipWidth / 2, tooltipWidth, viewportWidth, edgeBufferX, false)
           }
 
           const { width: bw, height: bh } = tooltipText.getBoundingClientRect()
-          const br = parseFloat(styles.getPropertyValue("--easy-tooltip-border-radius")) || 0
+          const br = px("--easy-tooltip-border-radius") || 0
           const ah = arrowSizeParts[1] ? parseFloat(arrowSizeParts[1]) : arrowBase / 2
-          const ar = parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-radius")) || 0
+          const ar = px("--easy-tooltip-arrow-radius") || 0
           const vertical = dir === "left" || dir === "right"
           const ax = vertical ? bw / 2 : bw / 2 - textShift
           const ay = vertical ? bh / 2 - textShift : bh / 2
@@ -451,24 +450,24 @@
 
     let touched
 
+    function setTouchPos(e) {
+      const t = e.touches[0]
+      if (!t) return false
+      cursorX = t.clientX
+      cursorY = t.clientY
+      return true
+    }
+
     document.addEventListener("touchstart", e => {
       touched = true
       lastByPointer = true
-      const t = e.touches[0]
-      if (t) {
-        cursorX = t.clientX
-        cursorY = t.clientY
-      }
+      setTouchPos(e)
       if (e.target === lastElement) return
       updateTooltipTarget(e, true)
     })
 
     document.addEventListener("touchmove", e => {
-      const t = e.touches[0]
-      if (!t) return
-      cursorX = t.clientX
-      cursorY = t.clientY
-      followCursor()
+      if (setTouchPos(e)) followCursor()
     })
 
     document.addEventListener("mouseover", e => {
