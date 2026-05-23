@@ -154,7 +154,32 @@ You can style tooltips using CSS variables (recommended) or by targeting the too
   
   /* Animation (required for JS timing) */
   --easy-tooltip-animation-length: 0.15s;    /* Duration of fade animation */
-  --easy-tooltip-delay: 0.15s;               /* How long before the animation starts */
+  --easy-tooltip-delay: 0s;                  /* Base delay before the tooltip shows; always added */
+  --easy-tooltip-inactive-delay: 0.15s;      /* Extra delay when no tooltip was recently active; drops to 0 once a tooltip is showing */
+  --easy-tooltip-cooldown: 0.15s;            /* How long after the last tooltip closes before the inactive-delay applies again */
+}
+```
+
+### Show delay and quick-switch
+Easy-tooltips uses a two-part delay so that the first tooltip waits, but switching between adjacent tooltips feels instant:
+
+* On the first hover, the tooltip waits `delay + inactive-delay` (`0 + 0.15s` by default) before showing. This protects against accidental hovers.
+* Once a tooltip has fully appeared, all subsequent tooltips skip the inactive-delay and show in just `delay` (`0s` by default, i.e. instantly).
+* When all tooltips have been closed for `cooldown` (`0.15s` by default), behaviour resets to "first hover" again.
+
+Each part is its own variable so you can tune them independently. For example, a slow, deliberate tooltip with a long initial wait but instant skip:
+
+```css
+.slow-tooltip {
+  --easy-tooltip-inactive-delay: 1s;
+}
+```
+
+Or a permanent delay regardless of recent activity (e.g. a 500ms reveal on every tooltip):
+
+```css
+.always-slow-tooltip {
+  --easy-tooltip-delay: 500ms;
 }
 ```
 
@@ -213,7 +238,9 @@ Easy-tooltips uses a smart positioning system that:
 2. **Keeps it on screen** - Shifts the tooltip along its edge (horizontally for above/below, vertically for left/right) so it stays within the viewport while the arrow keeps pointing at the element
 3. **Falls back gracefully** - When a tooltip can't fit on either side, it pins inside the viewport instead of overflowing
 4. **Manages animations** - Queues tooltip updates to prevent conflicts and flicker on rapid hover
-5. **Cleans up** - Removes a tooltip automatically when its trigger element leaves the DOM
+5. **Skips the delay when grazing** - The first hover waits a short delay to ignore accidental movement, but once any tooltip is showing, switching to adjacent tooltips is instant until you stop hovering for the cooldown period
+6. **Stacks newest on top** - When multiple tooltips are visible at once, the most recently activated one renders above the others
+7. **Cleans up** - Removes a tooltip automatically when its trigger element leaves the DOM
 
 ## License
 

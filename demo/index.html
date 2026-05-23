@@ -470,25 +470,24 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      background: rgba(0, 0, 0, 0.55);
-      color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.85);
+      color: #1f2937;
+      border: 1px solid rgba(0, 0, 0, 0.08);
       border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(6px);
       cursor: pointer;
       user-select: none;
       padding: 0;
     }
 
     .demo-code-button:hover {
-      background: rgba(0, 0, 0, 0.8);
+      background: #fff;
+      border-color: rgba(0, 0, 0, 0.16);
     }
 
     .demo-code-button svg {
       display: block;
-    }
-
-    body:has(#code-modal:not([hidden])) {
-      overflow: hidden;
     }
 
     #code-modal {
@@ -1528,7 +1527,9 @@
     --easy-tooltip-arrow-edge-buffer-y: 6px;   /* Arrow gap from corner (for left or right tooltips) */
     --easy-tooltip-arrow-radius: 0;            /* Border radius of the arrow */
     --easy-tooltip-animation-length: 0.15s;    /* Duration of fade animation */
-    --easy-tooltip-delay: 0.15s;               /* How long before the animation starts */
+    --easy-tooltip-delay: 0s;                  /* Base delay before the tooltip shows; always added */
+    --easy-tooltip-inactive-delay: 0.15s;      /* Extra delay when no tooltip was recently active; drops to 0 once a tooltip is showing */
+    --easy-tooltip-cooldown: 0.15s;            /* How long after the last tooltip closes before the inactive-delay applies again */
   }
 &lt;/style&gt;</pre>
       </div>
@@ -2049,6 +2050,29 @@ photoRegion.addEventListener("mousemove", e => {
       }
     }
 
+    function preventScroll(e) {
+      if (e.target?.closest(".code-modal-contents")) return
+      e.preventDefault()
+    }
+
+    function blockScrollKeys(e) {
+      if (e.target?.closest("#code-modal")) return
+      const keys = ["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " "]
+      if (keys.includes(e.key)) e.preventDefault()
+    }
+
+    function disableBodyScroll() {
+      window.addEventListener("wheel", preventScroll, { passive: false })
+      window.addEventListener("touchmove", preventScroll, { passive: false })
+      window.addEventListener("keydown", blockScrollKeys, true)
+    }
+
+    function enableBodyScroll() {
+      window.removeEventListener("wheel", preventScroll)
+      window.removeEventListener("touchmove", preventScroll)
+      window.removeEventListener("keydown", blockScrollKeys, true)
+    }
+
     function openCodeModal(code) {
       codeModalTitle.textContent = code.title || "Code"
       if (code.description) {
@@ -2061,6 +2085,7 @@ photoRegion.addEventListener("mousemove", e => {
       setSection("style", code.style)
       setSection("script", code.script)
       codeModal.hidden = false
+      disableBodyScroll()
       requestAnimationFrame(() => {
         codeModal.classList.add("open")
         codeModal.focus()
@@ -2070,6 +2095,7 @@ photoRegion.addEventListener("mousemove", e => {
     function closeCodeModal() {
       if (codeModal.hidden) return
       codeModal.classList.remove("open")
+      enableBodyScroll()
       setTimeout(() => {
         codeModal.hidden = true
       }, 150)
