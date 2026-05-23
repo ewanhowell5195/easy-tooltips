@@ -392,6 +392,27 @@
       color: #f472b6;
     }
 
+    .scene-photo {
+      padding: 0;
+      background: #000;
+      overflow: hidden;
+    }
+
+    .photo-region {
+      position: relative;
+      width: 100%;
+      display: block;
+      line-height: 0;
+    }
+
+    .photo-region img {
+      width: 100%;
+      height: auto;
+      display: block;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
     .scene-glass::before {
       content: "";
       position: absolute;
@@ -873,6 +894,7 @@
             <button class="tab-button">Glass</button>
             <button class="tab-button">Sketch</button>
             <button class="tab-button">Neon</button>
+            <button class="tab-button">Photo</button>
           </div>
 
           <div class="tab-panel active">
@@ -1040,6 +1062,14 @@
                   </filter>
                 </defs>
               </svg>
+            </div>
+          </div>
+
+          <div class="tab-panel">
+            <div class="demo-scene scene-photo">
+              <div class="photo-region" data-easy-tooltip="Norway" data-easy-tooltip-anchor="cursor" data-easy-tooltip-class="photo-tooltip">
+                <img src="https://picsum.photos/id/1015/1920/1080.webp" alt="Preikestolen overlooking Lysefjord">
+              </div>
             </div>
           </div>
         </div>
@@ -1482,6 +1512,19 @@
           filter: drop-shadow(2px 3px 0 rgba(42, 42, 42, 0.15));
         }
 
+        .photo-tooltip {
+          --easy-tooltip-background-color: rgba(15, 23, 42, 0.92);
+          --easy-tooltip-border-color: rgba(255, 255, 255, 0.2);
+          --easy-tooltip-text-color: #fff;
+          --easy-tooltip-border-radius: 8px;
+          --easy-tooltip-padding: 8px 14px;
+          font-weight: 500;
+        }
+
+        .photo-tooltip .easy-tooltip-bg {
+          filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.5));
+        }
+
         .neon-tooltip {
           --easy-tooltip-background-color: #0a0a1e;
           --easy-tooltip-text-color: #fff;
@@ -1574,6 +1617,63 @@
         })
       })
     })
+
+    const photoRegion = document.querySelector(".photo-region")
+    if (photoRegion) {
+      const palette = [
+        { r: 144, g: 206, b: 255, label: "Sky over Lysefjord" },
+        { r: 1,   g: 98,  b: 175, label: "Lysefjord" },
+        { r: 76,  g: 166, b: 87,  label: "Eastern fjord wall" },
+        { r: 60,  g: 102, b: 65,  label: "Western fjord wall" },
+        { r: 173, g: 220, b: 133, label: "Preikestolen surroundings" },
+        { r: 204, g: 204, b: 193, label: "Preikestolen (Pulpit Rock)" },
+        { r: 255, g: 0,   b: 4,   label: "Tourists at the viewpoint" },
+      ]
+
+      let maskData = null
+      let maskW = 0
+      let maskH = 0
+
+      const mask = new Image()
+      mask.src = "photo-regions.png"
+      mask.onload = () => {
+        const canvas = document.createElement("canvas")
+        canvas.width = mask.naturalWidth
+        canvas.height = mask.naturalHeight
+        const ctx = canvas.getContext("2d")
+        ctx.drawImage(mask, 0, 0)
+        maskData = ctx.getImageData(0, 0, canvas.width, canvas.height).data
+        maskW = canvas.width
+        maskH = canvas.height
+      }
+
+      function closestLabel(r, g, b) {
+        let best = "Norway"
+        let bestDist = Infinity
+        for (const c of palette) {
+          const dist = (r - c.r) ** 2 + (g - c.g) ** 2 + (b - c.b) ** 2
+          if (dist < bestDist) {
+            bestDist = dist
+            best = c.label
+          }
+        }
+        return best
+      }
+
+      photoRegion.addEventListener("mousemove", e => {
+        if (!maskData) return
+        const r = photoRegion.getBoundingClientRect()
+        const px = (e.clientX - r.left) / r.width
+        const py = (e.clientY - r.top) / r.height
+        const mx = Math.min(maskW - 1, Math.max(0, Math.floor(px * maskW)))
+        const my = Math.min(maskH - 1, Math.max(0, Math.floor(py * maskH)))
+        const idx = (my * maskW + mx) * 4
+        const label = closestLabel(maskData[idx], maskData[idx + 1], maskData[idx + 2])
+        if (photoRegion.dataset.easyTooltip !== label) {
+          photoRegion.dataset.easyTooltip = label
+        }
+      })
+    }
   </script>
 </body>
 </html>
