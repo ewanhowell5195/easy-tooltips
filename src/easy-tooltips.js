@@ -24,6 +24,7 @@
       triggers.delete(node)
       delete node._tooltip
       delete node._tooltipText
+      delete node._svgPath
       delete node._tooltipClass
       delete node._source
       if (node === lastElement) lastElement = undefined
@@ -129,6 +130,14 @@
             tooltip = document.createElement("div")
             tooltip.className = "easy-tooltip"
             node._tooltip = tooltip
+
+            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+            svg.classList.add("easy-tooltip-bg")
+            svg.setAttribute("aria-hidden", "true")
+            const svgPath = document.createElementNS("http://www.w3.org/2000/svg", "path")
+            svg.append(svgPath)
+            tooltip.append(svg)
+            node._svgPath = svgPath
 
             tooltipText = document.createElement("div")
             tooltipText.className = "easy-tooltip-text"
@@ -248,7 +257,29 @@
             }
             if (text) tooltipText.style.setProperty("translate", vertical ? `0 ${text}px` : `${text}px`)
             if (tip) tooltip.style.setProperty("translate", vertical ? `0 ${tip}px` : `${tip}px 0`)
+            return text
           }
+
+          function arrowPath(dir, w, h, r, ab, ah, ax, ay, ar) {
+            const ahb = ab / 2
+            const s = ar * Math.SQRT1_2
+            if (dir === "above") {
+              const tip = ar > 0 ? `L${ax+s} ${h+ah-s}A${ar} ${ar} 0 0 1 ${ax-s} ${h+ah-s}` : `L${ax} ${h+ah}`
+              return `M${r} 0H${w-r}A${r} ${r} 0 0 1 ${w} ${r}V${h-r}A${r} ${r} 0 0 1 ${w-r} ${h}H${ax+ahb}${tip}L${ax-ahb} ${h}H${r}A${r} ${r} 0 0 1 0 ${h-r}V${r}A${r} ${r} 0 0 1 ${r} 0Z`
+            }
+            if (dir === "below") {
+              const tip = ar > 0 ? `L${ax-s} ${-ah+s}A${ar} ${ar} 0 0 1 ${ax+s} ${-ah+s}` : `L${ax} ${-ah}`
+              return `M${r} 0H${ax-ahb}${tip}L${ax+ahb} 0H${w-r}A${r} ${r} 0 0 1 ${w} ${r}V${h-r}A${r} ${r} 0 0 1 ${w-r} ${h}H${r}A${r} ${r} 0 0 1 0 ${h-r}V${r}A${r} ${r} 0 0 1 ${r} 0Z`
+            }
+            if (dir === "right") {
+              const tip = ar > 0 ? `L${-ah+s} ${ay+s}A${ar} ${ar} 0 0 1 ${-ah+s} ${ay-s}` : `L${-ah} ${ay}`
+              return `M${r} 0H${w-r}A${r} ${r} 0 0 1 ${w} ${r}V${h-r}A${r} ${r} 0 0 1 ${w-r} ${h}H${r}A${r} ${r} 0 0 1 0 ${h-r}V${ay+ahb}${tip}L0 ${ay-ahb}V${r}A${r} ${r} 0 0 1 ${r} 0Z`
+            }
+            const tip = ar > 0 ? `L${w+ah-s} ${ay-s}A${ar} ${ar} 0 0 1 ${w+ah-s} ${ay+s}` : `L${w+ah} ${ay}`
+            return `M${r} 0H${w-r}A${r} ${r} 0 0 1 ${w} ${r}V${ay-ahb}${tip}L${w} ${ay+ahb}V${h-r}A${r} ${r} 0 0 1 ${w-r} ${h}H${r}A${r} ${r} 0 0 1 0 ${h-r}V${r}A${r} ${r} 0 0 1 ${r} 0Z`
+          }
+
+          let textShift = 0
 
           if (dir === "left" || dir === "right") {
             const cy = Math.round(rect.top + rect.height / 2)
@@ -264,7 +295,7 @@
             }
 
             const height = tooltip.getBoundingClientRect().height
-            shift(cy - height / 2, cy + height / 2, height, viewportHeight, parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-edge-buffer-y")), true)
+            textShift = shift(cy - height / 2, cy + height / 2, height, viewportHeight, parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-edge-buffer-y")), true)
           } else {
             const x = Math.round(rect.left + rect.width / 2)
             const y = Math.round(rect.top)
@@ -273,7 +304,25 @@
               tooltip.style.setProperty("top", dir === "above" ? `${y}px` : `${y + rect.height}px`)
             }
 
-            shift(x - tooltipWidth / 2, x + tooltipWidth / 2, tooltipWidth, viewportWidth, parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-edge-buffer-x")), false)
+            textShift = shift(x - tooltipWidth / 2, x + tooltipWidth / 2, tooltipWidth, viewportWidth, parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-edge-buffer-x")), false)
+          }
+
+          const bodyRect = tooltipText.getBoundingClientRect()
+          const bw = bodyRect.width
+          const bh = bodyRect.height
+          const br = parseFloat(styles.getPropertyValue("--easy-tooltip-border-radius")) || 0
+          const as = parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-size"))
+          const ab = as * Math.SQRT2
+          const ah = as * Math.SQRT1_2
+          const ar = parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-radius")) || 0
+          const vertical = dir === "left" || dir === "right"
+          const ax = vertical ? bw / 2 : bw / 2 - textShift
+          const ay = vertical ? bh / 2 - textShift : bh / 2
+          node._svgPath.setAttribute("d", arrowPath(dir, bw, bh, br, ab, ah, ax, ay, ar))
+          if (textShift) {
+            node._svgPath.setAttribute("transform", vertical ? `translate(0 ${textShift})` : `translate(${textShift} 0)`)
+          } else {
+            node._svgPath.removeAttribute("transform")
           }
 
           if (!observedNodes.has(node)) {
