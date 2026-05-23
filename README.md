@@ -113,13 +113,16 @@ Use `data-easy-tooltip-prefer` to control which side a tooltip shows on. It stil
 <button data-easy-tooltip="Shows on the right" data-easy-tooltip-prefer="right">Hover me</button>
 ```
 
-### Cursor anchor
-By default a tooltip is anchored to its trigger element. Set `data-easy-tooltip-anchor="cursor"` to anchor it to the cursor (or touch point) instead, so it follows the cursor as it moves around the element. On touch, the tooltip appears at the tap point and tracks the finger if you drag.
+### Anchor modes
+By default a tooltip is anchored to its trigger element. Use `data-easy-tooltip-anchor` to change the anchor point:
+
+* `element` (default): anchored to the trigger's bounding box.
+* `cursor`: anchored to the cursor (or touch point), follows the cursor as it moves around the element. On touch, the tooltip appears at the tap point and tracks the finger if you drag.
+* `pin`: anchored to the first cursor or touch point on entry, then frozen there. Continues tracking the page as you scroll so the anchor stays at the same content position.
 
 ```html
-<div data-easy-tooltip="I follow your cursor" data-easy-tooltip-anchor="cursor">
-  Hover anywhere on me
-</div>
+<div data-easy-tooltip="I follow your cursor" data-easy-tooltip-anchor="cursor">…</div>
+<div data-easy-tooltip="I stay where you first hovered" data-easy-tooltip-anchor="pin">…</div>
 ```
 
 Keyboard focus has no coordinates and automatically falls back to element anchoring.

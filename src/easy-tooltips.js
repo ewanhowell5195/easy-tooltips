@@ -32,6 +32,7 @@
       delete node._svgPath
       delete node._tooltipClass
       delete node._source
+      delete node._anchorPoint
       if (node === lastElement) lastElement = undefined
     }
 
@@ -172,11 +173,23 @@
             tooltipText.classList.remove("easy-tooltip-text-html")
           }
           
-          const useCursor = node.dataset.easyTooltipAnchor === "cursor" && lastByPointer
+          const anchorMode = node.dataset.easyTooltipAnchor
+          const useCursor = anchorMode === "cursor" && lastByPointer
+          const usePin = anchorMode === "pin" && lastByPointer
           if (useCursor) cursorAnchorActive = true
-          const rect = useCursor
-            ? { left: cursorX, right: cursorX, top: cursorY, bottom: cursorY, width: 0, height: 0 }
-            : node.getBoundingClientRect()
+          if (usePin && !tooltip.classList.contains("easy-tooltip-visible")) {
+            node._anchorPoint = { x: cursorX + window.scrollX, y: cursorY + window.scrollY }
+          }
+          let rect
+          if (useCursor) {
+            rect = { left: cursorX, right: cursorX, top: cursorY, bottom: cursorY, width: 0, height: 0 }
+          } else if (usePin && node._anchorPoint) {
+            const px = node._anchorPoint.x - window.scrollX
+            const py = node._anchorPoint.y - window.scrollY
+            rect = { left: px, right: px, top: py, bottom: py, width: 0, height: 0 }
+          } else {
+            rect = node.getBoundingClientRect()
+          }
 
           const styles = getComputedStyle(tooltip)
           const distance = parseFloat(styles.getPropertyValue("--easy-tooltip-distance"))
