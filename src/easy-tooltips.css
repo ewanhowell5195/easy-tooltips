@@ -1,6 +1,6 @@
 :root {
   --easy-tooltip-distance: 16px;
-  --easy-tooltip-arrow-size: 12px;
+  --easy-tooltip-arrow-size: 16px;
   --easy-tooltip-arrow-edge-buffer-x: 12px;
   --easy-tooltip-arrow-edge-buffer-y: 6px;
   --easy-tooltip-viewport-padding: 16px;
@@ -56,7 +56,6 @@
   transition: opacity var(--easy-tooltip-animation-length), translate var(--easy-tooltip-animation-length);
   translate: 0 var(--easy-tooltip-animation-distance);
   max-width: min(100% - var(--easy-tooltip-viewport-padding) * 2 - var(--easy-tooltip-left-offset, 0px) - var(--easy-tooltip-right-offset, 0px), var(--easy-tooltip-max-width, 100%));
-  min-width: calc(var(--easy-tooltip-arrow-edge-buffer-x) * 2 + var(--easy-tooltip-arrow-size) * 1.41421356);
 }
 
 .easy-tooltip.easy-tooltip-visible {
@@ -122,7 +121,6 @@
 
 .easy-tooltip.easy-tooltip-left .easy-tooltip-text,
 .easy-tooltip.easy-tooltip-right .easy-tooltip-text {
-  min-height: calc(var(--easy-tooltip-arrow-edge-buffer-y) * 2 + var(--easy-tooltip-arrow-size) * 1.41421356);
   display: flex;
   flex-direction: column;
   justify-content: center;

@@ -171,6 +171,13 @@
           const styles = getComputedStyle(tooltip)
           const distance = parseFloat(styles.getPropertyValue("--easy-tooltip-distance"))
           const padding = parseFloat(styles.getPropertyValue("--easy-tooltip-viewport-padding"))
+          const arrowSizeParts = styles.getPropertyValue("--easy-tooltip-arrow-size").trim().split(/\s+/)
+          const arrowBase = parseFloat(arrowSizeParts[0])
+          const edgeBufferX = parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-edge-buffer-x"))
+          const edgeBufferY = parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-edge-buffer-y"))
+
+          tooltip.style.minWidth = `${edgeBufferX * 2 + arrowBase}px`
+          tooltipText.style.removeProperty("min-height")
 
           const viewportWidth = document.documentElement.clientWidth
           const viewportHeight = document.documentElement.clientHeight
@@ -244,6 +251,10 @@
           else if (dir === "right") tooltip.classList.add("easy-tooltip-right")
           if (inside) tooltip.classList.add("easy-tooltip-inside")
 
+          if (dir === "left" || dir === "right") {
+            tooltipText.style.minHeight = `${edgeBufferY * 2 + arrowBase}px`
+          }
+
           function shift(before, after, size, viewportSize, edgeBuffer, vertical) {
             const maxTextShift = size / 2 - parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-size")) / 2 - edgeBuffer
             let text = 0
@@ -311,9 +322,8 @@
           const bw = bodyRect.width
           const bh = bodyRect.height
           const br = parseFloat(styles.getPropertyValue("--easy-tooltip-border-radius")) || 0
-          const as = parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-size"))
-          const ab = as * Math.SQRT2
-          const ah = as * Math.SQRT1_2
+          const ab = arrowBase
+          const ah = arrowSizeParts[1] ? parseFloat(arrowSizeParts[1]) : ab / 2
           const ar = parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-radius")) || 0
           const vertical = dir === "left" || dir === "right"
           const ax = vertical ? bw / 2 : bw / 2 - textShift
