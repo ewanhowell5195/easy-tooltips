@@ -2123,9 +2123,14 @@ photoRegion.addEventListener("mousemove", e => {
       button.className = "demo-code-button"
       button.type = "button"
       button.setAttribute("aria-label", "View code")
+      button.dataset.easyTooltip = "View code"
       button.innerHTML = codeIcon
       button.addEventListener("click", () => openCodeModal(demoCode[sceneClass]))
       scene.appendChild(button)
+    })
+
+    document.querySelector(".scene-glass .player-play")?.addEventListener("click", () => {
+      window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ", "_blank", "noopener,noreferrer")
     })
 
     const photoRegion = document.querySelector(".photo-region")

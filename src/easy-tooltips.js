@@ -5,7 +5,7 @@
     document.body.append(tooltips)
 
     let lastElement, lastByPointer, cursorX, cursorY, cursorAnchorActive, cursorRafQueued, cooldownTimer
-    let activeCount = 0, zIndexCounter = 0
+    let activeCount = 0, visibleCount = 0, zIndexCounter = 0
 
     function activateTooltip(tooltip) {
       tooltip._activated = true
@@ -13,6 +13,7 @@
       clearTimeout(cooldownTimer)
       tooltips.classList.add("easy-tooltips-active")
       tooltip.style.zIndex = ++zIndexCounter
+      startHoverPoll()
     }
 
     function deactivateTooltip(tooltip) {
@@ -35,6 +36,7 @@
     function releaseTooltip(node) {
       const t = node._tooltip
       if (t) {
+        if (t.classList.contains("easy-tooltip-visible")) visibleCount--
         clearTimeout(t._timeout)
         clearTimeout(t._activateTimer)
         deactivateTooltip(t)
@@ -63,6 +65,23 @@
       })
     }).observe(document.body, { childList: true, subtree: true })
 
+    let hoverPollRaf
+    function pollHover() {
+      hoverPollRaf = 0
+      if (cursorX === undefined) return
+      const cursorEl = document.elementFromPoint(cursorX, cursorY)
+      for (const trigger of triggers) {
+        const tip = trigger._tooltip
+        if (tip && tip.classList.contains("easy-tooltip-visible") && trigger !== cursorEl && !trigger.contains(cursorEl)) {
+          tooltipVisibility(tip, false)
+        }
+      }
+      if (visibleCount > 0) hoverPollRaf = requestAnimationFrame(pollHover)
+    }
+    function startHoverPoll() {
+      if (!hoverPollRaf) hoverPollRaf = requestAnimationFrame(pollHover)
+    }
+
     function ms(value) {
       value = value.trim()
       const n = parseFloat(value)
@@ -81,6 +100,7 @@
         tooltip._animation_duration = length + delay
       } else {
         if (tooltip._delay && performance.now() < tooltip._start + tooltip._delay) {
+          if (tooltip.classList.contains("easy-tooltip-visible")) visibleCount--
           tooltip.classList.remove("easy-tooltip-visible")
           clearTimeout(tooltip._timeout)
           clearTimeout(tooltip._activateTimer)
@@ -98,6 +118,7 @@
       if (tooltip._timeout === undefined) {
         tooltip._next = undefined
         tooltip.classList.toggle("easy-tooltip-visible", visible)
+        visibleCount += visible ? 1 : -1
 
         clearTimeout(tooltip._activateTimer)
         tooltip._activateTimer = undefined
@@ -150,7 +171,7 @@
           let tooltipText = node._tooltipText
           if (!tooltip) {
             tooltip = document.createElement("div")
-            tooltip.className = "easy-tooltip"
+            tooltip.className = "easy-tooltip easy-tooltip-setup"
             node._tooltip = tooltip
 
             const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
@@ -221,8 +242,6 @@
           const rightPlacementOffset = Math.round(rect.right + distance - padding)
           const leftPlacementOffset = Math.round(viewportWidth - rect.left + distance - padding)
 
-          tooltipVisibility(tooltip, true)
-
           tooltip.style.translate = ""
           tooltip.style.removeProperty("--easy-tooltip-left-offset")
           tooltip.style.removeProperty("--easy-tooltip-right-offset")
@@ -281,6 +300,9 @@
 
           if (dir !== "above") tooltip.classList.add("easy-tooltip-" + dir)
           if (inside) tooltip.classList.add("easy-tooltip-inside")
+
+          tooltip.classList.remove("easy-tooltip-setup")
+          tooltipVisibility(tooltip, true)
 
           if (dir === "left" || dir === "right") {
             tooltipText.style.minHeight = `${edgeBufferY * 2 + arrowBase}px`
