@@ -11,7 +11,7 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="easy-tooltips">
   <meta property="og:description" content="A lightweight, zero-dependency tooltip library using modern JavaScript and CSS. Just add &quot;data-easy-tooltip&quot; to any element! No setup or config required.">
-  <link href="../src/easy-tooltips.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/easy-tooltips@latest/dist/easy-tooltips.min.css" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -1045,7 +1045,10 @@
           <li>Works with mouse, touch, and keyboard focus</li>
           <li>Customizable via CSS variables</li>
           <li>Smart positioning and viewport detection</li>
-          <li>Smooth animations with no flicker</li>
+          <li>Smooth animations with smart skip-delay between adjacent tooltips</li>
+          <li>Anchor to the trigger element, the cursor, or where the user first hovered</li>
+          <li>Plain text or arbitrary HTML content</li>
+          <li>Seamless body + arrow drawn as a single SVG path</li>
           <li>Works in Vue, React, Svelte, and more</li>
         </ul>
       </div>
@@ -1518,15 +1521,15 @@
     --easy-tooltip-border-radius: 4px;         /* Corner radius of the tooltip */
     --easy-tooltip-padding: 8px 12px;          /* Inner padding */
     --easy-tooltip-max-width: 100%;            /* Maximum tooltip width */
-    --easy-tooltip-animation-distance: 4px;    /* Distance the tooltip slides in */
     --easy-tooltip-distance: 16px;             /* Distance from trigger element */
     --easy-tooltip-viewport-padding: 16px;     /* Minimum distance from screen edges */
     --easy-tooltip-arrow-size: 16px;           /* Arrow size (height defaults to width / 2; 0 to disable) */
     --easy-tooltip-arrow-size: 16px 8px;       /* Or specify arrow width and height separately */
     --easy-tooltip-arrow-edge-buffer-x: 12px;  /* Arrow gap from corner (for above or below tooltips) */
     --easy-tooltip-arrow-edge-buffer-y: 6px;   /* Arrow gap from corner (for left or right tooltips) */
-    --easy-tooltip-arrow-radius: 0;            /* Border radius of the arrow */
+    --easy-tooltip-arrow-radius: 0;            /* Border radius of the arrow tip */
     --easy-tooltip-animation-length: 0.15s;    /* Duration of fade animation */
+    --easy-tooltip-animation-distance: 4px;    /* Distance the tooltip slides in */
     --easy-tooltip-delay: 0s;                  /* Base delay before the tooltip shows; always added */
     --easy-tooltip-inactive-delay: 0.15s;      /* Extra delay when no tooltip was recently active; drops to 0 once a tooltip is showing */
     --easy-tooltip-cooldown: 0.15s;            /* How long after the last tooltip closes before the inactive-delay applies again */
@@ -1771,7 +1774,7 @@
     </div>
   </div>
   
-  <script src="../src/easy-tooltips.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/easy-tooltips@latest/dist/easy-tooltips.min.js"></script>
   <script>
     let count = 0
     const dynamicCounter = document.getElementById("dynamic-counter")

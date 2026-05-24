@@ -15,7 +15,10 @@ Just add `data-easy-tooltip` to any element! No setup or config required.
 * Works with mouse, touch, and keyboard focus
 * Customizable via CSS variables
 * Automatically repositions and shifts to fit the screen
-* Smooth, non-interrupting animations (no flicker on rapid hover)
+* Smooth, non-interrupting animations with smart skip-delay between adjacent tooltips
+* Anchor to the trigger element, the cursor, or where the user first hovered
+* Plain text or arbitrary HTML content
+* Seamless body + arrow drawn as a single SVG path
 * Compatible with Vue, React, Svelte, and more
 
 ## Quick Start
@@ -37,8 +40,10 @@ https://www.jsdelivr.com/package/npm/easy-tooltips
 ```html
 <button data-easy-tooltip="Click to save your changes">Save</button>
 <span data-easy-tooltip="This field is required">Username *</span>
-<div data-easy-tooltip="Multi-line tooltips<br>are supported too">Info</div>
+<div data-easy-tooltip="Multi-line tooltips&#10;are supported too">Info</div>
 ```
+
+Multi-line text uses `&#10;` (newline). For full HTML content see [Custom HTML](#custom-html) below.
 
 No additional setup is needed for Vue, React, Svelte, or other frameworks! Tooltips automatically update when the element updates!
 
@@ -141,9 +146,8 @@ You can style tooltips using CSS variables (recommended) or by targeting the too
   --easy-tooltip-border-radius: 4px;         /* Corner radius of the tooltip */
   --easy-tooltip-padding: 8px 12px;          /* Inner padding */
   --easy-tooltip-max-width: 100%;            /* Maximum tooltip width */
-  --easy-tooltip-animation-distance: 4px;    /* Distance the tooltip slides in */
-  
-  /* Positioning (required for JS positioning) */
+
+  /* Positioning */
   --easy-tooltip-distance: 16px;             /* Distance from trigger element */
   --easy-tooltip-viewport-padding: 16px;     /* Minimum distance from screen edges */
   --easy-tooltip-arrow-size: 16px;           /* Arrow size (height defaults to width / 2; 0 to disable) */
@@ -151,9 +155,10 @@ You can style tooltips using CSS variables (recommended) or by targeting the too
   --easy-tooltip-arrow-edge-buffer-x: 12px;  /* Arrow gap from corner (for above or below tooltips) */
   --easy-tooltip-arrow-edge-buffer-y: 6px;   /* Arrow gap from corner (for left or right tooltips) */
   --easy-tooltip-arrow-radius: 0;            /* Border radius of the arrow tip */
-  
-  /* Animation (required for JS timing) */
+
+  /* Animation */
   --easy-tooltip-animation-length: 0.15s;    /* Duration of fade animation */
+  --easy-tooltip-animation-distance: 4px;    /* Distance the tooltip slides in */
   --easy-tooltip-delay: 0s;                  /* Base delay before the tooltip shows; always added */
   --easy-tooltip-inactive-delay: 0.15s;      /* Extra delay when no tooltip was recently active; drops to 0 once a tooltip is showing */
   --easy-tooltip-cooldown: 0.15s;            /* How long after the last tooltip closes before the inactive-delay applies again */
