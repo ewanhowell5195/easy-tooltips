@@ -82,7 +82,8 @@
 
     function ms(value) {
       value = value.trim()
-      return value.endsWith("ms") ? parseFloat(value) : parseFloat(value) * 1000
+      const n = parseFloat(value)
+      return value.endsWith("ms") ? n : n * 1000
     }
 
     function tooltipVisibility(tooltip, visible) {
@@ -225,9 +226,9 @@
           if (useCursor) {
             rect = { left: cursorX, right: cursorX, top: cursorY, bottom: cursorY, width: 0, height: 0 }
           } else if (usePin && node._anchorPoint) {
-            const px = node._anchorPoint.x - window.scrollX
-            const py = node._anchorPoint.y - window.scrollY
-            rect = { left: px, right: px, top: py, bottom: py, width: 0, height: 0 }
+            const ax = node._anchorPoint.x - window.scrollX
+            const ay = node._anchorPoint.y - window.scrollY
+            rect = { left: ax, right: ax, top: ay, bottom: ay, width: 0, height: 0 }
           } else {
             rect = node.getBoundingClientRect()
           }
@@ -249,6 +250,16 @@
           const prefer = node.dataset.easyTooltipPrefer
           const rightPlacementOffset = Math.round(rect.right + distance - padding)
           const leftPlacementOffset = Math.round(viewportWidth - rect.left + distance - padding)
+
+          function applyOffset(side) {
+            if (side === "right") {
+              tooltip.style.setProperty("--easy-tooltip-left-offset", `${rightPlacementOffset}px`)
+              tooltip.style.removeProperty("--easy-tooltip-right-offset")
+            } else {
+              tooltip.style.setProperty("--easy-tooltip-right-offset", `${leftPlacementOffset}px`)
+              tooltip.style.removeProperty("--easy-tooltip-left-offset")
+            }
+          }
 
           tooltipVisibility(tooltip, true)
 
@@ -273,13 +284,7 @@
               if ((side === "left" ? rect.left - distance - padding : viewportWidth - rect.right - distance - padding) < minWidth) continue
               tooltip.classList.remove("easy-tooltip-left", "easy-tooltip-right")
               tooltip.classList.add("easy-tooltip-" + side)
-              if (side === "right") {
-                tooltip.style.setProperty("--easy-tooltip-left-offset", `${rightPlacementOffset}px`)
-                tooltip.style.removeProperty("--easy-tooltip-right-offset")
-              } else {
-                tooltip.style.setProperty("--easy-tooltip-right-offset", `${leftPlacementOffset}px`)
-                tooltip.style.removeProperty("--easy-tooltip-left-offset")
-              }
+              applyOffset(side)
               if (tooltip.getBoundingClientRect().height <= viewportHeight - padding * 2) {
                 dir = side
                 break
@@ -355,13 +360,8 @@
             const cy = Math.round(rect.top + rect.height / 2)
             tooltip.style.setProperty("top", `${cy}px`)
             if (!inside) {
-              if (dir === "right") {
-                tooltip.style.setProperty("left", `${Math.round(rect.right)}px`)
-                tooltip.style.setProperty("--easy-tooltip-left-offset", `${rightPlacementOffset}px`)
-              } else {
-                tooltip.style.setProperty("left", `${Math.round(rect.left)}px`)
-                tooltip.style.setProperty("--easy-tooltip-right-offset", `${leftPlacementOffset}px`)
-              }
+              tooltip.style.setProperty("left", `${Math.round(dir === "right" ? rect.right : rect.left)}px`)
+              applyOffset(dir)
             }
 
             const height = tooltip.getBoundingClientRect().height
