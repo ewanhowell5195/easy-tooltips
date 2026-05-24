@@ -8,7 +8,6 @@
     let activeCount = 0, zIndexCounter = 0
 
     function activateTooltip(tooltip) {
-      if (tooltip._activated) return
       tooltip._activated = true
       activeCount++
       clearTimeout(cooldownTimer)
@@ -19,16 +18,13 @@
     function deactivateTooltip(tooltip) {
       if (!tooltip._activated) return
       tooltip._activated = false
-      activeCount--
-      if (activeCount <= 0) {
+      if (--activeCount <= 0) {
         activeCount = 0
         clearTimeout(cooldownTimer)
-        const cooldown = ms(getComputedStyle(document.documentElement).getPropertyValue("--easy-tooltip-cooldown"))
-        if (cooldown > 0) {
-          cooldownTimer = setTimeout(() => tooltips.classList.remove("easy-tooltips-active"), cooldown)
-        } else {
-          tooltips.classList.remove("easy-tooltips-active")
-        }
+        cooldownTimer = setTimeout(
+          () => tooltips.classList.remove("easy-tooltips-active"),
+          ms(getComputedStyle(document.documentElement).getPropertyValue("--easy-tooltip-cooldown"))
+        )
       }
     }
 
@@ -37,11 +33,12 @@
     const observer = new MutationObserver(() => reloadTooltips())
 
     function releaseTooltip(node) {
-      if (node._tooltip) {
-        clearTimeout(node._tooltip._timeout)
-        clearTimeout(node._tooltip._activateTimer)
-        deactivateTooltip(node._tooltip)
-        node._tooltip.remove()
+      const t = node._tooltip
+      if (t) {
+        clearTimeout(t._timeout)
+        clearTimeout(t._activateTimer)
+        deactivateTooltip(t)
+        t.remove()
       }
       observer.unobserve(node)
       observedNodes.delete(node)
@@ -50,18 +47,13 @@
         observedNodes.delete(node._source)
       }
       triggers.delete(node)
-      delete node._tooltip
-      delete node._tooltipText
-      delete node._svgPath
-      delete node._tooltipClass
-      delete node._source
-      delete node._anchorPoint
+      node._tooltip = node._tooltipText = node._svgPath = node._tooltipClass = node._source = node._anchorPoint = undefined
       if (node === lastElement) lastElement = undefined
     }
 
     let releaseScheduled
-    function scheduleRelease() {
-      if (releaseScheduled) return
+    new MutationObserver(records => {
+      if (releaseScheduled || !records.some(r => r.removedNodes.length)) return
       releaseScheduled = true
       queueMicrotask(() => {
         releaseScheduled = false
@@ -69,15 +61,6 @@
           if (!node.isConnected) releaseTooltip(node)
         }
       })
-    }
-
-    new MutationObserver(records => {
-      for (const record of records) {
-        if (record.removedNodes.length) {
-          scheduleRelease()
-          return
-        }
-      }
     }).observe(document.body, { childList: true, subtree: true })
 
     function ms(value) {
@@ -101,10 +84,7 @@
           tooltip.classList.remove("easy-tooltip-visible")
           clearTimeout(tooltip._timeout)
           clearTimeout(tooltip._activateTimer)
-          delete tooltip._timeout
-          delete tooltip._activateTimer
-          delete tooltip._start
-          delete tooltip._delay
+          tooltip._timeout = tooltip._activateTimer = tooltip._start = tooltip._delay = undefined
           return
         }
         tooltip._animation_duration = length
@@ -155,23 +135,16 @@
             toAdd.push(node)
           } else if (node.dataset.easyTooltipSrc) {
             const src = node.dataset.easyTooltipSrc
-            if (src === "next" && node.nextElementSibling) {
+            if (src === "next") {
               node._source = node.nextElementSibling
             } else {
-              node._source = document.getElementById(src)
-              if (!node._source) {
-                try {
-                  node._source = document.querySelector(src)
-                } catch {}
-              }
+              try { node._source = document.getElementById(src) || document.querySelector(src) } catch {}
             }
-            if (node._source) {
-              toAdd.push(node)
-            }
+            if (node._source) toAdd.push(node)
           }
           node = node.parentElement
         }
-        for (let i = toAdd.length - 1; i >= 0; i--) {
+        for (let i = toAdd.length; i--;) {
           const node = toAdd[i]
           let tooltip = node._tooltip
           let tooltipText = node._tooltipText
@@ -185,14 +158,13 @@
             svg.setAttribute("aria-hidden", "true")
             const svgPath = document.createElementNS("http://www.w3.org/2000/svg", "path")
             svg.append(svgPath)
-            tooltip.append(svg)
             node._svgPath = svgPath
 
             tooltipText = document.createElement("div")
             tooltipText.className = "easy-tooltip-text"
-            tooltip.append(tooltipText)
             node._tooltipText = tooltipText
 
+            tooltip.append(svg, tooltipText)
             tooltips.append(tooltip)
           }
 
@@ -222,28 +194,26 @@
           if (usePin && !tooltip.classList.contains("easy-tooltip-visible")) {
             node._anchorPoint = { x: cursorX + window.scrollX, y: cursorY + window.scrollY }
           }
+          const pointRect = (x, y) => ({ left: x, right: x, top: y, bottom: y, width: 0, height: 0 })
           let rect
           if (useCursor) {
-            rect = { left: cursorX, right: cursorX, top: cursorY, bottom: cursorY, width: 0, height: 0 }
+            rect = pointRect(cursorX, cursorY)
           } else if (usePin && node._anchorPoint) {
-            const ax = node._anchorPoint.x - window.scrollX
-            const ay = node._anchorPoint.y - window.scrollY
-            rect = { left: ax, right: ax, top: ay, bottom: ay, width: 0, height: 0 }
+            rect = pointRect(node._anchorPoint.x - window.scrollX, node._anchorPoint.y - window.scrollY)
           } else {
             rect = node.getBoundingClientRect()
           }
 
           const styles = getComputedStyle(tooltip)
-          const px = name => parseFloat(styles.getPropertyValue(name))
-          const distance = px("--easy-tooltip-distance")
-          const padding = px("--easy-tooltip-viewport-padding")
+          const distance = parseFloat(styles.getPropertyValue("--easy-tooltip-distance"))
+          const padding = parseFloat(styles.getPropertyValue("--easy-tooltip-viewport-padding"))
           const arrowSizeParts = styles.getPropertyValue("--easy-tooltip-arrow-size").trim().split(/\s+/)
           const arrowBase = parseFloat(arrowSizeParts[0])
-          const edgeBufferX = px("--easy-tooltip-arrow-edge-buffer-x")
-          const edgeBufferY = px("--easy-tooltip-arrow-edge-buffer-y")
+          const edgeBufferX = parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-edge-buffer-x"))
+          const edgeBufferY = parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-edge-buffer-y"))
 
           tooltip.style.minWidth = `${edgeBufferX * 2 + arrowBase}px`
-          tooltipText.style.removeProperty("min-height")
+          tooltipText.style.minHeight = ""
 
           const viewportWidth = document.documentElement.clientWidth
           const viewportHeight = document.documentElement.clientHeight
@@ -251,22 +221,12 @@
           const rightPlacementOffset = Math.round(rect.right + distance - padding)
           const leftPlacementOffset = Math.round(viewportWidth - rect.left + distance - padding)
 
-          function applyOffset(side) {
-            if (side === "right") {
-              tooltip.style.setProperty("--easy-tooltip-left-offset", `${rightPlacementOffset}px`)
-              tooltip.style.removeProperty("--easy-tooltip-right-offset")
-            } else {
-              tooltip.style.setProperty("--easy-tooltip-right-offset", `${leftPlacementOffset}px`)
-              tooltip.style.removeProperty("--easy-tooltip-left-offset")
-            }
-          }
-
           tooltipVisibility(tooltip, true)
 
-          tooltip.style.removeProperty("translate")
+          tooltip.style.translate = ""
           tooltip.style.removeProperty("--easy-tooltip-left-offset")
           tooltip.style.removeProperty("--easy-tooltip-right-offset")
-          tooltipText.style.removeProperty("translate")
+          tooltipText.style.translate = ""
           tooltip.classList.remove("easy-tooltip-below", "easy-tooltip-inside", "easy-tooltip-left", "easy-tooltip-right")
 
           const { width: tooltipWidth, height: tooltipHeight } = tooltip.getBoundingClientRect()
@@ -274,17 +234,23 @@
           let dir, inside
 
           if (prefer === "left" || prefer === "right") {
-            tooltipText.style.setProperty("width", "min-content")
-            tooltipText.style.setProperty("min-width", "0")
+            tooltipText.style.width = "min-content"
+            tooltipText.style.minWidth = "0"
             const minWidth = tooltip.getBoundingClientRect().width
-            tooltipText.style.removeProperty("width")
-            tooltipText.style.removeProperty("min-width")
+            tooltipText.style.width = ""
+            tooltipText.style.minWidth = ""
 
-            for (const side of (prefer === "left" ? ["left", "right"] : ["right", "left"])) {
+            for (const side of [prefer, prefer === "left" ? "right" : "left"]) {
               if ((side === "left" ? rect.left - distance - padding : viewportWidth - rect.right - distance - padding) < minWidth) continue
               tooltip.classList.remove("easy-tooltip-left", "easy-tooltip-right")
               tooltip.classList.add("easy-tooltip-" + side)
-              applyOffset(side)
+              if (side === "right") {
+                tooltip.style.setProperty("--easy-tooltip-left-offset", `${rightPlacementOffset}px`)
+                tooltip.style.removeProperty("--easy-tooltip-right-offset")
+              } else {
+                tooltip.style.setProperty("--easy-tooltip-right-offset", `${leftPlacementOffset}px`)
+                tooltip.style.removeProperty("--easy-tooltip-left-offset")
+              }
               if (tooltip.getBoundingClientRect().height <= viewportHeight - padding * 2) {
                 dir = side
                 break
@@ -310,8 +276,8 @@
           tooltip.classList.remove("easy-tooltip-below", "easy-tooltip-inside", "easy-tooltip-left", "easy-tooltip-right")
           tooltip.style.removeProperty("--easy-tooltip-left-offset")
           tooltip.style.removeProperty("--easy-tooltip-right-offset")
-          tooltip.style.removeProperty("top")
-          tooltip.style.removeProperty("left")
+          tooltip.style.top = ""
+          tooltip.style.left = ""
 
           if (dir !== "above") tooltip.classList.add("easy-tooltip-" + dir)
           if (inside) tooltip.classList.add("easy-tooltip-inside")
@@ -330,8 +296,8 @@
               text = -Math.min(after - (viewportSize - padding), maxTextShift)
               if (after + text > viewportSize - padding) tip = -(after + text - (viewportSize - padding))
             }
-            if (text) tooltipText.style.setProperty("translate", vertical ? `0 ${text}px` : `${text}px`)
-            if (tip) tooltip.style.setProperty("translate", vertical ? `0 ${tip}px` : `${tip}px 0`)
+            if (text) tooltipText.style.translate = vertical ? `0 ${text}px` : `${text}px`
+            if (tip) tooltip.style.translate = vertical ? `0 ${tip}px` : `${tip}px 0`
             return text
           }
 
@@ -358,10 +324,16 @@
 
           if (dir === "left" || dir === "right") {
             const cy = Math.round(rect.top + rect.height / 2)
-            tooltip.style.setProperty("top", `${cy}px`)
+            tooltip.style.top = `${cy}px`
             if (!inside) {
-              tooltip.style.setProperty("left", `${Math.round(dir === "right" ? rect.right : rect.left)}px`)
-              applyOffset(dir)
+              tooltip.style.left = `${Math.round(dir === "right" ? rect.right : rect.left)}px`
+              if (dir === "right") {
+                tooltip.style.setProperty("--easy-tooltip-left-offset", `${rightPlacementOffset}px`)
+                tooltip.style.removeProperty("--easy-tooltip-right-offset")
+              } else {
+                tooltip.style.setProperty("--easy-tooltip-right-offset", `${leftPlacementOffset}px`)
+                tooltip.style.removeProperty("--easy-tooltip-left-offset")
+              }
             }
 
             const height = tooltip.getBoundingClientRect().height
@@ -369,18 +341,18 @@
           } else {
             const x = Math.round(rect.left + rect.width / 2)
             const y = Math.round(rect.top)
-            tooltip.style.setProperty("left", `${x}px`)
+            tooltip.style.left = `${x}px`
             if (!inside) {
-              tooltip.style.setProperty("top", dir === "above" ? `${y}px` : `${y + rect.height}px`)
+              tooltip.style.top = dir === "above" ? `${y}px` : `${y + rect.height}px`
             }
 
             textShift = shift(x - tooltipWidth / 2, x + tooltipWidth / 2, tooltipWidth, viewportWidth, edgeBufferX, false)
           }
 
           const { width: bw, height: bh } = tooltipText.getBoundingClientRect()
-          const br = px("--easy-tooltip-border-radius") || 0
+          const br = parseFloat(styles.getPropertyValue("--easy-tooltip-border-radius")) || 0
           const ah = arrowSizeParts[1] ? parseFloat(arrowSizeParts[1]) : arrowBase / 2
-          const ar = px("--easy-tooltip-arrow-radius") || 0
+          const ar = parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-radius")) || 0
           const vertical = dir === "left" || dir === "right"
           const ax = vertical ? bw / 2 : bw / 2 - textShift
           const ay = vertical ? bh / 2 - textShift : bh / 2
@@ -404,14 +376,12 @@
       }
     }
 
-    function removeTooltips(nodes, force) {
-      for (let node of nodes) {
-        while (node && node !== document.body) {
-          if (node._tooltip && (force || !node.matches(":hover"))) {
-            tooltipVisibility(node._tooltip, false)
-          }
-          node = node.parentElement
+    function removeTooltips(node, force) {
+      while (node && node !== document.body) {
+        if (node._tooltip && (force || !node.matches(":hover"))) {
+          tooltipVisibility(node._tooltip, false)
         }
+        node = node.parentElement
       }
     }
 
@@ -442,7 +412,7 @@
 
     function updateTooltipTarget(e, forceRemove) {
       queueTooltipUpdate(() => {
-        removeTooltips([lastElement], forceRemove)
+        removeTooltips(lastElement, forceRemove)
         lastElement = e.target
         addTooltips()
       })
@@ -508,7 +478,7 @@
     })
 
     document.addEventListener("focusout", e => {
-      queueTooltipUpdate(() => removeTooltips([e.target]))
+      queueTooltipUpdate(() => removeTooltips(e.target))
     })
 
     window.addEventListener("resize", reloadTooltips)
