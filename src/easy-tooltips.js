@@ -232,8 +232,9 @@
           const arrowBase = parseFloat(arrowSizeParts[0])
           const edgeBufferX = parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-edge-buffer-x"))
           const edgeBufferY = parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-edge-buffer-y"))
+          const br = parseFloat(styles.getPropertyValue("--easy-tooltip-border-radius")) || 0
 
-          tooltip.style.minWidth = `${edgeBufferX * 2 + arrowBase}px`
+          tooltip.style.minWidth = `${edgeBufferX * 2 + arrowBase + br * 2}px`
           tooltipText.style.minHeight = ""
 
           const viewportWidth = document.documentElement.clientWidth
@@ -248,11 +249,11 @@
           tooltipText.style.translate = ""
           tooltip.classList.remove("easy-tooltip-below", "easy-tooltip-inside", "easy-tooltip-left", "easy-tooltip-right")
 
-          const { width: tooltipWidth, height: tooltipHeight } = tooltip.getBoundingClientRect()
-
+          let tooltipWidth, tooltipHeight
           let dir, inside
 
           if (prefer === "left" || prefer === "right") {
+            tooltip.style.minWidth = `${br * 2}px`
             tooltipText.style.width = "min-content"
             tooltipText.style.minWidth = "0"
             const minWidth = tooltip.getBoundingClientRect().width
@@ -280,6 +281,7 @@
               inside = true
             }
           } else {
+            ({ width: tooltipWidth, height: tooltipHeight } = tooltip.getBoundingClientRect())
             const y = Math.round(rect.top)
             const fitsAbove = y - tooltipHeight - distance > padding
             const fitsBelow = y + rect.height + tooltipHeight + distance < viewportHeight - padding
@@ -305,11 +307,13 @@
           tooltipVisibility(tooltip, true)
 
           if (dir === "left" || dir === "right") {
-            tooltipText.style.minHeight = `${edgeBufferY * 2 + arrowBase}px`
+            tooltipText.style.minHeight = `${edgeBufferY * 2 + arrowBase + br * 2}px`
+          } else {
+            tooltipText.style.minHeight = `${br * 2}px`
           }
 
           function shift(before, after, size, viewportSize, edgeBuffer, vertical) {
-            const maxTextShift = size / 2 - arrowBase / 2 - edgeBuffer
+            const maxTextShift = size / 2 - arrowBase / 2 - edgeBuffer - br
             let text = 0, tip = 0
             if (before < padding) {
               text = Math.min(padding - before, maxTextShift)
@@ -372,7 +376,6 @@
           }
 
           const { width: bw, height: bh } = tooltipText.getBoundingClientRect()
-          const br = parseFloat(styles.getPropertyValue("--easy-tooltip-border-radius")) || 0
           const ah = arrowSizeParts[1] ? parseFloat(arrowSizeParts[1]) : arrowBase / 2
           const ar = parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-radius")) || 0
           const vertical = dir === "left" || dir === "right"

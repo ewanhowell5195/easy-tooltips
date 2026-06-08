@@ -152,8 +152,8 @@ You can style tooltips using CSS variables (recommended) or by targeting the too
   --easy-tooltip-viewport-padding: 16px;     /* Minimum distance from screen edges */
   --easy-tooltip-arrow-size: 16px;           /* Arrow size (height defaults to width / 2; 0 to disable) */
   --easy-tooltip-arrow-size: 16px 8px;       /* Or specify arrow width and height separately */
-  --easy-tooltip-arrow-edge-buffer-x: 12px;  /* Arrow gap from corner (for above or below tooltips) */
-  --easy-tooltip-arrow-edge-buffer-y: 6px;   /* Arrow gap from corner (for left or right tooltips) */
+  --easy-tooltip-arrow-edge-buffer-x: 12px;  /* Minimum arrow gap from where the border radius starts (for above or below tooltips) */
+  --easy-tooltip-arrow-edge-buffer-y: 6px;   /* Minimum arrow gap from where the border radius starts (for left or right tooltips) */
   --easy-tooltip-arrow-radius: 0;            /* Border radius of the arrow tip */
 
   /* Animation */

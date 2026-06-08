@@ -5,7 +5,7 @@
   --easy-tooltip-arrow-edge-buffer-y: 6px;
   --easy-tooltip-viewport-padding: 16px;
   --easy-tooltip-border-size: 1px;
-  --easy-tooltip-border-radius: 4px;
+  --easy-tooltip-border-radius: 44px;
   --easy-tooltip-padding: 8px 12px;
   --easy-tooltip-animation-length: .15s;
   --easy-tooltip-animation-distance: 4px;
@@ -116,13 +116,6 @@
   transform: translate(calc(-100% - var(--easy-tooltip-distance)), -50%);
 }
 
-.easy-tooltip.easy-tooltip-left .easy-tooltip-text,
-.easy-tooltip.easy-tooltip-right .easy-tooltip-text {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
 .easy-tooltip.easy-tooltip-right {
   translate: calc(var(--easy-tooltip-animation-distance) * -1) 0;
 }
@@ -138,6 +131,9 @@
 }
 
 .easy-tooltip-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   position: relative;
   z-index: 1;
   width: max-content;
@@ -147,6 +143,8 @@
   text-align: center;
   box-sizing: border-box;
   min-width: 100%;
+  border-radius: var(--easy-tooltip-border-radius);
+  overflow: hidden;
 }
 
 .easy-tooltip-text:not(.easy-tooltip-text-html) {
