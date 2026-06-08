@@ -443,7 +443,7 @@
       })
     }
 
-    let touched
+    let touchedAt = 0
 
     function setTouchPos(e) {
       const t = e.touches[0]
@@ -454,7 +454,7 @@
     }
 
     document.addEventListener("touchstart", e => {
-      touched = true
+      touchedAt = performance.now()
       lastByPointer = true
       setTouchPos(e)
       if (e.target === lastElement) return
@@ -462,14 +462,12 @@
     })
 
     document.addEventListener("touchmove", e => {
+      touchedAt = performance.now()
       if (setTouchPos(e)) followCursor()
     })
 
     document.addEventListener("mouseover", e => {
-      if (touched) {
-        touched = false
-        return
-      }
+      if (touchedAt && performance.now() - touchedAt < 700) return
       lastByPointer = true
       cursorX = e.clientX
       cursorY = e.clientY
@@ -492,12 +490,14 @@
     }
 
     document.addEventListener("mousemove", e => {
+      if (touchedAt && performance.now() - touchedAt < 700) return
       cursorX = e.clientX
       cursorY = e.clientY
       followCursor()
     })
 
     document.addEventListener("focusin", e => {
+      if (touchedAt && performance.now() - touchedAt < 700) return
       lastByPointer = false
       updateTooltipTarget(e)
     })
