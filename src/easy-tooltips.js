@@ -4,7 +4,7 @@
     tooltips.id = "easy-tooltips"
     document.body.append(tooltips)
 
-    let lastElement, lastByPointer, cursorX, cursorY, cursorAnchorActive, cursorRafQueued, cooldownTimer
+    let lastElement, lastByPointer, mouseActive, cursorX, cursorY, cursorAnchorActive, cursorRafQueued, cooldownTimer
     let activeCount = 0, visibleCount = 0, zIndexCounter = 0
 
     function activateTooltip(tooltip) {
@@ -68,12 +68,13 @@
     let hoverPollRaf
     function pollHover() {
       hoverPollRaf = 0
-      if (cursorX === undefined) return
-      const cursorEl = document.elementFromPoint(cursorX, cursorY)
-      for (const trigger of triggers) {
-        const tip = trigger._tooltip
-        if (tip && tip.classList.contains("easy-tooltip-visible") && trigger !== cursorEl && !trigger.contains(cursorEl)) {
-          tooltipVisibility(tip, false)
+      if (mouseActive && cursorX !== undefined) {
+        const cursorEl = document.elementFromPoint(cursorX, cursorY)
+        for (const trigger of triggers) {
+          const tip = trigger._tooltip
+          if (tip && tip.classList.contains("easy-tooltip-visible") && trigger !== cursorEl && !trigger.contains(cursorEl)) {
+            tooltipVisibility(tip, false)
+          }
         }
       }
       if (visibleCount > 0) hoverPollRaf = requestAnimationFrame(pollHover)
@@ -304,7 +305,12 @@
           if (inside) tooltip.classList.add("easy-tooltip-inside")
 
           tooltip.classList.remove("easy-tooltip-setup")
-          tooltipVisibility(tooltip, true)
+          let show = true
+          if (mouseActive && cursorX !== undefined) {
+            const cursorEl = document.elementFromPoint(cursorX, cursorY)
+            show = !!cursorEl && (node === cursorEl || node.contains(cursorEl))
+          }
+          tooltipVisibility(tooltip, show)
 
           if (dir === "left" || dir === "right") {
             tooltipText.style.minHeight = `${edgeBufferY * 2 + arrowBase + br * 2}px`
@@ -456,6 +462,7 @@
     document.addEventListener("touchstart", e => {
       touchedAt = performance.now()
       lastByPointer = true
+      mouseActive = false
       setTouchPos(e)
       if (e.target === lastElement) return
       updateTooltipTarget(e, true)
@@ -469,6 +476,7 @@
     document.addEventListener("mouseover", e => {
       if (touchedAt && performance.now() - touchedAt < 700) return
       lastByPointer = true
+      mouseActive = true
       cursorX = e.clientX
       cursorY = e.clientY
       updateTooltipTarget(e)
@@ -491,6 +499,7 @@
 
     document.addEventListener("mousemove", e => {
       if (touchedAt && performance.now() - touchedAt < 700) return
+      mouseActive = true
       cursorX = e.clientX
       cursorY = e.clientY
       followCursor()
@@ -499,6 +508,7 @@
     document.addEventListener("focusin", e => {
       if (touchedAt && performance.now() - touchedAt < 700) return
       lastByPointer = false
+      mouseActive = false
       updateTooltipTarget(e)
     })
 
