@@ -4,7 +4,7 @@
     tooltips.id = "easy-tooltips"
     document.body.append(tooltips)
 
-    let lastElement, lastByPointer, mouseActive, cursorX, cursorY, cursorAnchorActive, cursorRafQueued, cooldownTimer
+    let lastElement, lastByPointer, mouseActive, cursorX, cursorY, cursorAnchorActive, cursorRafQueued, cooldownTimer, ignoreFocusReturn
     let activeCount = 0, visibleCount = 0, zIndexCounter = 0
 
     function activateTooltip(tooltip) {
@@ -461,6 +461,7 @@
 
     document.addEventListener("touchstart", e => {
       touchedAt = performance.now()
+      ignoreFocusReturn = false
       lastByPointer = true
       mouseActive = false
       setTouchPos(e)
@@ -475,6 +476,7 @@
 
     document.addEventListener("mouseover", e => {
       if (touchedAt && performance.now() - touchedAt < 700) return
+      ignoreFocusReturn = false
       lastByPointer = true
       mouseActive = true
       cursorX = e.clientX
@@ -507,6 +509,10 @@
 
     document.addEventListener("focusin", e => {
       if (touchedAt && performance.now() - touchedAt < 700) return
+      if (ignoreFocusReturn) {
+        ignoreFocusReturn = false
+        return
+      }
       lastByPointer = false
       mouseActive = false
       updateTooltipTarget(e)
@@ -514,6 +520,16 @@
 
     document.addEventListener("focusout", e => {
       queueTooltipUpdate(() => removeTooltips(e.target))
+    })
+
+    window.addEventListener("blur", () => {
+      ignoreFocusReturn = document.activeElement !== document.body
+      queueTooltipUpdate(() => {
+        lastElement = undefined
+        for (const node of triggers) {
+          if (node._tooltip) tooltipVisibility(node._tooltip, false)
+        }
+      })
     })
 
     window.addEventListener("resize", reloadTooltips)
