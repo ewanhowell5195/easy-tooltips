@@ -1,4 +1,4 @@
-import './easy-tooltips.css'
+import "./easy-tooltips.css"
 
 type TooltipElement = HTMLElement & {
   _tooltip?: TooltipElement
@@ -309,7 +309,7 @@ type TooltipElement = HTMLElement & {
           tooltip.classList.remove("easy-tooltip-below", "easy-tooltip-inside", "easy-tooltip-left", "easy-tooltip-right")
 
           let tooltipWidth: number = 0, tooltipHeight: number = 0
-          let dir: 'above' | 'below' | 'right' | 'left' | undefined, inside
+          let dir: "above" | "below" | "right" | "left" | undefined, inside
 
           if (prefer === "left" || prefer === "right") {
             tooltip.style.minWidth = `${br * 2}px`
@@ -319,7 +319,7 @@ type TooltipElement = HTMLElement & {
             tooltipText.style.width = ""
             tooltipText.style.minWidth = ""
 
-            for (const side of [prefer, prefer === "left" ? "right" : "left"] as ('right' | 'left')[]) {
+            for (const side of [prefer, prefer === "left" ? "right" : "left"] as ("right" | "left")[]) {
               if ((side === "left" ? rect.left - distance - padding : viewportWidth - rect.right - distance - padding) < minWidth) continue
               tooltip.classList.remove("easy-tooltip-left", "easy-tooltip-right")
               tooltip.classList.add("easy-tooltip-" + side)
@@ -399,7 +399,7 @@ type TooltipElement = HTMLElement & {
           }
 
           function arrowPath(
-            dir: 'above' | 'below' | 'right' | 'left',
+            dir: "above" | "below" | "right" | "left",
             w: number,
             h: number,
             r: number,
