@@ -17,6 +17,10 @@ type TooltipElement = HTMLElement & {
   _clipPath?: SVGPathElement
   _foreignObj?: SVGForeignObjectElement
   _surfaceDiv?: HTMLDivElement
+  _borderMask?: SVGMaskElement
+  _borderMaskPath?: SVGPathElement
+  _borderForeignObj?: SVGForeignObjectElement
+  _borderSurfaceDiv?: HTMLDivElement
   _observer?: MutationObserver
   _sourceObserver?: MutationObserver
 }
@@ -80,7 +84,7 @@ type TooltipElement = HTMLElement & {
       node._observer = node._sourceObserver = undefined
 
       triggers.delete(node)
-      node._tooltip = node._tooltipText = node._svgPath = node._clipPath = node._foreignObj = node._surfaceDiv = node._tooltipClass = node._source = node._anchorPoint = undefined
+      node._tooltip = node._tooltipText = node._svgPath = node._clipPath = node._foreignObj = node._surfaceDiv = node._borderMask = node._borderMaskPath = node._borderForeignObj = node._borderSurfaceDiv = node._tooltipClass = node._source = node._anchorPoint = undefined
       if (node === lastElement) lastElement = undefined
     }
 
@@ -235,10 +239,31 @@ type TooltipElement = HTMLElement & {
             node._foreignObj = foreignObj
             node._surfaceDiv = surfaceDiv
 
+            const mask = document.createElementNS("http://www.w3.org/2000/svg", "mask")
+            const maskId = "easy-tooltip-mask-" + Math.random().toString(36).substring(2, 9)
+            mask.id = maskId
+            mask.setAttribute("maskUnits", "userSpaceOnUse")
+
+            const maskPath = document.createElementNS("http://www.w3.org/2000/svg", "path")
+            mask.append(maskPath)
+            defs.append(mask)
+            node._borderMask = mask
+            node._borderMaskPath = maskPath
+
+            const borderForeignObj = document.createElementNS("http://www.w3.org/2000/svg", "foreignObject")
+            borderForeignObj.setAttribute("mask", `url(#${maskId})`)
+
+            const borderSurfaceDiv = document.createElement("div")
+            borderSurfaceDiv.className = "easy-tooltip-surface"
+            borderForeignObj.append(borderSurfaceDiv)
+
+            node._borderForeignObj = borderForeignObj
+            node._borderSurfaceDiv = borderSurfaceDiv
+
             const svgPath = document.createElementNS("http://www.w3.org/2000/svg", "path")
             node._svgPath = svgPath
 
-            svg.append(defs, foreignObj, svgPath)
+            svg.append(defs, foreignObj, svgPath, borderForeignObj)
 
             tooltipText = document.createElement("div")
             tooltipText.className = "easy-tooltip-text"
@@ -466,35 +491,39 @@ type TooltipElement = HTMLElement & {
           const pathData = arrowPath(dir, bw, bh, br, arrowBase, ah, ax, ay, ar)
           node._svgPath?.setAttribute("d", pathData)
           node._clipPath?.setAttribute("d", pathData)
+          node._borderMaskPath?.setAttribute("d", pathData)
 
           if (textShift) {
             const transformVal = vertical ? `translate(0 ${textShift})` : `translate(${textShift} 0)`
             node._svgPath?.setAttribute("transform", transformVal)
             node._clipPath?.setAttribute("transform", transformVal)
+            node._borderMaskPath?.setAttribute("transform", transformVal)
           } else {
             node._svgPath?.removeAttribute("transform")
             node._clipPath?.removeAttribute("transform")
+            node._borderMaskPath?.removeAttribute("transform")
           }
 
           const customBg = node.dataset.easyTooltipBackground || styles.getPropertyValue("--easy-tooltip-background").trim()
+          const customBorder = node.dataset.easyTooltipBorder || styles.getPropertyValue("--easy-tooltip-border").trim()
+
+          let minX = 0, maxX = bw, minY = 0, maxY = bh
+          if (dir === "left") maxX += ah
+          else if (dir === "right") minX -= ah
+          else if (dir === "above") maxY += ah
+          else if (dir === "below") minY -= ah
+
+          if (textShift) {
+            if (vertical) {
+              minY += Math.min(0, textShift)
+              maxY += Math.max(0, textShift)
+            } else {
+              minX += Math.min(0, textShift)
+              maxX += Math.max(0, textShift)
+            }
+          }
 
           if (customBg && node._surfaceDiv && node._foreignObj) {
-            let minX = 0, maxX = bw, minY = 0, maxY = bh
-            if (dir === "left") maxX += ah
-            else if (dir === "right") minX -= ah
-            else if (dir === "above") maxY += ah
-            else if (dir === "below") minY -= ah
-
-            if (textShift) {
-              if (vertical) {
-                minY += Math.min(0, textShift)
-                maxY += Math.max(0, textShift)
-              } else {
-                minX += Math.min(0, textShift)
-                maxX += Math.max(0, textShift)
-              }
-            }
-
             node._foreignObj.setAttribute("x", `${minX}`)
             node._foreignObj.setAttribute("y", `${minY}`)
             node._foreignObj.setAttribute("width", `${maxX - minX}`)
@@ -510,11 +539,39 @@ type TooltipElement = HTMLElement & {
             node._svgPath?.style.removeProperty("fill")
           }
 
+          if (customBorder && customBorder !== "none" && node._borderMask && node._borderSurfaceDiv && node._borderForeignObj) {
+            const bs = parseFloat(styles.getPropertyValue("--easy-tooltip-border-size")) || 0
+            const pad = bs * 2
+            const bx = minX - pad
+            const by = minY - pad
+            const bWidth = maxX - minX + pad * 2
+            const bHeight = maxY - minY + pad * 2
+
+            node._borderMask.setAttribute("x", `${bx}`)
+            node._borderMask.setAttribute("y", `${by}`)
+            node._borderMask.setAttribute("width", `${bWidth}`)
+            node._borderMask.setAttribute("height", `${bHeight}`)
+
+            node._borderForeignObj.setAttribute("x", `${bx}`)
+            node._borderForeignObj.setAttribute("y", `${by}`)
+            node._borderForeignObj.setAttribute("width", `${bWidth}`)
+            node._borderForeignObj.setAttribute("height", `${bHeight}`)
+
+            node._borderSurfaceDiv.style.width = "100%"
+            node._borderSurfaceDiv.style.height = "100%"
+            node._borderSurfaceDiv.style.background = customBorder
+            node._borderForeignObj.style.display = ""
+            node._svgPath?.style.setProperty("stroke", "none")
+          } else if (node._borderForeignObj) {
+            node._borderForeignObj.style.display = "none"
+            node._svgPath?.style.removeProperty("stroke")
+          }
+
           if (!node._observer) {
             const obs = new MutationObserver(() => reloadTooltips())
             obs.observe(node, {
               attributes: true,
-              attributeFilter: ["data-easy-tooltip", "data-easy-tooltip-src", "data-easy-tooltip-background"]
+              attributeFilter: ["data-easy-tooltip", "data-easy-tooltip-src", "data-easy-tooltip-background", "data-easy-tooltip-border"]
             })
             node._observer = obs
           }

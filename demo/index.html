@@ -411,6 +411,130 @@
       color: #f472b6;
     }
 
+    @property --scene-aurora-1 {
+      syntax: "<color>";
+      inherits: true;
+      initial-value: transparent;
+    }
+
+    @property --scene-aurora-2 {
+      syntax: "<color>";
+      inherits: true;
+      initial-value: transparent;
+    }
+
+    @property --scene-aurora-3 {
+      syntax: "<color>";
+      inherits: true;
+      initial-value: transparent;
+    }
+
+    .scene-aurora {
+      overflow: hidden;
+      min-height: 320px;
+      align-items: flex-end;
+      padding-bottom: 44px;
+      background: linear-gradient(180deg, #020617, #0f172a);
+      --scene-aurora-1: rgba(74, 222, 128, 0.35);
+      --scene-aurora-2: rgba(34, 211, 238, 0.3);
+      --scene-aurora-3: rgba(167, 139, 250, 0.3);
+      transition: --scene-aurora-1 0.6s, --scene-aurora-2 0.6s, --scene-aurora-3 0.6s;
+    }
+
+    .scene-aurora:has([data-easy-tooltip-class~="aurora-tromso"]:is(:hover, :focus)) {
+      --scene-aurora-1: rgba(74, 222, 128, 0.5);
+      --scene-aurora-2: rgba(34, 211, 238, 0.4);
+      --scene-aurora-3: rgba(74, 222, 128, 0.3);
+    }
+
+    .scene-aurora:has([data-easy-tooltip-class~="aurora-reykjavik"]:is(:hover, :focus)) {
+      --scene-aurora-1: rgba(167, 139, 250, 0.45);
+      --scene-aurora-2: rgba(244, 114, 182, 0.4);
+      --scene-aurora-3: rgba(167, 139, 250, 0.35);
+    }
+
+    .scene-aurora:has([data-easy-tooltip-class~="aurora-fairbanks"]:is(:hover, :focus)) {
+      --scene-aurora-1: rgba(34, 211, 238, 0.45);
+      --scene-aurora-2: rgba(96, 165, 250, 0.4);
+      --scene-aurora-3: rgba(34, 211, 238, 0.32);
+    }
+
+    .scene-aurora::before {
+      content: "";
+      position: absolute;
+      inset: -20%;
+      background:
+        radial-gradient(ellipse 40% 60% at 25% 20%, var(--scene-aurora-1), transparent 65%),
+        radial-gradient(ellipse 35% 55% at 55% 10%, var(--scene-aurora-2), transparent 65%),
+        radial-gradient(ellipse 40% 60% at 80% 25%, var(--scene-aurora-3), transparent 65%);
+      filter: blur(24px);
+      animation: aurora-drift 16s ease-in-out infinite alternate;
+    }
+
+    .scene-aurora::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(1px 1px at 12% 25%, rgba(255, 255, 255, 0.8), transparent),
+        radial-gradient(1px 1px at 28% 60%, rgba(255, 255, 255, 0.5), transparent),
+        radial-gradient(1.5px 1.5px at 45% 15%, rgba(255, 255, 255, 0.9), transparent),
+        radial-gradient(1px 1px at 62% 45%, rgba(255, 255, 255, 0.6), transparent),
+        radial-gradient(1.5px 1.5px at 78% 20%, rgba(255, 255, 255, 0.8), transparent),
+        radial-gradient(1px 1px at 90% 55%, rgba(255, 255, 255, 0.5), transparent);
+    }
+
+    @keyframes aurora-drift {
+      from {
+        transform: translateX(-4%) skewX(-3deg);
+      }
+      to {
+        transform: translateX(4%) skewX(3deg);
+      }
+    }
+
+    .aurora-chip {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px 10px 20px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #e2e8f0;
+      font-weight: 500;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+    }
+
+    .aurora-chip:hover {
+      background: rgba(255, 255, 255, 0.14);
+    }
+
+    .aurora-kp {
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .aurora-kp-high {
+      background: rgba(74, 222, 128, 0.18);
+      color: #4ade80;
+    }
+
+    .aurora-kp-mid {
+      background: rgba(34, 211, 238, 0.18);
+      color: #22d3ee;
+    }
+
+    .aurora-kp-low {
+      background: rgba(167, 139, 250, 0.18);
+      color: #a78bfa;
+    }
+
     .scene-photo {
       padding: 0;
       background: #000;
@@ -1063,6 +1187,7 @@
           <li>No dependencies or frameworks required</li>
           <li>Works with mouse, touch, and keyboard focus</li>
           <li>Customizable via CSS variables</li>
+          <li>Gradient and image backgrounds and borders</li>
           <li>Smart positioning and viewport detection</li>
           <li>Smooth animations with smart skip-delay between adjacent tooltips</li>
           <li>Anchor to the trigger element, the cursor, or where the user first hovered</li>
@@ -1085,6 +1210,7 @@
             <button class="tab-button">Glass</button>
             <button class="tab-button">Sketch</button>
             <button class="tab-button">Neon</button>
+            <button class="tab-button">Aurora</button>
             <button class="tab-button">Photo</button>
           </div>
 
@@ -1253,6 +1379,14 @@
                   </filter>
                 </defs>
               </svg>
+            </div>
+          </div>
+
+          <div class="tab-panel">
+            <div class="demo-scene scene-aurora">
+              <div class="aurora-chip" tabindex="0" data-easy-tooltip="Strong aurora likely tonight, look north after 22:00" data-easy-tooltip-class="aurora-tooltip aurora-tromso">Tromsø<span class="aurora-kp aurora-kp-high">KP 6</span></div>
+              <div class="aurora-chip" tabindex="0" data-easy-tooltip="Visible away from city lights, best around midnight" data-easy-tooltip-class="aurora-tooltip aurora-reykjavik">Reykjavík<span class="aurora-kp aurora-kp-low">KP 4</span></div>
+              <div class="aurora-chip" tabindex="0" data-easy-tooltip="Good display expected, clear skies forecast" data-easy-tooltip-class="aurora-tooltip aurora-fairbanks">Fairbanks<span class="aurora-kp aurora-kp-mid">KP 5</span></div>
             </div>
           </div>
 
@@ -1466,6 +1600,44 @@
       </div>
 
       <div class="section">
+        <h2>Backgrounds & Borders</h2>
+        <p>Beyond flat colors, <code>--easy-tooltip-background</code> and <code>--easy-tooltip-border</code> accept any CSS image: gradients or <code>url()</code> images. Both follow the tooltip shape, arrow included. They can also be set per element with the <code>data-easy-tooltip-background</code> and <code>data-easy-tooltip-border</code> attributes.</p>
+
+        <div class="demo-grid demo-grid-4">
+          <div class="demo-card">
+            <h3>Gradient Background</h3>
+            <button data-easy-tooltip="Gradient background" data-easy-tooltip-class="gradient-bg-tooltip">Hover me</button>
+          </div>
+
+          <div class="demo-card">
+            <h3>Image Background</h3>
+            <button data-easy-tooltip="Image background" data-easy-tooltip-class="image-bg-tooltip" data-easy-tooltip-background="url('https://picsum.photos/id/255/300/100?blur')">Hover me</button>
+          </div>
+
+          <div class="demo-card">
+            <h3>Gradient Border</h3>
+            <button data-easy-tooltip="Gradient border" data-easy-tooltip-class="gradient-border-tooltip">Hover me</button>
+          </div>
+
+          <div class="demo-card">
+            <h3>Rainbow Border</h3>
+            <button data-easy-tooltip="Conic gradient border" data-easy-tooltip-class="rainbow-border-tooltip">Hover me</button>
+          </div>
+        </div>
+
+        <pre>&lt;button data-easy-tooltip="Gradient background" data-easy-tooltip-class="gradient-tooltip"&gt;Hover me&lt;/button&gt;
+&lt;button data-easy-tooltip="Image background" data-easy-tooltip-background="url('photo.jpg')"&gt;Hover me&lt;/button&gt;
+&lt;button data-easy-tooltip="Gradient border" data-easy-tooltip-border="linear-gradient(135deg, #f0f, #0ff)"&gt;Hover me&lt;/button&gt;
+
+&lt;style&gt;
+  .gradient-tooltip {
+    --easy-tooltip-background: linear-gradient(135deg, #667eea, #764ba2);
+    --easy-tooltip-text-color: #fff;
+  }
+&lt;/style&gt;</pre>
+      </div>
+
+      <div class="section">
         <h2>Customization Variables</h2>
         <p>Fine-tune tooltips with CSS variables:</p>
         
@@ -1537,6 +1709,8 @@
     --easy-tooltip-text-color: #000;           /* Text color */
     --easy-tooltip-border-color: #aaa;         /* Border color */
     --easy-tooltip-border-size: 1px;           /* Border thickness */
+    --easy-tooltip-background: none;           /* Background image/gradient, replaces the background color */
+    --easy-tooltip-border: none;               /* Border image/gradient, replaces the border color */
     --easy-tooltip-border-radius: 4px;         /* Corner radius of the tooltip */
     --easy-tooltip-padding: 8px 12px;          /* Inner padding */
     --easy-tooltip-max-width: 100%;            /* Maximum tooltip width */
@@ -1739,6 +1913,89 @@
           filter:
             drop-shadow(0 0 4px rgba(34, 211, 238, 0.4))
             drop-shadow(0 0 14px rgba(34, 211, 238, 0.25));
+        }
+
+        .aurora-tooltip {
+          --aurora-stars:
+            radial-gradient(1px 1px at 15% 30%, rgba(255, 255, 255, 0.9), transparent),
+            radial-gradient(1px 1px at 35% 70%, rgba(255, 255, 255, 0.5), transparent),
+            radial-gradient(1.5px 1.5px at 10% 80%, rgba(255, 255, 255, 0.9), transparent),
+            radial-gradient(1px 1px at 65% 55%, rgba(255, 255, 255, 0.6), transparent),
+            radial-gradient(1.5px 1.5px at 82% 35%, rgba(255, 255, 255, 0.8), transparent),
+            radial-gradient(1px 1px at 92% 75%, rgba(255, 255, 255, 0.5), transparent);
+          --easy-tooltip-background:
+            var(--aurora-stars),
+            radial-gradient(ellipse 130% 90% at 20% 0%, rgba(74, 222, 128, 0.4), transparent 60%),
+            radial-gradient(ellipse 130% 90% at 85% 15%, rgba(167, 139, 250, 0.4), transparent 60%),
+            linear-gradient(180deg, #0b1120, #101c3a);
+          --easy-tooltip-border: linear-gradient(120deg, #4ade80, #22d3ee 50%, #a78bfa);
+          --easy-tooltip-border-size: 2px;
+          --easy-tooltip-border-radius: 10px;
+          --easy-tooltip-text-color: #fff;
+          --easy-tooltip-max-width: 240px;
+          font-weight: 500;
+          text-shadow: 0 1px 4px rgba(2, 6, 23, 0.8);
+        }
+
+        .aurora-tooltip .easy-tooltip-bg {
+          filter: drop-shadow(0 0 14px rgba(74, 222, 128, 0.3));
+        }
+
+        .aurora-tromso {
+          --easy-tooltip-background:
+            var(--aurora-stars),
+            radial-gradient(ellipse 130% 90% at 20% 0%, rgba(74, 222, 128, 0.45), transparent 60%),
+            radial-gradient(ellipse 130% 90% at 85% 15%, rgba(34, 211, 238, 0.35), transparent 60%),
+            linear-gradient(180deg, #0b1120, #101c3a);
+          --easy-tooltip-border: linear-gradient(120deg, #4ade80, #22d3ee);
+        }
+
+        .aurora-reykjavik {
+          --easy-tooltip-background:
+            var(--aurora-stars),
+            radial-gradient(ellipse 130% 90% at 20% 0%, rgba(167, 139, 250, 0.45), transparent 60%),
+            radial-gradient(ellipse 130% 90% at 85% 15%, rgba(244, 114, 182, 0.35), transparent 60%),
+            linear-gradient(180deg, #0b1120, #101c3a);
+          --easy-tooltip-border: linear-gradient(120deg, #a78bfa, #f472b6);
+        }
+
+        .aurora-reykjavik .easy-tooltip-bg {
+          filter: drop-shadow(0 0 14px rgba(167, 139, 250, 0.35));
+        }
+
+        .aurora-fairbanks {
+          --easy-tooltip-background:
+            var(--aurora-stars),
+            radial-gradient(ellipse 130% 90% at 20% 0%, rgba(34, 211, 238, 0.45), transparent 60%),
+            radial-gradient(ellipse 130% 90% at 85% 15%, rgba(96, 165, 250, 0.35), transparent 60%),
+            linear-gradient(180deg, #0b1120, #101c3a);
+          --easy-tooltip-border: linear-gradient(120deg, #22d3ee, #60a5fa);
+        }
+
+        .aurora-fairbanks .easy-tooltip-bg {
+          filter: drop-shadow(0 0 14px rgba(34, 211, 238, 0.35));
+        }
+
+        .gradient-bg-tooltip {
+          --easy-tooltip-background: linear-gradient(135deg, #667eea, #764ba2);
+          --easy-tooltip-border-color: #667eea;
+          --easy-tooltip-text-color: #fff;
+        }
+
+        .image-bg-tooltip {
+          --easy-tooltip-border-color: #333;
+          --easy-tooltip-text-color: #fff;
+          text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+        }
+
+        .gradient-border-tooltip {
+          --easy-tooltip-border: linear-gradient(135deg, #f0f, #0ff);
+          --easy-tooltip-border-size: 3px;
+        }
+
+        .rainbow-border-tooltip {
+          --easy-tooltip-border: conic-gradient(red, yellow, lime, cyan, blue, magenta, red);
+          --easy-tooltip-border-size: 3px;
         }
       </style>
     </div>
@@ -1981,6 +2238,45 @@
   filter:
     drop-shadow(0 0 4px rgba(34, 211, 238, 0.4))
     drop-shadow(0 0 14px rgba(34, 211, 238, 0.25));
+}`,
+      },
+      "scene-aurora": {
+        title: "Aurora",
+        description: "Both the fill and the border are painted from CSS gradients. --easy-tooltip-background layers star specks and aurora curtains over a night-sky base, and --easy-tooltip-border wraps the shape in a gradient band. Any CSS image works for either (linear, radial, or conic gradients, even url() images), and both follow the arrow since they are clipped from the same SVG path. Each city adds a modifier class that recolors the curtains and border, reusing the shared star layers through a helper variable.",
+        html: `<div data-easy-tooltip="Strong aurora likely tonight, look north after 22:00" data-easy-tooltip-class="aurora-tooltip aurora-tromso">Tromsø<span>KP 6</span></div>
+<div data-easy-tooltip="Visible away from city lights, best around midnight" data-easy-tooltip-class="aurora-tooltip aurora-reykjavik">Reykjavík<span>KP 4</span></div>`,
+        style: `.aurora-tooltip {
+  --aurora-stars:
+    radial-gradient(1px 1px at 15% 30%, rgba(255, 255, 255, 0.9), transparent),
+    radial-gradient(1px 1px at 35% 70%, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1.5px 1.5px at 10% 80%, rgba(255, 255, 255, 0.9), transparent),
+    radial-gradient(1px 1px at 65% 55%, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1.5px 1.5px at 82% 35%, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1px 1px at 92% 75%, rgba(255, 255, 255, 0.5), transparent);
+  --easy-tooltip-border-size: 2px;
+  --easy-tooltip-border-radius: 10px;
+  --easy-tooltip-text-color: #fff;
+  --easy-tooltip-max-width: 240px;
+  font-weight: 500;
+  text-shadow: 0 1px 4px rgba(2, 6, 23, 0.8);
+}
+
+.aurora-tromso {
+  --easy-tooltip-background:
+    var(--aurora-stars),
+    radial-gradient(ellipse 130% 90% at 20% 0%, rgba(74, 222, 128, 0.45), transparent 60%),
+    radial-gradient(ellipse 130% 90% at 85% 15%, rgba(34, 211, 238, 0.35), transparent 60%),
+    linear-gradient(180deg, #0b1120, #101c3a);
+  --easy-tooltip-border: linear-gradient(120deg, #4ade80, #22d3ee);
+}
+
+.aurora-reykjavik {
+  --easy-tooltip-background:
+    var(--aurora-stars),
+    radial-gradient(ellipse 130% 90% at 20% 0%, rgba(167, 139, 250, 0.45), transparent 60%),
+    radial-gradient(ellipse 130% 90% at 85% 15%, rgba(244, 114, 182, 0.35), transparent 60%),
+    linear-gradient(180deg, #0b1120, #101c3a);
+  --easy-tooltip-border: linear-gradient(120deg, #a78bfa, #f472b6);
 }`,
       },
       "scene-photo": {

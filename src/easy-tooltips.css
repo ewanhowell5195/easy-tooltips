@@ -50,6 +50,12 @@
   initial-value: none;
 }
 
+@property --easy-tooltip-border {
+  syntax: "<image>";
+  inherits: true;
+  initial-value: none;
+}
+
 #easy-tooltips {
   z-index: 99999;
   position: relative;
@@ -111,6 +117,12 @@
 .easy-tooltip-bg path {
   fill: var(--easy-tooltip-background-color);
   stroke: var(--easy-tooltip-border-color);
+  stroke-width: var(--easy-tooltip-border-size);
+}
+
+.easy-tooltip-bg mask path {
+  fill: none;
+  stroke: #fff;
   stroke-width: var(--easy-tooltip-border-size);
 }
 

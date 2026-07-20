@@ -14,6 +14,7 @@ Just add `data-easy-tooltip` to any element! No setup or config required.
 * No dependencies
 * Works with mouse, touch, and keyboard focus
 * Customizable via CSS variables
+* Gradient and image backgrounds and borders
 * Automatically repositions and shifts to fit the screen
 * Smooth, non-interrupting animations with smart skip-delay between adjacent tooltips
 * Anchor to the trigger element, the cursor, or where the user first hovered
@@ -143,6 +144,8 @@ You can style tooltips using CSS variables (recommended) or by targeting the too
   --easy-tooltip-text-color: #000;           /* Text color */
   --easy-tooltip-border-color: #aaa;         /* Border color */
   --easy-tooltip-border-size: 1px;           /* Border thickness */
+  --easy-tooltip-background: none;           /* Background image/gradient, replaces the background color */
+  --easy-tooltip-border: none;               /* Border image/gradient, replaces the border color */
   --easy-tooltip-border-radius: 4px;         /* Corner radius of the tooltip */
   --easy-tooltip-padding: 8px 12px;          /* Inner padding */
   --easy-tooltip-max-width: 100%;            /* Maximum tooltip width */
@@ -163,6 +166,26 @@ You can style tooltips using CSS variables (recommended) or by targeting the too
   --easy-tooltip-inactive-delay: 0.15s;      /* Extra delay when no tooltip was recently active; drops to 0 once a tooltip is showing */
   --easy-tooltip-cooldown: 0.15s;            /* How long after the last tooltip closes before the inactive-delay applies again */
 }
+```
+
+### Image backgrounds and borders
+
+`--easy-tooltip-background` and `--easy-tooltip-border` accept any CSS `<image>`: gradients or `url()` images. Both follow the tooltip shape, arrow included, and replace the flat background/border colors when set.
+
+```css
+.fancy-tooltip {
+  --easy-tooltip-background: linear-gradient(135deg, #667eea, #764ba2);
+  --easy-tooltip-border: linear-gradient(135deg, #f0f, #0ff);
+  --easy-tooltip-border-size: 2px;
+  --easy-tooltip-text-color: #fff;
+}
+```
+
+They can also be set per element with data attributes, which take priority over the variables:
+
+```html
+<button data-easy-tooltip="Photo background" data-easy-tooltip-background="url('photo.jpg')">Hover me</button>
+<button data-easy-tooltip="Gradient border" data-easy-tooltip-border="linear-gradient(135deg, #f0f, #0ff)">Hover me</button>
 ```
 
 ### Show delay and quick-switch
@@ -206,7 +229,7 @@ The border is the SVG path's `stroke`, so any stroke property works:
 
 #### Backgrounds
 
-`fill` on the SVG path only accepts a `<paint>` value, so CSS gradients (`linear-gradient`, etc.) won't apply directly. To use a gradient (or any other SVG paint server), declare it once in the document and reference it by id:
+For gradient or image backgrounds, use `--easy-tooltip-background` (see [Image backgrounds and borders](#image-backgrounds-and-borders)). Alternatively, the path's `fill` accepts any SVG paint server declared in the document, referenced by id:
 
 ```html
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -225,7 +248,7 @@ The border is the SVG path's `stroke`, so any stroke property works:
 }
 ```
 
-The same approach works for `stroke` (gradient borders), and for radial, conic, or pattern paint servers.
+The same approach works for `stroke` (an alternative to `--easy-tooltip-border`), and for radial, conic, or pattern paint servers.
 
 For a drop shadow that follows the full body + arrow shape, apply a filter to the SVG element:
 
