@@ -1,22 +1,56 @@
+import './easy-tooltips.css'
+
+type TooltipElement = HTMLElement & {
+  _tooltip?: TooltipElement
+  _tooltipText?: HTMLElement
+  _activated?: boolean
+  _source?: Node
+  _timeout?: number
+  _activateTimer?: number
+  _tooltipClass?: string
+  _start?: number
+  _delay?: number
+  _animation_duration?: number
+  _next?: boolean
+  _anchorPoint?: { x: number, y: number }
+  _svgPath?: SVGPathElement
+  _clipPath?: SVGPathElement
+  _foreignObj?: SVGForeignObjectElement
+  _surfaceDiv?: HTMLDivElement
+  _observer?: MutationObserver
+  _sourceObserver?: MutationObserver
+}
+
 {
   function initTooltips() {
     const tooltips = document.createElement("div")
     tooltips.id = "easy-tooltips"
     document.body.append(tooltips)
 
-    let lastElement, lastByPointer, mouseActive, cursorX, cursorY, cursorAnchorActive, cursorRafQueued, cooldownTimer, ignoreFocusReturn
-    let activeCount = 0, visibleCount = 0, zIndexCounter = 0
+    let
+      lastElement: TooltipElement | undefined,
+      lastByPointer: boolean,
+      mouseActive: boolean,
+      cursorX: number,
+      cursorY: number,
+      cursorAnchorActive: boolean,
+      cursorRafQueued: boolean,
+      cooldownTimer: number,
+      ignoreFocusReturn: boolean,
+      activeCount = 0,
+      visibleCount = 0,
+      zIndexCounter = 0
 
-    function activateTooltip(tooltip) {
+    function activateTooltip(tooltip: TooltipElement) {
       tooltip._activated = true
       activeCount++
       clearTimeout(cooldownTimer)
       tooltips.classList.add("easy-tooltips-active")
-      tooltip.style.zIndex = ++zIndexCounter
+      tooltip.style.zIndex = String(++zIndexCounter)
       startHoverPoll()
     }
 
-    function deactivateTooltip(tooltip) {
+    function deactivateTooltip(tooltip: TooltipElement) {
       if (!tooltip._activated) return
       tooltip._activated = false
       if (--activeCount <= 0) {
@@ -29,11 +63,9 @@
       }
     }
 
-    const observedNodes = new Set()
-    const triggers = new Set()
-    const observer = new MutationObserver(() => reloadTooltips())
+    const triggers = new Set<TooltipElement>()
 
-    function releaseTooltip(node) {
+    function releaseTooltip(node: TooltipElement) {
       const t = node._tooltip
       if (t) {
         if (t.classList.contains("easy-tooltip-visible")) visibleCount--
@@ -42,18 +74,17 @@
         deactivateTooltip(t)
         t.remove()
       }
-      observer.unobserve(node)
-      observedNodes.delete(node)
-      if (node._source) {
-        observer.unobserve(node._source)
-        observedNodes.delete(node._source)
-      }
+
+      node._observer?.disconnect()
+      node._sourceObserver?.disconnect()
+      node._observer = node._sourceObserver = undefined
+
       triggers.delete(node)
-      node._tooltip = node._tooltipText = node._svgPath = node._tooltipClass = node._source = node._anchorPoint = undefined
+      node._tooltip = node._tooltipText = node._svgPath = node._clipPath = node._foreignObj = node._surfaceDiv = node._tooltipClass = node._source = node._anchorPoint = undefined
       if (node === lastElement) lastElement = undefined
     }
 
-    let releaseScheduled
+    let releaseScheduled: boolean
     new MutationObserver(records => {
       if (releaseScheduled || !records.some(r => r.removedNodes.length)) return
       releaseScheduled = true
@@ -65,7 +96,7 @@
       })
     }).observe(document.body, { childList: true, subtree: true })
 
-    let hoverPollRaf
+    let hoverPollRaf: number
     function pollHover() {
       hoverPollRaf = 0
       if (mouseActive && cursorX !== undefined) {
@@ -83,13 +114,13 @@
       if (!hoverPollRaf) hoverPollRaf = requestAnimationFrame(pollHover)
     }
 
-    function ms(value) {
+    function ms(value: string) {
       value = value.trim()
       const n = parseFloat(value)
       return value.endsWith("ms") ? n : n * 1000
     }
 
-    function tooltipVisibility(tooltip, visible) {
+    function tooltipVisibility(tooltip: TooltipElement, visible: boolean) {
       const styles = getComputedStyle(tooltip)
       const length = ms(styles.getPropertyValue("--easy-tooltip-animation-length"))
       if (visible) {
@@ -100,7 +131,7 @@
         }
         tooltip._animation_duration = length + delay
       } else {
-        if (tooltip._delay && performance.now() < tooltip._start + tooltip._delay) {
+        if (tooltip._delay && performance.now() < Number(tooltip._start) + tooltip._delay) {
           if (tooltip.classList.contains("easy-tooltip-visible")) visibleCount--
           tooltip.classList.remove("easy-tooltip-visible")
           clearTimeout(tooltip._timeout)
@@ -151,36 +182,63 @@
       cursorAnchorActive = false
       if (lastElement) {
         const toAdd = []
-        let node = lastElement
+        let node: TooltipElement | null = lastElement
         while (node && node !== document.body) {
           if (node.dataset.easyTooltip) {
             toAdd.push(node)
           } else if (node.dataset.easyTooltipSrc) {
             const src = node.dataset.easyTooltipSrc
+            const oldSource = node._source
             if (src === "next") {
-              node._source = node.nextElementSibling
+              node._source = node.nextElementSibling ?? undefined
             } else {
-              try { node._source = document.getElementById(src) || document.querySelector(src) } catch {}
+              try { node._source = (document.getElementById(src) || document.querySelector(src)) ?? undefined } catch {}
+            }
+            if (oldSource !== node._source && node._sourceObserver) {
+              node._sourceObserver.disconnect()
+              node._sourceObserver = undefined
             }
             if (node._source) toAdd.push(node)
           }
-          node = node.parentElement
+          node = node.parentElement as TooltipElement | null
         }
         for (let i = toAdd.length; i--;) {
           const node = toAdd[i]
           let tooltip = node._tooltip
           let tooltipText = node._tooltipText
-          if (!tooltip) {
-            tooltip = document.createElement("div")
+          if (!tooltip || !tooltipText) {
+            tooltip = document.createElement("div") as TooltipElement
             tooltip.className = "easy-tooltip easy-tooltip-setup"
             node._tooltip = tooltip
 
             const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
             svg.classList.add("easy-tooltip-bg")
             svg.setAttribute("aria-hidden", "true")
+
+            const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs")
+            const clipPath = document.createElementNS("http://www.w3.org/2000/svg", "clipPath")
+            const clipId = "easy-tooltip-clip-" + Math.random().toString(36).substring(2, 9)
+            clipPath.id = clipId
+
+            const clipSvgPath = document.createElementNS("http://www.w3.org/2000/svg", "path")
+            clipPath.append(clipSvgPath)
+            defs.append(clipPath)
+            node._clipPath = clipSvgPath
+
+            const foreignObj = document.createElementNS("http://www.w3.org/2000/svg", "foreignObject")
+            foreignObj.setAttribute("clip-path", `url(#${clipId})`)
+
+            const surfaceDiv = document.createElement("div")
+            surfaceDiv.className = "easy-tooltip-surface"
+            foreignObj.append(surfaceDiv)
+
+            node._foreignObj = foreignObj
+            node._surfaceDiv = surfaceDiv
+
             const svgPath = document.createElementNS("http://www.w3.org/2000/svg", "path")
-            svg.append(svgPath)
             node._svgPath = svgPath
+
+            svg.append(defs, foreignObj, svgPath)
 
             tooltipText = document.createElement("div")
             tooltipText.className = "easy-tooltip-text"
@@ -205,10 +263,10 @@
             tooltipText.replaceChildren(...node._source.cloneNode(true).childNodes)
             tooltipText.classList.add("easy-tooltip-text-html")
           } else {
-            tooltipText.textContent = node.dataset.easyTooltip
+            tooltipText.textContent = node.dataset.easyTooltip ?? null
             tooltipText.classList.remove("easy-tooltip-text-html")
           }
-          
+
           const anchorMode = node.dataset.easyTooltipAnchor
           const useCursor = anchorMode === "cursor" && lastByPointer
           const usePin = anchorMode === "pin" && lastByPointer
@@ -216,7 +274,7 @@
           if (usePin && !tooltip.classList.contains("easy-tooltip-visible")) {
             node._anchorPoint = { x: cursorX + window.scrollX, y: cursorY + window.scrollY }
           }
-          const pointRect = (x, y) => ({ left: x, right: x, top: y, bottom: y, width: 0, height: 0 })
+          const pointRect = (x: number, y: number) => ({ left: x, right: x, top: y, bottom: y, width: 0, height: 0 })
           let rect
           if (useCursor) {
             rect = pointRect(cursorX, cursorY)
@@ -250,8 +308,8 @@
           tooltipText.style.translate = ""
           tooltip.classList.remove("easy-tooltip-below", "easy-tooltip-inside", "easy-tooltip-left", "easy-tooltip-right")
 
-          let tooltipWidth, tooltipHeight
-          let dir, inside
+          let tooltipWidth: number = 0, tooltipHeight: number = 0
+          let dir: 'above' | 'below' | 'right' | 'left' | undefined, inside
 
           if (prefer === "left" || prefer === "right") {
             tooltip.style.minWidth = `${br * 2}px`
@@ -261,7 +319,7 @@
             tooltipText.style.width = ""
             tooltipText.style.minWidth = ""
 
-            for (const side of [prefer, prefer === "left" ? "right" : "left"]) {
+            for (const side of [prefer, prefer === "left" ? "right" : "left"] as ('right' | 'left')[]) {
               if ((side === "left" ? rect.left - distance - padding : viewportWidth - rect.right - distance - padding) < minWidth) continue
               tooltip.classList.remove("easy-tooltip-left", "easy-tooltip-right")
               tooltip.classList.add("easy-tooltip-" + side)
@@ -282,7 +340,7 @@
               inside = true
             }
           } else {
-            ({ width: tooltipWidth, height: tooltipHeight } = tooltip.getBoundingClientRect())
+            ;({ width: tooltipWidth, height: tooltipHeight } = tooltip.getBoundingClientRect())
             const y = Math.round(rect.top)
             const fitsAbove = y - tooltipHeight - distance > padding
             const fitsBelow = y + rect.height + tooltipHeight + distance < viewportHeight - padding
@@ -318,7 +376,14 @@
             tooltipText.style.minHeight = `${br * 2}px`
           }
 
-          function shift(before, after, size, viewportSize, edgeBuffer, vertical) {
+          function shift(
+            before: number,
+            after: number,
+            size: number,
+            viewportSize: number,
+            edgeBuffer: number,
+            vertical: boolean
+          ) {
             const maxTextShift = size / 2 - arrowBase / 2 - edgeBuffer - br
             let text = 0, tip = 0
             if (before < padding) {
@@ -328,12 +393,22 @@
               text = -Math.min(after - (viewportSize - padding), maxTextShift)
               if (after + text > viewportSize - padding) tip = -(after + text - (viewportSize - padding))
             }
-            if (text) tooltipText.style.translate = vertical ? `0 ${text}px` : `${text}px`
-            if (tip) tooltip.style.translate = vertical ? `0 ${tip}px` : `${tip}px 0`
+            if (text && tooltipText !== undefined) tooltipText.style.translate = vertical ? `0 ${text}px` : `${text}px`
+            if (tip && tooltip !== undefined) tooltip.style.translate = vertical ? `0 ${tip}px` : `${tip}px 0`
             return text
           }
 
-          function arrowPath(dir, w, h, r, ab, ah, ax, ay, ar) {
+          function arrowPath(
+            dir: 'above' | 'below' | 'right' | 'left',
+            w: number,
+            h: number,
+            r: number,
+            ab: number,
+            ah: number,
+            ax: number,
+            ay: number,
+            ar: number
+          ) {
             const ahb = ab / 2
             const s = ar * Math.SQRT1_2
             if (dir === "above") {
@@ -387,38 +462,85 @@
           const vertical = dir === "left" || dir === "right"
           const ax = vertical ? bw / 2 : bw / 2 - textShift
           const ay = vertical ? bh / 2 - textShift : bh / 2
-          node._svgPath.setAttribute("d", arrowPath(dir, bw, bh, br, arrowBase, ah, ax, ay, ar))
+
+          const pathData = arrowPath(dir, bw, bh, br, arrowBase, ah, ax, ay, ar)
+          node._svgPath?.setAttribute("d", pathData)
+          node._clipPath?.setAttribute("d", pathData)
+
           if (textShift) {
-            node._svgPath.setAttribute("transform", vertical ? `translate(0 ${textShift})` : `translate(${textShift} 0)`)
+            const transformVal = vertical ? `translate(0 ${textShift})` : `translate(${textShift} 0)`
+            node._svgPath?.setAttribute("transform", transformVal)
+            node._clipPath?.setAttribute("transform", transformVal)
           } else {
-            node._svgPath.removeAttribute("transform")
+            node._svgPath?.removeAttribute("transform")
+            node._clipPath?.removeAttribute("transform")
           }
 
-          if (!observedNodes.has(node)) {
-            observer.observe(node, { attributes: true, attributeFilter: ["data-easy-tooltip", "data-easy-tooltip-src"] })
-            observedNodes.add(node)
+          const customBg = node.dataset.easyTooltipBackground || styles.getPropertyValue("--easy-tooltip-background").trim()
+
+          if (customBg && node._surfaceDiv && node._foreignObj) {
+            let minX = 0, maxX = bw, minY = 0, maxY = bh
+            if (dir === "left") maxX += ah
+            else if (dir === "right") minX -= ah
+            else if (dir === "above") maxY += ah
+            else if (dir === "below") minY -= ah
+
+            if (textShift) {
+              if (vertical) {
+                minY += Math.min(0, textShift)
+                maxY += Math.max(0, textShift)
+              } else {
+                minX += Math.min(0, textShift)
+                maxX += Math.max(0, textShift)
+              }
+            }
+
+            node._foreignObj.setAttribute("x", `${minX}`)
+            node._foreignObj.setAttribute("y", `${minY}`)
+            node._foreignObj.setAttribute("width", `${maxX - minX}`)
+            node._foreignObj.setAttribute("height", `${maxY - minY}`)
+
+            node._surfaceDiv.style.width = "100%"
+            node._surfaceDiv.style.height = "100%"
+            node._surfaceDiv.style.background = customBg
+            node._foreignObj.style.display = ""
+            node._svgPath?.style.setProperty("fill", "none")
+          } else if (node._foreignObj) {
+            node._foreignObj.style.display = "none"
+            node._svgPath?.style.removeProperty("fill")
+          }
+
+          if (!node._observer) {
+            const obs = new MutationObserver(() => reloadTooltips())
+            obs.observe(node, {
+              attributes: true,
+              attributeFilter: ["data-easy-tooltip", "data-easy-tooltip-src", "data-easy-tooltip-background"]
+            })
+            node._observer = obs
           }
           triggers.add(node)
-          if (node._source && !observedNodes.has(node._source)) {
-            observer.observe(node._source, { childList: true, subtree: true, characterData: true })
-            observedNodes.add(node._source)
+
+          if (node._source && !node._sourceObserver) {
+            const obs = new MutationObserver(() => reloadTooltips())
+            obs.observe(node._source, { childList: true, subtree: true, characterData: true })
+            node._sourceObserver = obs
           }
         }
       }
     }
 
-    function removeTooltips(node, force) {
+    function removeTooltips(node: TooltipElement | undefined, force: boolean = false) {
       while (node && node !== document.body) {
         if (node._tooltip && (force || !node.matches(":hover"))) {
           tooltipVisibility(node._tooltip, false)
         }
-        node = node.parentElement
+        node = node.parentElement ?? undefined
       }
     }
 
-    let runningTooltip, nextTooltipEvent
+    let runningTooltip: boolean, nextTooltipEvent: Function | null
 
-    function queueTooltipUpdate(func) {
+    function queueTooltipUpdate(func: Function) {
       if (runningTooltip) {
         nextTooltipEvent = func
         return
@@ -441,17 +563,17 @@
       queueTooltipUpdate(addTooltips)
     }
 
-    function updateTooltipTarget(e, forceRemove) {
+    function updateTooltipTarget(e: Event, forceRemove: boolean = false) {
       queueTooltipUpdate(() => {
         removeTooltips(lastElement, forceRemove)
-        lastElement = e.target
+        lastElement = (e.target as TooltipElement | null) ?? undefined
         addTooltips()
       })
     }
 
     let touchedAt = 0
 
-    function setTouchPos(e) {
+    function setTouchPos(e: TouchEvent) {
       const t = e.touches[0]
       if (!t) return false
       cursorX = t.clientX
@@ -519,7 +641,11 @@
     })
 
     document.addEventListener("focusout", e => {
-      queueTooltipUpdate(() => removeTooltips(e.target))
+      queueTooltipUpdate(() => {
+        if (e.target) {
+          removeTooltips(e.target as TooltipElement)
+        }
+      })
     })
 
     window.addEventListener("blur", () => {

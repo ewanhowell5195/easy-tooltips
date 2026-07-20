@@ -1,0 +1,51 @@
+import { defineConfig, Plugin } from 'vite'
+import pkg from './package.json' with { type: 'json' }
+
+const banner = `/*!
+ * easy-tooltips
+ * Version  : ${pkg.version}
+ * License  : MIT
+ * Copyright: ${new Date().getFullYear()} Ewan Howell
+ */`
+
+const cssBannerPlugin = (banner: string): Plugin => ({
+  name: 'css-banner-plugin',
+  enforce: 'post',
+  generateBundle(_, bundle) {
+    for (const fileName in bundle) {
+      if (fileName.endsWith('.css')) {
+        const file = bundle[fileName]
+        if (file.type === 'asset') {
+          const content = typeof file.source === 'string'
+            ? file.source
+            : new TextDecoder().decode(file.source)
+          file.source = `${banner}\n${content.replace('\n/*$vite$:1*/', '')}`
+        }
+      }
+    }
+  },
+})
+
+export default defineConfig({
+  plugins: [cssBannerPlugin(banner)],
+  build: {
+    outDir: 'dist',
+    emptyOutDir: true,
+    assetsDir: '.',
+    cssCodeSplit: false,
+    lib: {
+      entry: 'src/easy-tooltips.ts',
+      cssFileName: 'easy-tooltips.min',
+      fileName: 'easy-tooltips',
+      name: 'easyTooltips',
+      formats: ['cjs'],
+    },
+    rolldownOptions: {
+      output: {
+        entryFileNames: '[name].min.js',
+        topLevelVar: true,
+        postBanner: banner
+      }
+    }
+  }
+})

@@ -3,6 +3,9 @@
   "version": "3.0.3",
   "description": "A lightweight, zero-dependency tooltip library using modern JavaScript and CSS.",
   "author": "Ewan Howell <ewanhowell5195>",
+  "contributors": [
+    "Even Torset <eventorset@gmail.com>"
+  ],
   "license": "MIT",
   "type": "module",
   "main": "./dist/easy-tooltips.min.js",
@@ -40,10 +43,12 @@
     "positioning"
   ],
   "scripts": {
-    "build": "node build.js"
+    "build": "vite build",
+    "dev": "vite dev"
   },
   "devDependencies": {
-    "clean-css": "^5.3.3",
-    "terser": "^5.43.1"
+    "@types/node": "^26.1.1",
+    "typescript": "^7.0.2",
+    "vite": "^8.1.5"
   }
 }

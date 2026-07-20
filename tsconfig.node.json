@@ -1,0 +1,8 @@
+{
+  "files": ["vite.config.ts"],
+  "compilerOptions": {
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "types": ["node"]
+  }
+}
