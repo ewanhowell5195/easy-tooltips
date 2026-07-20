@@ -24,7 +24,7 @@
       </div>
     </div>
     <div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);">
-      <div tabindex="0" data-easy-tooltip="I am a tooltip I am a tooltip" style="background: red; padding: 20px;">
+      <div tabindex="0" data-easy-tooltip="I am a tooltip I am a tooltip" data-easy-tooltip-background="url('https://picsum.photos/id/255/300/100?blur')" style="background: red; padding: 20px;">
         Hello there<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
         <div tabindex="0" data-easy-tooltip="I am a sub-tooltip&#10;I am a sub-tooltip" data-easy-tooltip-class="sub-tooltip" style="background: lime;">Hello there</div>
       </div>
@@ -53,6 +53,6 @@
         autoReleaseTimer = setTimeout(() => this.remove(), 5000)
       })
     </script>
-    <script>import(`./src/easy-tooltips.js?rnd=${Math.random()}`)</script>
+    <script type="module" src="/src/easy-tooltips.ts"></script>
   </body>
 </html>

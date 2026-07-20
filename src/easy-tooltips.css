@@ -44,6 +44,12 @@
   initial-value: 100%;
 }
 
+@property --easy-tooltip-background {
+  syntax: "<image>";
+  inherits: true;
+  initial-value: none;
+}
+
 #easy-tooltips {
   z-index: 99999;
   position: relative;
