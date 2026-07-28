@@ -24,7 +24,15 @@
       </div>
     </div>
     <div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);">
-      <div tabindex="0" data-easy-tooltip="I am a tooltip I am a tooltip" data-easy-tooltip-background="url('https://picsum.photos/id/255/300/100?blur')" data-easy-tooltip-border="linear-gradient(135deg, #f0f, #0ff)" style="background: red; padding: 20px;">
+      <div
+        tabindex="0"
+        id="bouncy-tooltip-owner"
+        data-easy-tooltip="I am a tooltip I am a tooltip"
+        data-easy-tooltip-background="url('https://picsum.photos/id/255/300/100?blur')"
+        data-easy-tooltip-border="linear-gradient(135deg, #f0f, #0ff)"
+        data-easy-tooltip-style="--easy-tooltip-distance:50px;"
+        style="background: red; padding: 20px;"
+      >
         Hello there<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
         <div tabindex="0" data-easy-tooltip="I am a sub-tooltip&#10;I am a sub-tooltip" data-easy-tooltip-class="sub-tooltip" style="background: lime;">Hello there</div>
       </div>
@@ -52,6 +60,14 @@
         if (autoReleaseTimer) return
         autoReleaseTimer = setTimeout(() => this.remove(), 5000)
       })
+
+      const bouncyTooltipOwner = document.getElementById('bouncy-tooltip-owner')
+      function bounce() {
+        const dist = (Math.sin(performance.now() / 200) * 0.5 + 0.5) * 30 + 20
+        bouncyTooltipOwner.dataset.easyTooltipStyle = `--easy-tooltip-distance:${dist}px;`
+        requestAnimationFrame(bounce)
+      }
+      requestAnimationFrame(bounce)
     </script>
     <script type="module" src="/src/easy-tooltips.ts"></script>
   </body>
