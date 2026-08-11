@@ -273,7 +273,7 @@ type TooltipElement = HTMLElement & {
             tooltips.append(tooltip)
           }
 
-          tooltip.style = node.dataset.easyTooltipStyle ?? ''
+          tooltip.style = node.dataset.easyTooltipStyle ?? ""
 
           const customClass = node.dataset.easyTooltipClass
           if (node._tooltipClass !== customClass) {
