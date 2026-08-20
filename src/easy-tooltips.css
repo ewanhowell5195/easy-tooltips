@@ -58,9 +58,23 @@
 
 #easy-tooltips {
   z-index: 99999;
-  position: relative;
+  position: fixed;
+  inset: 0;
   pointer-events: none;
   user-select: none;
+}
+
+#easy-tooltips[popover] {
+  display: block !important;
+  position: fixed !important;
+  inset: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 !important;
+  border: none !important;
+  padding: 0 !important;
+  background: none !important;
+  overflow: visible !important;
 }
 
 .easy-tooltip {
@@ -169,7 +183,8 @@
   white-space: pre-line;
 }
 
-[data-easy-tooltip-src="next"] + * {
+[data-easy-tooltip-src="next"] + *,
+*:has(+ [data-easy-tooltip-src="prev"]) {
   display: none !important;
 }
 

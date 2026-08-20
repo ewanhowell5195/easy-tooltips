@@ -31,6 +31,26 @@ type TooltipElement = HTMLElement & {
     tooltips.id = "easy-tooltips"
     document.body.append(tooltips)
 
+    const supportsPopover = !!tooltips.showPopover
+    function showTooltipLayer() {
+      if (!supportsPopover || tooltips.matches(":popover-open")) return
+      try { tooltips.showPopover() } catch {}
+    }
+    function promoteTooltipLayer() {
+      if (!supportsPopover) return
+      try {
+        if (tooltips.matches(":popover-open")) tooltips.hidePopover()
+      } catch {}
+      showTooltipLayer()
+    }
+    if (supportsPopover) {
+      tooltips.popover = "manual"
+      showTooltipLayer()
+      tooltips.addEventListener("toggle", e => {
+        if ((e as ToggleEvent).newState === "closed") requestAnimationFrame(showTooltipLayer)
+      })
+    }
+
     let
       lastElement: TooltipElement | undefined,
       lastByPointer: boolean,
@@ -46,6 +66,7 @@ type TooltipElement = HTMLElement & {
       zIndexCounter = 0
 
     function activateTooltip(tooltip: TooltipElement) {
+      promoteTooltipLayer()
       tooltip._activated = true
       activeCount++
       clearTimeout(cooldownTimer)
@@ -185,6 +206,7 @@ type TooltipElement = HTMLElement & {
     function addTooltips() {
       cursorAnchorActive = false
       if (lastElement) {
+        const containerRect = tooltips.getBoundingClientRect()
         const toAdd = []
         let node: TooltipElement | null = lastElement
         while (node && node !== document.body) {
@@ -195,6 +217,8 @@ type TooltipElement = HTMLElement & {
             const oldSource = node._source
             if (src === "next") {
               node._source = node.nextElementSibling ?? undefined
+            } else if (src === "prev") {
+              node._source = node.previousElementSibling ?? undefined
             } else {
               try { node._source = (document.getElementById(src) || document.querySelector(src)) ?? undefined } catch {}
             }
@@ -456,9 +480,9 @@ type TooltipElement = HTMLElement & {
 
           if (dir === "left" || dir === "right") {
             const cy = Math.round(rect.top + rect.height / 2)
-            tooltip.style.top = `${cy}px`
+            tooltip.style.top = `${cy - containerRect.top}px`
             if (!inside) {
-              tooltip.style.left = `${Math.round(dir === "right" ? rect.right : rect.left)}px`
+              tooltip.style.left = `${Math.round(dir === "right" ? rect.right : rect.left) - containerRect.left}px`
               if (dir === "right") {
                 tooltip.style.setProperty("--easy-tooltip-left-offset", `${rightPlacementOffset}px`)
                 tooltip.style.removeProperty("--easy-tooltip-right-offset")
@@ -473,9 +497,9 @@ type TooltipElement = HTMLElement & {
           } else {
             const x = Math.round(rect.left + rect.width / 2)
             const y = Math.round(rect.top)
-            tooltip.style.left = `${x}px`
+            tooltip.style.left = `${x - containerRect.left}px`
             if (!inside) {
-              tooltip.style.top = dir === "above" ? `${y}px` : `${y + rect.height}px`
+              tooltip.style.top = dir === "above" ? `${y - containerRect.top}px` : `${y + rect.height - containerRect.top}px`
             }
 
             textShift = shift(x - tooltipWidth / 2, x + tooltipWidth / 2, tooltipWidth, viewportWidth, edgeBufferX, false)
@@ -664,10 +688,12 @@ type TooltipElement = HTMLElement & {
     })
 
     function followCursor() {
+      let containerRect: DOMRect | undefined
       for (const node of triggers) {
         if (node.dataset.easyTooltipAnchor !== "cursor" || !node._tooltip) continue
-        node._tooltip.style.top = `${cursorY}px`
-        node._tooltip.style.left = `${cursorX}px`
+        containerRect ??= tooltips.getBoundingClientRect()
+        node._tooltip.style.top = `${cursorY - containerRect.top}px`
+        node._tooltip.style.left = `${cursorX - containerRect.left}px`
       }
       if (cursorAnchorActive && !cursorRafQueued) {
         cursorRafQueued = true

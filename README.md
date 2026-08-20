@@ -53,7 +53,7 @@ Tooltips also show on keyboard focus. Natively focusable elements (buttons, link
 ## Advanced Usage
 
 ### Custom HTML
-You can render custom HTML inside a tooltip using `data-easy-tooltip-src`. The value can be a CSS selector or the literal keyword `next`.
+You can render custom HTML inside a tooltip using `data-easy-tooltip-src`. The value can be a CSS selector or the literal keywords `next`/`prev`.
 
 The matched element's content is copied into the tooltip.
 
@@ -67,8 +67,8 @@ Point to any element in the document. The value is matched by id first, then as 
 </template>
 ```
 
-**Using `next`**
-Use `next` to automatically pull content from the next DOM element.
+**Using `next` or `prev`**
+Use `next` to automatically pull content from the next DOM element, or `prev` for the previous one.
 The source element is automatically hidden.
 ```html
 <button data-easy-tooltip-src="next">Ingredients</button>
@@ -268,7 +268,8 @@ Easy-tooltips uses a smart positioning system that:
 4. **Manages animations** - Queues tooltip updates to prevent conflicts and flicker on rapid hover
 5. **Skips the delay when grazing** - The first hover waits a short delay to ignore accidental movement, but once any tooltip is showing, switching to adjacent tooltips is instant until you stop hovering for the cooldown period
 6. **Stacks newest on top** - When multiple tooltips are visible at once, the most recently activated one renders above the others
-7. **Cleans up** - Removes a tooltip automatically when its trigger element leaves the DOM
+7. **Always paints above everything** - The tooltip container lives in the browser's top layer (via the Popover API), so tooltips render above any z-index, no matter how large, and re-promote themselves above modal dialogs and fullscreen elements when activated. Falls back to a high z-index in browsers without popover support
+8. **Cleans up** - Removes a tooltip automatically when its trigger element leaves the DOM
 
 ## License
 
