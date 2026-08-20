@@ -83,7 +83,7 @@
   opacity: 0;
   transition: opacity var(--easy-tooltip-animation-length), translate var(--easy-tooltip-animation-length);
   translate: 0 var(--easy-tooltip-animation-distance);
-  max-width: min(100% - var(--easy-tooltip-viewport-padding) * 2 - var(--easy-tooltip-left-offset, 0px) - var(--easy-tooltip-right-offset, 0px), var(--easy-tooltip-max-width, 100%));
+  max-width: min(var(--easy-tooltip-view-width, 100%) - var(--easy-tooltip-viewport-padding) * 2 - var(--easy-tooltip-left-offset, 0px) - var(--easy-tooltip-right-offset, 0px), var(--easy-tooltip-max-width, 100%));
 }
 
 .easy-tooltip.easy-tooltip-setup {

@@ -207,6 +207,7 @@ type TooltipElement = HTMLElement & {
       cursorAnchorActive = false
       if (lastElement) {
         const containerRect = tooltips.getBoundingClientRect()
+        tooltips.style.setProperty("--easy-tooltip-view-width", (visualViewport?.width ?? document.documentElement.clientWidth) + "px")
         const toAdd = []
         let node: TooltipElement | null = lastElement
         while (node && node !== document.body) {
@@ -352,11 +353,13 @@ type TooltipElement = HTMLElement & {
           tooltip.style.minWidth = `${edgeBufferX * 2 + arrowBase + br * 2}px`
           tooltipText.style.minHeight = ""
 
-          const viewportWidth = document.documentElement.clientWidth
-          const viewportHeight = document.documentElement.clientHeight
+          const viewLeft = containerRect.left + (visualViewport?.offsetLeft ?? 0)
+          const viewTop = containerRect.top + (visualViewport?.offsetTop ?? 0)
+          const viewportWidth = visualViewport?.width ?? document.documentElement.clientWidth
+          const viewportHeight = visualViewport?.height ?? document.documentElement.clientHeight
           const prefer = node.dataset.easyTooltipPrefer
-          const rightPlacementOffset = Math.round(rect.right + distance - padding)
-          const leftPlacementOffset = Math.round(viewportWidth - rect.left + distance - padding)
+          const rightPlacementOffset = Math.round(rect.right - viewLeft + distance - padding)
+          const leftPlacementOffset = Math.round(viewLeft + viewportWidth - rect.left + distance - padding)
 
           tooltip.style.translate = ""
           tooltip.style.removeProperty("--easy-tooltip-left-offset")
@@ -376,7 +379,7 @@ type TooltipElement = HTMLElement & {
             tooltipText.style.minWidth = ""
 
             for (const side of [prefer, prefer === "left" ? "right" : "left"] as ("right" | "left")[]) {
-              if ((side === "left" ? rect.left - distance - padding : viewportWidth - rect.right - distance - padding) < minWidth) continue
+              if ((side === "left" ? rect.left - viewLeft - distance - padding : viewLeft + viewportWidth - rect.right - distance - padding) < minWidth) continue
               tooltip.classList.remove("easy-tooltip-left", "easy-tooltip-right")
               tooltip.classList.add("easy-tooltip-" + side)
               if (side === "right") {
@@ -398,8 +401,8 @@ type TooltipElement = HTMLElement & {
           } else {
             ;({ width: tooltipWidth, height: tooltipHeight } = tooltip.getBoundingClientRect())
             const y = Math.round(rect.top)
-            const fitsAbove = y - tooltipHeight - distance > padding
-            const fitsBelow = y + rect.height + tooltipHeight + distance < viewportHeight - padding
+            const fitsAbove = y - tooltipHeight - distance > viewTop + padding
+            const fitsBelow = y + rect.height + tooltipHeight + distance < viewTop + viewportHeight - padding
 
             if (prefer === "below") {
               dir = fitsBelow ? "below" : fitsAbove ? "above" : "below"
@@ -436,18 +439,21 @@ type TooltipElement = HTMLElement & {
             before: number,
             after: number,
             size: number,
+            viewStart: number,
             viewportSize: number,
             edgeBuffer: number,
             vertical: boolean
           ) {
             const maxTextShift = size / 2 - arrowBase / 2 - edgeBuffer - br
+            const min = viewStart + padding
+            const max = viewStart + viewportSize - padding
             let text = 0, tip = 0
-            if (before < padding) {
-              text = Math.min(padding - before, maxTextShift)
-              if (before + text < padding) tip = padding - (before + text)
-            } else if (after > viewportSize - padding) {
-              text = -Math.min(after - (viewportSize - padding), maxTextShift)
-              if (after + text > viewportSize - padding) tip = -(after + text - (viewportSize - padding))
+            if (before < min) {
+              text = Math.min(min - before, maxTextShift)
+              if (before + text < min) tip = min - (before + text)
+            } else if (after > max) {
+              text = -Math.min(after - max, maxTextShift)
+              if (after + text > max) tip = -(after + text - max)
             }
             if (text && tooltipText !== undefined) tooltipText.style.translate = vertical ? `0 ${text}px` : `${text}px`
             if (tip && tooltip !== undefined) tooltip.style.translate = vertical ? `0 ${tip}px` : `${tip}px 0`
@@ -500,7 +506,7 @@ type TooltipElement = HTMLElement & {
             }
 
             const height = tooltip.getBoundingClientRect().height
-            textShift = shift(cy - height / 2, cy + height / 2, height, viewportHeight, edgeBufferY, true)
+            textShift = shift(cy - height / 2, cy + height / 2, height, viewTop, viewportHeight, edgeBufferY, true)
           } else {
             const x = Math.round(rect.left + rect.width / 2)
             const y = Math.round(rect.top)
@@ -509,7 +515,7 @@ type TooltipElement = HTMLElement & {
               tooltip.style.top = dir === "above" ? `${y - containerRect.top}px` : `${y + rect.height - containerRect.top}px`
             }
 
-            textShift = shift(x - tooltipWidth / 2, x + tooltipWidth / 2, tooltipWidth, viewportWidth, edgeBufferX, false)
+            textShift = shift(x - tooltipWidth / 2, x + tooltipWidth / 2, tooltipWidth, viewLeft, viewportWidth, edgeBufferX, false)
           }
 
           const { width: bw, height: bh } = tooltipText.getBoundingClientRect()
@@ -755,7 +761,9 @@ type TooltipElement = HTMLElement & {
     })
 
     window.addEventListener("resize", reloadTooltips)
-    window.addEventListener("scroll", reloadTooltips)
+    window.addEventListener("scroll", reloadTooltips, true)
+    visualViewport?.addEventListener("resize", reloadTooltips)
+    visualViewport?.addEventListener("scroll", reloadTooltips)
   }
 
   if (document.readyState === "loading") {
