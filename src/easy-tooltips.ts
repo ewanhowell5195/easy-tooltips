@@ -227,6 +227,9 @@ type TooltipElement = HTMLElement & {
               node._sourceObserver = undefined
             }
             if (node._source) toAdd.push(node)
+            else if (node._tooltip) tooltipVisibility(node._tooltip, false)
+          } else if (node._tooltip) {
+            tooltipVisibility(node._tooltip, false)
           }
           node = node.parentElement as TooltipElement | null
         }
