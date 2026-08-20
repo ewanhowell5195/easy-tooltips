@@ -297,6 +297,10 @@ type TooltipElement = HTMLElement & {
             tooltips.append(tooltip)
           }
 
+          const zIndex = tooltip.style.zIndex
+          tooltip.style.cssText = node.dataset.easyTooltipStyle ?? ""
+          if (zIndex) tooltip.style.zIndex = zIndex
+
           const customClass = node.dataset.easyTooltipClass
           if (node._tooltipClass !== customClass) {
             if (node._tooltipClass) {
@@ -595,7 +599,13 @@ type TooltipElement = HTMLElement & {
             const obs = new MutationObserver(() => reloadTooltips())
             obs.observe(node, {
               attributes: true,
-              attributeFilter: ["data-easy-tooltip", "data-easy-tooltip-src", "data-easy-tooltip-background", "data-easy-tooltip-border"]
+              attributeFilter: [
+                "data-easy-tooltip",
+                "data-easy-tooltip-src",
+                "data-easy-tooltip-background",
+                "data-easy-tooltip-border",
+                "data-easy-tooltip-style",
+              ]
             })
             node._observer = obs
           }

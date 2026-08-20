@@ -1730,6 +1730,42 @@
 &lt;/style&gt;</pre>
       </div>
 
+      <div class="section">
+        <h2>Per-Tooltip Adjustments</h2>
+        <p>Reach for <code>data-easy-tooltip-class</code> when you're theming a group of tooltips, and <code>data-easy-tooltip-style</code> when you just need to nudge one. It writes CSS variables straight onto that tooltip's <code>style</code> attribute, so there's no class to name and no stylesheet to touch:</p>
+
+        <div class="demo-grid">
+          <div class="demo-card">
+            <h3>Round</h3>
+            <div class="icon info" tabindex="0" data-easy-tooltip="Perfectly round, just for me" data-easy-tooltip-style="--easy-tooltip-border-radius: 50%; --easy-tooltip-padding: 14px;">?</div>
+          </div>
+
+          <div class="demo-card">
+            <h3>Compact</h3>
+            <span tabindex="0" data-easy-tooltip="Synced 2 minutes ago" data-easy-tooltip-style="--easy-tooltip-padding: 4px 8px; --easy-tooltip-border-radius: 4px;" style="display: inline-flex; padding: 8px; border: 1px dashed #aaa; border-radius: 6px; cursor: default;">🔄</span>
+          </div>
+
+          <div class="demo-card">
+            <h3>Live Distance</h3>
+            <button id="live-distance-btn" data-easy-tooltip="Drag the slider to move me" data-easy-tooltip-style="--easy-tooltip-distance: 16px;">Hover me</button>
+            <input type="range" id="live-distance-slider" min="4" max="60" value="16" style="width: 100%; margin-top: 14px;">
+          </div>
+        </div>
+
+        <pre>&lt;div data-easy-tooltip="Perfectly round, just for me" data-easy-tooltip-style="--easy-tooltip-border-radius: 50%;"&gt;?&lt;/div&gt;
+&lt;span data-easy-tooltip="Synced 2 minutes ago" data-easy-tooltip-style="--easy-tooltip-padding: 4px 8px; --easy-tooltip-border-radius: 4px;"&gt;🔄&lt;/span&gt;
+
+&lt;button id="live-distance-btn" data-easy-tooltip="Drag the slider to move me" data-easy-tooltip-style="--easy-tooltip-distance: 16px;"&gt;Hover me&lt;/button&gt;
+&lt;input type="range" id="live-distance-slider" min="4" max="60" value="16"&gt;
+
+&lt;script&gt;
+  const btn = document.getElementById("live-distance-btn")
+  document.getElementById("live-distance-slider").addEventListener("input", e =&gt; {
+    btn.dataset.easyTooltipStyle = `--easy-tooltip-distance: ${e.target.value}px;`
+  })
+&lt;/script&gt;</pre>
+      </div>
+
       <style>
         .success-tooltip {
           --easy-tooltip-background-color: #f0fdf4;
@@ -2065,6 +2101,11 @@
       dynamicCounter.dataset.easyTooltip = `Count: ${++count}`
       updateTime()
     }, 100)
+
+    const liveDistanceBtn = document.getElementById("live-distance-btn")
+    document.getElementById("live-distance-slider").addEventListener("input", e => {
+      liveDistanceBtn.dataset.easyTooltipStyle = `--easy-tooltip-distance: ${e.target.value}px;`
+    })
 
     const centerElement = document.getElementById("center-element")
     const edgeButtons = document.getElementById("edge-buttons")

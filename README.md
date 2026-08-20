@@ -106,6 +106,14 @@ For styling specific tooltips, add `data-easy-tooltip-class`. The value is appli
 }
 ```
 
+### Per-tooltip styling
+For a one-off tweak that doesn't warrant a class, `data-easy-tooltip-style` writes inline styles (typically the CSS variables below) straight onto that tooltip, just like the HTML `style` attribute:
+```html
+<div data-easy-tooltip="Perfectly round, just for me" data-easy-tooltip-style="--easy-tooltip-border-radius: 50%; --easy-tooltip-padding: 14px;">?</div>
+```
+
+The attribute is observed, so changing it while the tooltip is visible re-renders it live.
+
 ### Preferred side
 Use `data-easy-tooltip-prefer` to control which side a tooltip shows on. It still flips to the opposite side when there isn't room. Using `left` or `right` switches the tooltip to horizontal mode.
 
