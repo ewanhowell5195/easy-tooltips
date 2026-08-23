@@ -132,7 +132,12 @@ By default a tooltip is anchored to its trigger element. Use `data-easy-tooltip-
 
 * `element` (default): anchored to the trigger's bounding box.
 * `cursor`: anchored to the cursor (or touch point), follows the cursor as it moves around the element. On touch, the tooltip appears at the tap point and tracks the finger if you drag.
-* `pin`: anchored to the first cursor or touch point on entry, then frozen there. Continues tracking the page as you scroll so the anchor stays at the same content position.
+* `pin`: anchored to wherever the cursor is when the tooltip appears, then frozen there. If the tooltip is delayed, it pins where the cursor ends up rather than where it entered. Continues tracking the page as you scroll so the anchor stays at the same content position.
+
+`cursor` and `pin` also come in single axis versions, which take one axis from the cursor and the other from the trigger's bounding box:
+
+* `cursor-x` and `pin-x`: horizontally on the cursor, vertically on the trigger
+* `cursor-y` and `pin-y`: vertically on the cursor, horizontally on the trigger
 
 ```html
 <div data-easy-tooltip="I follow your cursor" data-easy-tooltip-anchor="cursor">…</div>
@@ -174,7 +179,7 @@ Every event has the same `detail`:
 * `text`: the tooltip text
 * `side`: `above`, `below`, `left`, or `right`
 * `inside`: `true` when the tooltip did not fit on any side, so it floats over the trigger without an arrow. `side` still reports the side it is using
-* `anchor`: `element`, `cursor`, or `pin`
+* `anchor`: the anchor mode in use, `element` unless the tooltip was opened by pointer
 * `anchorRect`: the box the tooltip is anchored to. For cursor and pin anchoring this is a zero size box at the anchor point
 * `point`: the point on the anchor that the tooltip points at
 * `rect`: the box of the tooltip itself

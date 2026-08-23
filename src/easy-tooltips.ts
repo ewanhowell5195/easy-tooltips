@@ -1,7 +1,7 @@
 import "./easy-tooltips.css"
 
 type TooltipSide = "above" | "below" | "left" | "right"
-type TooltipAnchor = "element" | "cursor" | "pin"
+type TooltipAnchor = "element" | "cursor" | "cursor-x" | "cursor-y" | "pin" | "pin-x" | "pin-y"
 
 type TooltipRect = {
   x: number
@@ -103,6 +103,11 @@ type TooltipElement = HTMLElement & {
       promoteTooltipLayer()
       tooltip._activated = true
       queueVisibilityEvent(tooltip)
+      const trigger = tooltip._trigger
+      if (anchorBaseOf(trigger?.dataset.easyTooltipAnchor) === "pin" && trigger && lastByPointer && cursorX !== undefined) {
+        trigger._anchorPoint = { x: cursorX + window.scrollX, y: cursorY + window.scrollY }
+        reloadTooltips()
+      }
       activeCount++
       clearTimeout(cooldownTimer)
       tooltips.classList.add("easy-tooltips-active")
@@ -179,6 +184,14 @@ type TooltipElement = HTMLElement & {
     }
     function startHoverPoll() {
       if (!hoverPollRaf) hoverPollRaf = requestAnimationFrame(pollHover)
+    }
+
+    function anchorAxisOf(mode: string | undefined) {
+      return mode?.endsWith("-x") ? "x" : mode?.endsWith("-y") ? "y" : "both"
+    }
+
+    function anchorBaseOf(mode: string | undefined) {
+      return mode?.replace(/-[xy]$/, "")
     }
 
     function rectValue(rect: { left: number, top: number, right: number, bottom: number, width: number, height: number }): TooltipRect {
@@ -453,18 +466,27 @@ type TooltipElement = HTMLElement & {
           }
 
           const anchorMode = node.dataset.easyTooltipAnchor
-          const useCursor = anchorMode === "cursor" && lastByPointer
-          const usePin = anchorMode === "pin" && lastByPointer
+          const anchorAxis = anchorAxisOf(anchorMode)
+          const anchorBase = anchorBaseOf(anchorMode)
+          const useCursor = anchorBase === "cursor" && lastByPointer
+          const usePin = anchorBase === "pin" && lastByPointer
           if (useCursor) cursorAnchorActive = true
-          if (usePin && !tooltip.classList.contains("easy-tooltip-visible")) {
+          if (usePin && !tooltip._activated) {
             node._anchorPoint = { x: cursorX + window.scrollX, y: cursorY + window.scrollY }
           }
-          const pointRect = (x: number, y: number) => ({ left: x, right: x, top: y, bottom: y, width: 0, height: 0 })
           let rect
-          if (useCursor) {
-            rect = pointRect(cursorX, cursorY)
-          } else if (usePin && node._anchorPoint) {
-            rect = pointRect(node._anchorPoint.x - window.scrollX, node._anchorPoint.y - window.scrollY)
+          if (useCursor || (usePin && node._anchorPoint)) {
+            const x = useCursor ? cursorX : node._anchorPoint!.x - window.scrollX
+            const y = useCursor ? cursorY : node._anchorPoint!.y - window.scrollY
+            const box = anchorAxis === "both" ? null : node.getBoundingClientRect()
+            rect = {
+              left: anchorAxis === "y" ? box!.left : x,
+              right: anchorAxis === "y" ? box!.right : x,
+              width: anchorAxis === "y" ? box!.width : 0,
+              top: anchorAxis === "x" ? box!.top : y,
+              bottom: anchorAxis === "x" ? box!.bottom : y,
+              height: anchorAxis === "x" ? box!.height : 0,
+            }
           } else {
             rect = node.getBoundingClientRect()
           }
@@ -744,7 +766,7 @@ type TooltipElement = HTMLElement & {
           tooltip._placement = {
             side: dir!,
             inside: !!inside,
-            anchor: useCursor ? "cursor" : usePin ? "pin" : "element",
+            anchor: (useCursor || usePin ? anchorMode : "element") as TooltipAnchor,
             anchorRect,
             point: anchorPoint(anchorRect, dir!)
           }
@@ -883,10 +905,12 @@ type TooltipElement = HTMLElement & {
     function followCursor() {
       let containerRect: DOMRect | undefined
       for (const node of triggers) {
-        if (node.dataset.easyTooltipAnchor !== "cursor" || !node._tooltip) continue
+        const mode = node.dataset.easyTooltipAnchor
+        if (anchorBaseOf(mode) !== "cursor" || !node._tooltip) continue
+        const axis = anchorAxisOf(mode)
         containerRect ??= tooltips.getBoundingClientRect()
-        node._tooltip.style.top = `${cursorY - containerRect.top}px`
-        node._tooltip.style.left = `${cursorX - containerRect.left}px`
+        if (axis !== "x") node._tooltip.style.top = `${cursorY - containerRect.top}px`
+        if (axis !== "y") node._tooltip.style.left = `${cursorX - containerRect.left}px`
       }
       if (cursorAnchorActive && !cursorRafQueued) {
         cursorRafQueued = true
