@@ -10,12 +10,17 @@
   "type": "module",
   "main": "./dist/easy-tooltips.min.js",
   "style": "./dist/easy-tooltips.min.css",
+  "types": "./types/easy-tooltips.d.ts",
   "exports": {
-    ".": "./dist/easy-tooltips.min.js",
+    ".": {
+      "types": "./types/easy-tooltips.d.ts",
+      "default": "./dist/easy-tooltips.min.js"
+    },
     "./styles.css": "./dist/easy-tooltips.min.css"
   },
   "files": [
-    "dist"
+    "dist",
+    "types"
   ],
   "repository": {
     "type": "git",

@@ -188,7 +188,11 @@ Every event has the same `detail`:
 * `rect`: the box of the tooltip itself
 * `previous`: on `move`, the same placement values from before the change
 
-All coordinates are viewport coordinates, the same as `getBoundingClientRect`.
+All coordinates are viewport coordinates, the same as `getBoundingClientRect`. TypeScript users get the event names and the `detail` typed automatically, and the types are exported if you need them:
+
+```ts
+import type { TooltipEvent, TooltipEventDetail, TooltipSide, TooltipAnchor } from "easy-tooltips"
+```
 
 `open` fires when the tooltip actually appears, after any delay, so a hover too brief to show a tooltip fires nothing at all.
 
