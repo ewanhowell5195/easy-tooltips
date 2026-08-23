@@ -368,7 +368,7 @@ type TooltipElement = HTMLElement & {
         if (tooltip._delay && performance.now() < Number(tooltip._start) + tooltip._delay) {
           if (tooltip.classList.contains("easy-tooltip-visible")) visibleCount--
           tooltip.classList.remove("easy-tooltip-visible")
-          if (tooltip._trigger) tooltip._trigger._anchorSide = undefined
+          if (tooltip._trigger) tooltip._trigger._anchorSide = tooltip._trigger._anchorPoint = undefined
           clearTimeout(tooltip._timeout)
           clearTimeout(tooltip._activateTimer)
           tooltip._timeout = tooltip._activateTimer = tooltip._start = tooltip._delay = undefined
@@ -385,7 +385,7 @@ type TooltipElement = HTMLElement & {
       if (tooltip._timeout === undefined) {
         tooltip._next = undefined
         tooltip.classList.toggle("easy-tooltip-visible", visible)
-        if (!visible && tooltip._trigger) tooltip._trigger._anchorSide = undefined
+        if (!visible && tooltip._trigger) tooltip._trigger._anchorSide = tooltip._trigger._anchorPoint = undefined
         visibleCount += visible ? 1 : -1
 
         clearTimeout(tooltip._activateTimer)
@@ -542,7 +542,9 @@ type TooltipElement = HTMLElement & {
           const useCursor = anchorBase === "cursor" && lastByPointer
           const { preferAttr, pin: usePin, entry: useEntry } = anchorFlags(node)
           if (useCursor) cursorAnchorActive = true
-          if ((usePin || useEntry) && !tooltip._activated) entryAnchor(node, usePin, useEntry)
+          if ((usePin || useEntry) && !tooltip._activated && node._anchorSide === undefined && node._anchorPoint === undefined) {
+            entryAnchor(node, usePin, useEntry)
+          }
           let rect
           if (useCursor || (usePin && node._anchorPoint)) {
             const x = useCursor ? cursorX : node._anchorPoint!.x - window.scrollX
