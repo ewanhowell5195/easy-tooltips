@@ -1736,32 +1736,41 @@
 
         <div class="demo-grid">
           <div class="demo-card">
-            <h3>Round</h3>
-            <div class="icon info" tabindex="0" data-easy-tooltip="Perfectly round, just for me" data-easy-tooltip-style="--easy-tooltip-border-radius: 50%; --easy-tooltip-padding: 14px;">?</div>
+            <h3>Pill</h3>
+            <div class="icon info" tabindex="0" data-easy-tooltip="Pill shaped, just for me" data-easy-tooltip-style="--easy-tooltip-border-radius: 999px;">?</div>
           </div>
 
           <div class="demo-card">
-            <h3>Compact</h3>
-            <span tabindex="0" data-easy-tooltip="Synced 2 minutes ago" data-easy-tooltip-style="--easy-tooltip-padding: 4px 8px; --easy-tooltip-border-radius: 4px;" style="display: inline-flex; padding: 8px; border: 1px dashed #aaa; border-radius: 6px; cursor: default;">🔄</span>
+            <h3>Swatches</h3>
+            <div style="display: flex; gap: 12px; justify-content: center;">
+              <span tabindex="0" data-easy-tooltip="Coral" data-easy-tooltip-style="--easy-tooltip-background-color: #ff6f61; --easy-tooltip-text-color: #fff; --easy-tooltip-border-color: #d84f42;" style="width: 30px; height: 30px; border-radius: 50%; background: #ff6f61; cursor: pointer;"></span>
+              <span tabindex="0" data-easy-tooltip="Teal" data-easy-tooltip-style="--easy-tooltip-background-color: #14919b; --easy-tooltip-text-color: #fff; --easy-tooltip-border-color: #0e7078;" style="width: 30px; height: 30px; border-radius: 50%; background: #14919b; cursor: pointer;"></span>
+              <span tabindex="0" data-easy-tooltip="Violet" data-easy-tooltip-style="--easy-tooltip-background-color: #7c5cff; --easy-tooltip-text-color: #fff; --easy-tooltip-border-color: #5e42d1;" style="width: 30px; height: 30px; border-radius: 50%; background: #7c5cff; cursor: pointer;"></span>
+            </div>
           </div>
 
           <div class="demo-card">
             <h3>Live Distance</h3>
-            <button id="live-distance-btn" data-easy-tooltip="Drag the slider to move me" data-easy-tooltip-style="--easy-tooltip-distance: 16px;">Hover me</button>
-            <input type="range" id="live-distance-slider" min="4" max="60" value="16" style="width: 100%; margin-top: 14px;">
+            <div id="live-distance-area" data-easy-tooltip="Distance: 16px" data-easy-tooltip-style="--easy-tooltip-distance: 16px;" style="padding: 10px; border: 1px dashed #aaa; border-radius: 6px; margin: 20px 0;">
+              <input type="range" id="live-distance-slider" min="4" max="60" value="16" style="width: 100%; display: block;">
+            </div>
           </div>
         </div>
 
-        <pre>&lt;div data-easy-tooltip="Perfectly round, just for me" data-easy-tooltip-style="--easy-tooltip-border-radius: 50%;"&gt;?&lt;/div&gt;
-&lt;span data-easy-tooltip="Synced 2 minutes ago" data-easy-tooltip-style="--easy-tooltip-padding: 4px 8px; --easy-tooltip-border-radius: 4px;"&gt;🔄&lt;/span&gt;
+        <pre>&lt;div data-easy-tooltip="Pill shaped, just for me" data-easy-tooltip-style="--easy-tooltip-border-radius: 999px;"&gt;?&lt;/div&gt;
+&lt;span data-easy-tooltip="Coral" data-easy-tooltip-style="--easy-tooltip-background-color: #ff6f61; --easy-tooltip-text-color: #fff;"&gt;&lt;/span&gt;
+&lt;span data-easy-tooltip="Teal" data-easy-tooltip-style="--easy-tooltip-background-color: #14919b; --easy-tooltip-text-color: #fff;"&gt;&lt;/span&gt;
 
-&lt;button id="live-distance-btn" data-easy-tooltip="Drag the slider to move me" data-easy-tooltip-style="--easy-tooltip-distance: 16px;"&gt;Hover me&lt;/button&gt;
-&lt;input type="range" id="live-distance-slider" min="4" max="60" value="16"&gt;
+&lt;div id="live-distance-area" data-easy-tooltip="Distance: 16px" data-easy-tooltip-style="--easy-tooltip-distance: 16px;"&gt;
+  &lt;input type="range" id="live-distance-slider" min="4" max="60" value="16"&gt;
+&lt;/div&gt;
 
 &lt;script&gt;
-  const btn = document.getElementById("live-distance-btn")
-  document.getElementById("live-distance-slider").addEventListener("input", e =&gt; {
-    btn.dataset.easyTooltipStyle = `--easy-tooltip-distance: ${e.target.value}px;`
+  const area = document.getElementById("live-distance-area")
+  const slider = document.getElementById("live-distance-slider")
+  slider.addEventListener("input", () =&gt; {
+    area.dataset.easyTooltip = `Distance: ${slider.value}px`
+    area.dataset.easyTooltipStyle = `--easy-tooltip-distance: ${slider.value}px;`
   })
 &lt;/script&gt;</pre>
       </div>
@@ -2102,9 +2111,11 @@
       updateTime()
     }, 100)
 
-    const liveDistanceBtn = document.getElementById("live-distance-btn")
-    document.getElementById("live-distance-slider").addEventListener("input", e => {
-      liveDistanceBtn.dataset.easyTooltipStyle = `--easy-tooltip-distance: ${e.target.value}px;`
+    const liveDistanceArea = document.getElementById("live-distance-area")
+    const liveDistanceSlider = document.getElementById("live-distance-slider")
+    liveDistanceSlider.addEventListener("input", () => {
+      liveDistanceArea.dataset.easyTooltip = `Distance: ${liveDistanceSlider.value}px`
+      liveDistanceArea.dataset.easyTooltipStyle = `--easy-tooltip-distance: ${liveDistanceSlider.value}px;`
     })
 
     const centerElement = document.getElementById("center-element")

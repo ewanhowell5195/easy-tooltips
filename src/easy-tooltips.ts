@@ -350,8 +350,10 @@ type TooltipElement = HTMLElement & {
           const edgeBufferY = parseFloat(styles.getPropertyValue("--easy-tooltip-arrow-edge-buffer-y"))
           const br = parseFloat(styles.getPropertyValue("--easy-tooltip-border-radius")) || 0
 
-          tooltip.style.minWidth = `${edgeBufferX * 2 + arrowBase + br * 2}px`
+          tooltip.style.minWidth = `${edgeBufferX * 2 + arrowBase}px`
           tooltipText.style.minHeight = ""
+          const radius = Math.min(br, tooltipText.getBoundingClientRect().height / 2)
+          tooltip.style.minWidth = `${edgeBufferX * 2 + arrowBase + radius * 2}px`
 
           const viewLeft = containerRect.left + (visualViewport?.offsetLeft ?? 0)
           const viewTop = containerRect.top + (visualViewport?.offsetTop ?? 0)
@@ -371,7 +373,7 @@ type TooltipElement = HTMLElement & {
           let dir: "above" | "below" | "right" | "left" | undefined, inside
 
           if (prefer === "left" || prefer === "right") {
-            tooltip.style.minWidth = `${br * 2}px`
+            tooltip.style.minWidth = `${radius * 2}px`
             tooltipText.style.width = "min-content"
             tooltipText.style.minWidth = "0"
             const minWidth = tooltip.getBoundingClientRect().width
@@ -430,9 +432,9 @@ type TooltipElement = HTMLElement & {
           tooltipVisibility(tooltip, show)
 
           if (dir === "left" || dir === "right") {
-            tooltipText.style.minHeight = `${edgeBufferY * 2 + arrowBase + br * 2}px`
+            tooltipText.style.minHeight = `${edgeBufferY * 2 + arrowBase + radius * 2}px`
           } else {
-            tooltipText.style.minHeight = `${br * 2}px`
+            tooltipText.style.minHeight = `${radius * 2}px`
           }
 
           function shift(
@@ -525,7 +527,12 @@ type TooltipElement = HTMLElement & {
           const ax = vertical ? bw / 2 : bw / 2 - textShift
           const ay = vertical ? bh / 2 - textShift : bh / 2
 
-          const pathData = arrowPath(dir, bw, bh, br, arrowBase, ah, ax, ay, ar)
+          const arrowRoom = vertical
+            ? (bh - arrowBase - edgeBufferY * 2) / 2
+            : (bw - arrowBase - edgeBufferX * 2) / 2
+          const drawnRadius = Math.max(0, Math.min(br, bw / 2, bh / 2, arrowRoom))
+
+          const pathData = arrowPath(dir, bw, bh, drawnRadius, arrowBase, ah, ax, ay, ar)
           node._svgPath?.setAttribute("d", pathData)
           node._clipPath?.setAttribute("d", pathData)
           node._borderMaskPath?.setAttribute("d", pathData)

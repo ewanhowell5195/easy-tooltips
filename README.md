@@ -109,7 +109,7 @@ For styling specific tooltips, add `data-easy-tooltip-class`. The value is appli
 ### Per-tooltip styling
 For a one-off tweak that doesn't warrant a class, `data-easy-tooltip-style` writes inline styles (typically the CSS variables below) straight onto that tooltip, just like the HTML `style` attribute:
 ```html
-<div data-easy-tooltip="Perfectly round, just for me" data-easy-tooltip-style="--easy-tooltip-border-radius: 50%; --easy-tooltip-padding: 14px;">?</div>
+<div data-easy-tooltip="Pill shaped, just for me" data-easy-tooltip-style="--easy-tooltip-border-radius: 999px;">?</div>
 ```
 
 The attribute is observed, so changing it while the tooltip is visible re-renders it live.
@@ -154,7 +154,7 @@ You can style tooltips using CSS variables (recommended) or by targeting the too
   --easy-tooltip-border-size: 1px;           /* Border thickness */
   --easy-tooltip-background: none;           /* Background image/gradient, replaces the background color */
   --easy-tooltip-border: none;               /* Border image/gradient, replaces the border color */
-  --easy-tooltip-border-radius: 4px;         /* Corner radius of the tooltip */
+  --easy-tooltip-border-radius: 4px;         /* Corner radius, clamped to half the tooltip like CSS, so a large value gives a pill */
   --easy-tooltip-padding: 8px 12px;          /* Inner padding */
   --easy-tooltip-max-width: 100%;            /* Maximum tooltip width */
 
