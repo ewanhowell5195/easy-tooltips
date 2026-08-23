@@ -35,6 +35,7 @@ type TooltipElement = HTMLElement & {
   _animation_duration?: number
   _next?: boolean
   _anchorPoint?: { x: number, y: number }
+  _anchorSide?: TooltipSide
   _svgPath?: SVGPathElement
   _clipPath?: SVGPathElement
   _foreignObj?: SVGForeignObjectElement
@@ -104,8 +105,8 @@ type TooltipElement = HTMLElement & {
       tooltip._activated = true
       queueVisibilityEvent(tooltip)
       const trigger = tooltip._trigger
-      if (anchorBaseOf(trigger?.dataset.easyTooltipAnchor) === "pin" && trigger && lastByPointer && cursorX !== undefined) {
-        trigger._anchorPoint = { x: cursorX + window.scrollX, y: cursorY + window.scrollY }
+      if (trigger && anchorBaseOf(trigger.dataset.easyTooltipAnchor) === "pin" && lastByPointer && cursorX !== undefined) {
+        capturePin(trigger)
         reloadTooltips()
       }
       activeCount++
@@ -152,7 +153,7 @@ type TooltipElement = HTMLElement & {
       node._observer = node._sourceObserver = undefined
 
       triggers.delete(node)
-      node._tooltip = node._tooltipText = node._svgPath = node._clipPath = node._foreignObj = node._surfaceDiv = node._borderMask = node._borderMaskPath = node._borderForeignObj = node._borderSurfaceDiv = node._tooltipClass = node._source = node._anchorPoint = undefined
+      node._tooltip = node._tooltipText = node._svgPath = node._clipPath = node._foreignObj = node._surfaceDiv = node._borderMask = node._borderMaskPath = node._borderForeignObj = node._borderSurfaceDiv = node._tooltipClass = node._source = node._anchorPoint = node._anchorSide = undefined
       if (node === lastElement) lastElement = undefined
     }
 
@@ -192,6 +193,29 @@ type TooltipElement = HTMLElement & {
 
     function anchorBaseOf(mode: string | undefined) {
       return mode?.replace(/-[xy]$/, "")
+    }
+
+    function capturePin(node: TooltipElement) {
+      if (anchorAxisOf(node.dataset.easyTooltipAnchor) !== "both") {
+        node._anchorSide = undefined
+        node._anchorPoint = { x: cursorX + window.scrollX, y: cursorY + window.scrollY }
+        return
+      }
+
+      const box = node.getBoundingClientRect()
+      const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max)
+      const gaps = {
+        left: cursorX - box.left,
+        right: box.right - cursorX,
+        above: cursorY - box.top,
+        below: box.bottom - cursorY,
+      }
+      const side = (Object.keys(gaps) as TooltipSide[]).reduce((a, b) => gaps[b] < gaps[a] ? b : a)
+      const x = side === "left" ? box.left : side === "right" ? box.right : clamp(cursorX, box.left, box.right)
+      const y = side === "above" ? box.top : side === "below" ? box.bottom : clamp(cursorY, box.top, box.bottom)
+
+      node._anchorSide = side
+      node._anchorPoint = { x: x + window.scrollX, y: y + window.scrollY }
     }
 
     function rectValue(rect: { left: number, top: number, right: number, bottom: number, width: number, height: number }): TooltipRect {
@@ -471,9 +495,7 @@ type TooltipElement = HTMLElement & {
           const useCursor = anchorBase === "cursor" && lastByPointer
           const usePin = anchorBase === "pin" && lastByPointer
           if (useCursor) cursorAnchorActive = true
-          if (usePin && !tooltip._activated) {
-            node._anchorPoint = { x: cursorX + window.scrollX, y: cursorY + window.scrollY }
-          }
+          if (usePin && !tooltip._activated) capturePin(node)
           let rect
           if (useCursor || (usePin && node._anchorPoint)) {
             const x = useCursor ? cursorX : node._anchorPoint!.x - window.scrollX
@@ -509,7 +531,7 @@ type TooltipElement = HTMLElement & {
           const viewTop = containerRect.top + (visualViewport?.offsetTop ?? 0)
           const viewportWidth = visualViewport?.width ?? document.documentElement.clientWidth
           const viewportHeight = visualViewport?.height ?? document.documentElement.clientHeight
-          const prefer = node.dataset.easyTooltipPrefer
+          const prefer = node.dataset.easyTooltipPrefer || (usePin ? node._anchorSide : undefined)
           const rightPlacementOffset = Math.round(rect.right - viewLeft + distance - padding)
           const leftPlacementOffset = Math.round(viewLeft + viewportWidth - rect.left + distance - padding)
 

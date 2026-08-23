@@ -136,6 +136,12 @@
       margin: 20px 0;
     }
 
+    @media (min-width: 860px) {
+      .anchor-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
     .demo-grid-4 {
       grid-template-columns: repeat(4, minmax(0, 1fr));
     }
@@ -1538,14 +1544,10 @@
         <h2>Anchor Modes</h2>
         <p>By default a tooltip anchors to its trigger element. Use <code>data-easy-tooltip-anchor</code> to change the anchor point: <code>cursor</code> follows the cursor or touch point, <code>pin</code> freezes where the cursor is when the tooltip appears. Both have single axis versions, which take one axis from the cursor and the other from the element. Keyboard focus always falls back to the element.</p>
 
-        <div class="demo-grid">
+        <div class="demo-grid anchor-grid">
           <div class="demo-card">
             <h3>Cursor</h3>
             <div data-easy-tooltip="I follow your cursor" data-easy-tooltip-anchor="cursor" style="padding: 32px 24px; border: 1px dashed #aaa; border-radius: 6px; text-align: center;">Move your cursor or tap across me</div>
-          </div>
-          <div class="demo-card">
-            <h3>Pin</h3>
-            <div data-easy-tooltip="I stay where you first hovered" data-easy-tooltip-anchor="pin" data-easy-tooltip-style="--easy-tooltip-delay: 0s; --easy-tooltip-inactive-delay: 0s;" style="padding: 32px 24px; border: 1px dashed #aaa; border-radius: 6px; text-align: center;">Hover anywhere, the tooltip stays put</div>
           </div>
           <div class="demo-card">
             <h3>Cursor X</h3>
@@ -1554,6 +1556,10 @@
           <div class="demo-card">
             <h3>Cursor Y</h3>
             <div data-easy-tooltip="I follow you up and down" data-easy-tooltip-anchor="cursor-y" data-easy-tooltip-prefer="right" style="padding: 32px 24px; border: 1px dashed #aaa; border-radius: 6px; text-align: center;">I track your cursor down the side of the box</div>
+          </div>
+          <div class="demo-card">
+            <h3>Pin</h3>
+            <div data-easy-tooltip="I snapped to the nearest edge" data-easy-tooltip-anchor="pin" data-easy-tooltip-style="--easy-tooltip-delay: 0s; --easy-tooltip-inactive-delay: 0s;" style="padding: 32px 24px; border: 1px dashed #aaa; border-radius: 6px; text-align: center;">Come in from any edge, I meet you there</div>
           </div>
           <div class="demo-card">
             <h3>Pin X</h3>
@@ -1566,10 +1572,11 @@
         </div>
 
         <pre>&lt;div data-easy-tooltip="I follow your cursor" data-easy-tooltip-anchor="cursor"&gt;…&lt;/div&gt;
-&lt;div data-easy-tooltip="I stay where you first hovered" data-easy-tooltip-anchor="pin"&gt;…&lt;/div&gt;
+&lt;div data-easy-tooltip="I snapped to the nearest edge" data-easy-tooltip-anchor="pin"&gt;…&lt;/div&gt;
 
 &lt;div data-easy-tooltip="I follow you sideways" data-easy-tooltip-anchor="cursor-x"&gt;…&lt;/div&gt;
-&lt;div data-easy-tooltip="I follow you up and down" data-easy-tooltip-anchor="cursor-y" data-easy-tooltip-prefer="right"&gt;…&lt;/div&gt;</pre>
+&lt;div data-easy-tooltip="I follow you up and down" data-easy-tooltip-anchor="cursor-y" data-easy-tooltip-prefer="right"&gt;…&lt;/div&gt;
+</pre>
       </div>
 
       <div class="section">

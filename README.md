@@ -132,12 +132,14 @@ By default a tooltip is anchored to its trigger element. Use `data-easy-tooltip-
 
 * `element` (default): anchored to the trigger's bounding box.
 * `cursor`: anchored to the cursor (or touch point), follows the cursor as it moves around the element. On touch, the tooltip appears at the tap point and tracks the finger if you drag.
-* `pin`: anchored to wherever the cursor is when the tooltip appears, then frozen there. If the tooltip is delayed, it pins where the cursor ends up rather than where it entered. Continues tracking the page as you scroll so the anchor stays at the same content position.
+* `pin`: snaps to whichever edge of the trigger the cursor is nearest when the tooltip appears, and pins to the point on that edge. Come in from the left and the tooltip sits to the left at the height you came in at. It picks the side itself, unless you set `data-easy-tooltip-prefer`, which still wins: the tooltip keeps the pinned position on the edge but shows on the side you asked for. If the tooltip is delayed, it pins where the cursor ends up rather than where it entered, and it keeps tracking the page as you scroll.
 
 `cursor` and `pin` also come in single axis versions, which take one axis from the cursor and the other from the trigger's bounding box:
 
 * `cursor-x` and `pin-x`: horizontally on the cursor, vertically on the trigger
 * `cursor-y` and `pin-y`: vertically on the cursor, horizontally on the trigger
+
+The axis versions of `pin` freeze the cursor position on that axis rather than snapping to an edge.
 
 ```html
 <div data-easy-tooltip="I follow your cursor" data-easy-tooltip-anchor="cursor">…</div>
