@@ -105,9 +105,12 @@ type TooltipElement = HTMLElement & {
       tooltip._activated = true
       queueVisibilityEvent(tooltip)
       const trigger = tooltip._trigger
-      if (trigger && anchorBaseOf(trigger.dataset.easyTooltipAnchor) === "pin" && lastByPointer && cursorX !== undefined) {
-        capturePin(trigger)
-        reloadTooltips()
+      if (trigger && cursorX !== undefined) {
+        const { pin, entry } = anchorFlags(trigger)
+        if (pin || entry) {
+          entryAnchor(trigger, pin, entry)
+          reloadTooltips()
+        }
       }
       activeCount++
       clearTimeout(cooldownTimer)
@@ -195,27 +198,36 @@ type TooltipElement = HTMLElement & {
       return mode?.replace(/-[xy]$/, "")
     }
 
-    function capturePin(node: TooltipElement) {
-      if (anchorAxisOf(node.dataset.easyTooltipAnchor) !== "both") {
-        node._anchorSide = undefined
-        node._anchorPoint = { x: cursorX + window.scrollX, y: cursorY + window.scrollY }
-        return
-      }
+    function entryAnchor(node: TooltipElement, pin: boolean, entry: boolean) {
+      const axis = anchorAxisOf(node.dataset.easyTooltipAnchor)
+      let x = cursorX, y = cursorY
+      let side: TooltipSide | undefined
 
-      const box = node.getBoundingClientRect()
-      const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max)
-      const gaps = {
-        left: cursorX - box.left,
-        right: box.right - cursorX,
-        above: cursorY - box.top,
-        below: box.bottom - cursorY,
+      if (entry || (pin && axis === "both")) {
+        const box = node.getBoundingClientRect()
+        const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max)
+        const gaps = {
+          left: cursorX - box.left,
+          right: box.right - cursorX,
+          above: cursorY - box.top,
+          below: box.bottom - cursorY,
+        }
+        side = (Object.keys(gaps) as TooltipSide[]).reduce((a, b) => gaps[b] < gaps[a] ? b : a)
+        if (axis === "both") {
+          x = side === "left" ? box.left : side === "right" ? box.right : clamp(cursorX, box.left, box.right)
+          y = side === "above" ? box.top : side === "below" ? box.bottom : clamp(cursorY, box.top, box.bottom)
+        }
       }
-      const side = (Object.keys(gaps) as TooltipSide[]).reduce((a, b) => gaps[b] < gaps[a] ? b : a)
-      const x = side === "left" ? box.left : side === "right" ? box.right : clamp(cursorX, box.left, box.right)
-      const y = side === "above" ? box.top : side === "below" ? box.bottom : clamp(cursorY, box.top, box.bottom)
 
       node._anchorSide = side
-      node._anchorPoint = { x: x + window.scrollX, y: y + window.scrollY }
+      if (pin) node._anchorPoint = { x: x + window.scrollX, y: y + window.scrollY }
+    }
+
+    function anchorFlags(node: TooltipElement) {
+      const preferAttr = node.dataset.easyTooltipPrefer
+      const pin = anchorBaseOf(node.dataset.easyTooltipAnchor) === "pin" && lastByPointer
+      const entry = lastByPointer && (preferAttr === "entry" || (!preferAttr && pin))
+      return { preferAttr, pin, entry }
     }
 
     function rectValue(rect: { left: number, top: number, right: number, bottom: number, width: number, height: number }): TooltipRect {
@@ -493,9 +505,9 @@ type TooltipElement = HTMLElement & {
           const anchorAxis = anchorAxisOf(anchorMode)
           const anchorBase = anchorBaseOf(anchorMode)
           const useCursor = anchorBase === "cursor" && lastByPointer
-          const usePin = anchorBase === "pin" && lastByPointer
+          const { preferAttr, pin: usePin, entry: useEntry } = anchorFlags(node)
           if (useCursor) cursorAnchorActive = true
-          if (usePin && !tooltip._activated) capturePin(node)
+          if ((usePin || useEntry) && !tooltip._activated) entryAnchor(node, usePin, useEntry)
           let rect
           if (useCursor || (usePin && node._anchorPoint)) {
             const x = useCursor ? cursorX : node._anchorPoint!.x - window.scrollX
@@ -531,7 +543,7 @@ type TooltipElement = HTMLElement & {
           const viewTop = containerRect.top + (visualViewport?.offsetTop ?? 0)
           const viewportWidth = visualViewport?.width ?? document.documentElement.clientWidth
           const viewportHeight = visualViewport?.height ?? document.documentElement.clientHeight
-          const prefer = node.dataset.easyTooltipPrefer || (usePin ? node._anchorSide : undefined)
+          const prefer = useEntry ? node._anchorSide : preferAttr
           const rightPlacementOffset = Math.round(rect.right - viewLeft + distance - padding)
           const leftPlacementOffset = Math.round(viewLeft + viewportWidth - rect.left + distance - padding)
 
