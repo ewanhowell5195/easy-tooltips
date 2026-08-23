@@ -1,5 +1,27 @@
 import "./easy-tooltips.css"
 
+type TooltipSide = "above" | "below" | "left" | "right"
+type TooltipAnchor = "element" | "cursor" | "pin"
+
+type TooltipRect = {
+  x: number
+  y: number
+  width: number
+  height: number
+  top: number
+  right: number
+  bottom: number
+  left: number
+}
+
+type TooltipPlacement = {
+  side: TooltipSide
+  inside: boolean
+  anchor: TooltipAnchor
+  anchorRect: TooltipRect
+  point: { x: number, y: number }
+}
+
 type TooltipElement = HTMLElement & {
   _tooltip?: TooltipElement
   _tooltipText?: HTMLElement
@@ -23,6 +45,13 @@ type TooltipElement = HTMLElement & {
   _borderSurfaceDiv?: HTMLDivElement
   _observer?: MutationObserver
   _sourceObserver?: MutationObserver
+  _trigger?: TooltipElement
+  _placement?: TooltipPlacement
+  _reported?: TooltipPlacement
+  _dispatched?: boolean
+  _dispatchQueued?: boolean
+  _moveAt?: number
+  _moveTimer?: number
 }
 
 {
@@ -65,9 +94,12 @@ type TooltipElement = HTMLElement & {
       visibleCount = 0,
       zIndexCounter = 0
 
+    const moveThrottle = 100
+
     function activateTooltip(tooltip: TooltipElement) {
       promoteTooltipLayer()
       tooltip._activated = true
+      queueVisibilityEvent(tooltip)
       activeCount++
       clearTimeout(cooldownTimer)
       tooltips.classList.add("easy-tooltips-active")
@@ -78,6 +110,7 @@ type TooltipElement = HTMLElement & {
     function deactivateTooltip(tooltip: TooltipElement) {
       if (!tooltip._activated) return
       tooltip._activated = false
+      queueVisibilityEvent(tooltip)
       if (--activeCount <= 0) {
         activeCount = 0
         clearTimeout(cooldownTimer)
@@ -93,6 +126,11 @@ type TooltipElement = HTMLElement & {
     function releaseTooltip(node: TooltipElement) {
       const t = node._tooltip
       if (t) {
+        clearTimeout(t._moveTimer)
+        if (t._dispatched) {
+          t._dispatched = false
+          tooltipEvent(t, "close")
+        }
         if (t.classList.contains("easy-tooltip-visible")) visibleCount--
         clearTimeout(t._timeout)
         clearTimeout(t._activateTimer)
@@ -137,6 +175,91 @@ type TooltipElement = HTMLElement & {
     }
     function startHoverPoll() {
       if (!hoverPollRaf) hoverPollRaf = requestAnimationFrame(pollHover)
+    }
+
+    function rectValue(rect: { left: number, top: number, right: number, bottom: number, width: number, height: number }): TooltipRect {
+      return {
+        x: rect.left,
+        y: rect.top,
+        width: rect.width,
+        height: rect.height,
+        top: rect.top,
+        right: rect.right,
+        bottom: rect.bottom,
+        left: rect.left
+      }
+    }
+
+    function tooltipEvent(tooltip: TooltipElement, type: "open" | "close" | "move", previous?: TooltipPlacement) {
+      const trigger = tooltip._trigger
+      if (!trigger) return
+      const placement = tooltip._placement
+      if (placement) tooltip._reported = placement
+      trigger.dispatchEvent(new CustomEvent(`easy-tooltip-${type}`, {
+        bubbles: true,
+        composed: true,
+        detail: {
+          trigger,
+          tooltip,
+          text: trigger._tooltipText?.textContent ?? "",
+          side: placement?.side,
+          inside: placement?.inside ?? false,
+          anchor: placement?.anchor ?? "element",
+          anchorRect: placement?.anchorRect,
+          point: placement?.point,
+          rect: rectValue(tooltip.getBoundingClientRect()),
+          previous
+        }
+      }))
+    }
+
+    function anchorPoint(rect: TooltipRect, side: TooltipSide) {
+      if (side === "left" || side === "right") {
+        return { x: Math.round(side === "left" ? rect.left : rect.right), y: Math.round(rect.top + rect.height / 2) }
+      }
+      return { x: Math.round(rect.left + rect.width / 2), y: Math.round(side === "below" ? rect.bottom : rect.top) }
+    }
+
+    function tooltipMove(tooltip: TooltipElement) {
+      const previous = tooltip._reported
+      const placement = tooltip._placement
+      if (!previous || !placement) return
+      const flipped = previous.side !== placement.side || previous.inside !== placement.inside || previous.anchor !== placement.anchor
+      if (!flipped && previous.point.x === placement.point.x && previous.point.y === placement.point.y) return
+
+      const now = performance.now()
+      const wait = flipped ? 0 : moveThrottle - (now - (tooltip._moveAt ?? 0))
+
+      if (wait <= 0) {
+        clearTimeout(tooltip._moveTimer)
+        tooltip._moveTimer = undefined
+        tooltip._moveAt = now
+        tooltipEvent(tooltip, "move", previous)
+        return
+      }
+
+      if (tooltip._moveTimer) return
+      tooltip._moveTimer = setTimeout(() => {
+        tooltip._moveTimer = undefined
+        if (!tooltip._dispatched || !tooltip._reported || !tooltip._placement) return
+        tooltip._moveAt = performance.now()
+        tooltipEvent(tooltip, "move", tooltip._reported)
+      }, wait)
+    }
+
+    function queueVisibilityEvent(tooltip: TooltipElement) {
+      if (tooltip._dispatchQueued) return
+      tooltip._dispatchQueued = true
+      queueMicrotask(() => {
+        tooltip._dispatchQueued = false
+        const visible = !!tooltip._activated
+        if (visible === !!tooltip._dispatched) return
+        tooltip._dispatched = visible
+        clearTimeout(tooltip._moveTimer)
+        tooltip._moveTimer = undefined
+        tooltip._moveAt = visible ? performance.now() : undefined
+        tooltipEvent(tooltip, visible ? "open" : "close")
+      })
     }
 
     function ms(value: string) {
@@ -241,6 +364,7 @@ type TooltipElement = HTMLElement & {
           if (!tooltip || !tooltipText) {
             tooltip = document.createElement("div") as TooltipElement
             tooltip.className = "easy-tooltip easy-tooltip-setup"
+            tooltip._trigger = node
             node._tooltip = tooltip
 
             const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
@@ -610,6 +734,17 @@ type TooltipElement = HTMLElement & {
             node._borderForeignObj.style.display = "none"
             node._svgPath?.style.removeProperty("stroke")
           }
+
+          const anchorRect = rectValue(rect)
+          tooltip._trigger = node
+          tooltip._placement = {
+            side: dir!,
+            inside: !!inside,
+            anchor: useCursor ? "cursor" : usePin ? "pin" : "element",
+            anchorRect,
+            point: anchorPoint(anchorRect, dir!)
+          }
+          if (tooltip._dispatched) tooltipMove(tooltip)
 
           if (!node._observer) {
             const obs = new MutationObserver(() => reloadTooltips())

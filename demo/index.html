@@ -1554,6 +1554,37 @@
       </div>
 
       <div class="section">
+        <h2>Events</h2>
+        <p>Tooltips fire <code>easy-tooltip-open</code>, <code>easy-tooltip-close</code>, and <code>easy-tooltip-move</code> on their trigger element. The events bubble, so you can listen on <code>document</code>. <code>move</code> fires when a tooltip flips to another side, and when its anchor point moves. Flips are sent straight away, anchor point changes are limited to one event every 100ms. <code>open</code> fires when the tooltip appears, after any delay, so a hover too brief to show a tooltip fires nothing at all. The buttons below use a <code>.5s</code> delay to make that obvious.</p>
+
+        <div class="demo-grid">
+          <div class="demo-card" style="display: flex; flex-direction: column;">
+            <h3>Open and Close</h3>
+            <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <div id="event-buttons" style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
+              <button class="btn" data-easy-tooltip="Saves your changes" data-easy-tooltip-style="--easy-tooltip-delay: .5s;">Save</button>
+              <button class="btn" data-easy-tooltip="Shares a link" data-easy-tooltip-style="--easy-tooltip-delay: .5s;">Share</button>
+              <button class="btn" data-easy-tooltip="Sends it to the printer" data-easy-tooltip-style="--easy-tooltip-delay: .5s;">Print</button>
+              <button class="btn" data-easy-tooltip="Throws it away" data-easy-tooltip-style="--easy-tooltip-delay: .5s;">Delete</button>
+            </div>
+            <p id="event-status" style="margin: 18px 0 0; text-align: center;">Nothing open</p>
+            </div>
+          </div>
+          <div class="demo-card">
+            <h3>Cursor</h3>
+            <div id="event-cursor" data-easy-tooltip="Move around for move events" data-easy-tooltip-anchor="cursor" style="padding: 24px; border: 1px dashed #aaa; border-radius: 6px; text-align: center;">Move your cursor across me</div>
+            <pre id="event-log" style="margin: 12px 0 0;">Waiting for events</pre>
+          </div>
+        </div>
+
+        <pre>document.addEventListener("easy-tooltip-open", e =&gt; {
+  console.log(e.detail.side, e.detail.point)
+})</pre>
+
+
+      </div>
+
+      <div class="section">
         <h2>Custom Colors</h2>
         <p>Style specific tooltips using <code>data-easy-tooltip-class</code> and CSS variables:</p>
         
@@ -2097,6 +2128,31 @@
   
   <script src="https://cdn.jsdelivr.net/npm/easy-tooltips@latest/dist/easy-tooltips.min.js"></script>
   <script>
+    {
+      const status = document.getElementById("event-status")
+      const buttons = document.getElementById("event-buttons")
+      buttons.addEventListener("easy-tooltip-open", e => status.textContent = `Open: ${e.detail.text}`)
+      buttons.addEventListener("easy-tooltip-close", () => status.textContent = "Nothing open")
+
+      const log = document.getElementById("event-log")
+      const cursor = document.getElementById("event-cursor")
+      const blank = "\u00a0"
+      const lines = ["Waiting for events", blank, blank, blank, blank]
+      log.textContent = lines.join("\n")
+      let logged = false
+      for (const type of ["open", "close", "move"]) {
+        cursor.addEventListener(`easy-tooltip-${type}`, e => {
+          if (!logged) {
+            logged = true
+            lines.fill(blank)
+          }
+          lines.unshift(`${type.padEnd(6)}${e.detail.side.padEnd(7)}${e.detail.point.x}, ${e.detail.point.y}`)
+          lines.length = 5
+          log.textContent = lines.join("\n")
+        })
+      }
+    }
+
     let count = 0
     const dynamicCounter = document.getElementById("dynamic-counter")
     const dynamicTime = document.getElementById("dynamic-time")

@@ -141,6 +141,38 @@ By default a tooltip is anchored to its trigger element. Use `data-easy-tooltip-
 
 Keyboard focus has no coordinates and automatically falls back to element anchoring.
 
+### Events
+Tooltips fire events on their trigger element. They bubble, so you can listen on `document`.
+
+* `easy-tooltip-open`: the tooltip appeared
+* `easy-tooltip-close`: the tooltip started hiding
+* `easy-tooltip-move`: the tooltip changed where it is attached
+
+```js
+document.addEventListener("easy-tooltip-open", e => {
+  console.log(e.detail.side, e.detail.point)
+})
+```
+
+Every event has the same `detail`:
+
+* `trigger`: the element the tooltip belongs to
+* `tooltip`: the tooltip element
+* `text`: the tooltip text
+* `side`: `above`, `below`, `left`, or `right`
+* `inside`: `true` when the tooltip did not fit on any side, so it floats over the trigger without an arrow. `side` still reports the side it is using
+* `anchor`: `element`, `cursor`, or `pin`
+* `anchorRect`: the box the tooltip is anchored to. For cursor and pin anchoring this is a zero size box at the anchor point
+* `point`: the point on the anchor that the tooltip points at
+* `rect`: the box of the tooltip itself
+* `previous`: on `move`, the same placement values from before the change
+
+All coordinates are viewport coordinates, the same as `getBoundingClientRect`.
+
+`open` fires when the tooltip actually appears, after any delay, so a hover too brief to show a tooltip fires nothing at all.
+
+`move` fires when the tooltip flips to another side, and when its anchor point moves, for example while scrolling or when using cursor anchoring. Flips are sent straight away. Anchor point changes are limited to one event every 100ms, so cursor anchoring does not spam.
+
 ## Customization
 
 You can style tooltips using CSS variables (recommended) or by targeting the tooltip classes directly. Note that some CSS variables are required for proper positioning:
