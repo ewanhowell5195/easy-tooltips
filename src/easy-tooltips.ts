@@ -52,6 +52,7 @@ type TooltipElement = HTMLElement & {
   _dispatchQueued?: boolean
   _moveAt?: number
   _moveTimer?: number
+  _held?: boolean
 }
 
 {
@@ -95,6 +96,8 @@ type TooltipElement = HTMLElement & {
       zIndexCounter = 0
 
     const moveThrottle = 100
+    const holdControls = "input, select, textarea, button, [role=button], [role=slider], [role=checkbox], [role=radio], [role=switch]"
+    let heldTrigger: TooltipElement | undefined
 
     function activateTooltip(tooltip: TooltipElement) {
       promoteTooltipLayer()
@@ -127,6 +130,7 @@ type TooltipElement = HTMLElement & {
       const t = node._tooltip
       if (t) {
         clearTimeout(t._moveTimer)
+        if (node === heldTrigger) heldTrigger = undefined
         if (t._dispatched) {
           t._dispatched = false
           tooltipEvent(t, "close")
@@ -166,7 +170,7 @@ type TooltipElement = HTMLElement & {
         const cursorEl = document.elementFromPoint(cursorX, cursorY)
         for (const trigger of triggers) {
           const tip = trigger._tooltip
-          if (tip && tip.classList.contains("easy-tooltip-visible") && trigger !== cursorEl && !trigger.contains(cursorEl)) {
+          if (tip && !tip._held && tip.classList.contains("easy-tooltip-visible") && trigger !== cursorEl && !trigger.contains(cursorEl)) {
             tooltipVisibility(tip, false)
           }
         }
@@ -351,8 +355,8 @@ type TooltipElement = HTMLElement & {
               node._sourceObserver = undefined
             }
             if (node._source) toAdd.push(node)
-            else if (node._tooltip) tooltipVisibility(node._tooltip, false)
-          } else if (node._tooltip) {
+            else if (node._tooltip && !node._tooltip._held) tooltipVisibility(node._tooltip, false)
+          } else if (node._tooltip && !node._tooltip._held) {
             tooltipVisibility(node._tooltip, false)
           }
           node = node.parentElement as TooltipElement | null
@@ -553,7 +557,7 @@ type TooltipElement = HTMLElement & {
             const cursorEl = document.elementFromPoint(cursorX, cursorY)
             show = !!cursorEl && (node === cursorEl || node.contains(cursorEl))
           }
-          tooltipVisibility(tooltip, show)
+          tooltipVisibility(tooltip, show || !!tooltip._held)
 
           if (dir === "left" || dir === "right") {
             tooltipText.style.minHeight = `${edgeBufferY * 2 + arrowBase + radius * 2}px`
@@ -773,7 +777,7 @@ type TooltipElement = HTMLElement & {
 
     function removeTooltips(node: TooltipElement | undefined, force: boolean = false) {
       while (node && node !== document.body) {
-        if (node._tooltip && (force || !node.matches(":hover"))) {
+        if (node._tooltip && !node._tooltip._held && (force || !node.matches(":hover"))) {
           tooltipVisibility(node._tooltip, false)
         }
         node = node.parentElement ?? undefined
@@ -821,6 +825,34 @@ type TooltipElement = HTMLElement & {
       cursorX = t.clientX
       cursorY = t.clientY
       return true
+    }
+
+    function releaseHeld() {
+      const trigger = heldTrigger
+      if (!trigger) return
+      heldTrigger = undefined
+      const tooltip = trigger._tooltip
+      if (!tooltip) return
+      tooltip._held = false
+      if (!trigger.matches(":hover")) tooltipVisibility(tooltip, false)
+    }
+
+    document.addEventListener("pointerdown", e => {
+      releaseHeld()
+      let node = e.target as TooltipElement | null
+      while (node && node !== document.body && !node._tooltip) {
+        node = node.parentElement as TooltipElement | null
+      }
+      if (!node?._tooltip) return
+      const hold = node.dataset.easyTooltipHold
+      if (hold === "false") return
+      if (hold === undefined && !(e.target as Element)?.closest?.(holdControls)) return
+      heldTrigger = node
+      node._tooltip._held = true
+    })
+
+    for (const type of ["pointerup", "pointercancel"]) {
+      window.addEventListener(type, releaseHeld)
     }
 
     document.addEventListener("touchstart", e => {
@@ -893,6 +925,8 @@ type TooltipElement = HTMLElement & {
     })
 
     window.addEventListener("blur", () => {
+      if (heldTrigger?._tooltip) heldTrigger._tooltip._held = false
+      heldTrigger = undefined
       ignoreFocusReturn = document.activeElement !== document.body
       queueTooltipUpdate(() => {
         lastElement = undefined

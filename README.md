@@ -141,6 +141,19 @@ By default a tooltip is anchored to its trigger element. Use `data-easy-tooltip-
 
 Keyboard focus has no coordinates and automatically falls back to element anchoring.
 
+### Holding while interacting
+A tooltip stays open while you are pressing its trigger, even once the pointer leaves it. This means that dragging a slider keeps its tooltip up until you let go, instead of losing it as soon as the cursor leaves the track.
+
+This happens automatically when the press lands on a control: `input`, `select`, `textarea`, `button`, or anything with a `button`, `slider`, `checkbox`, `radio`, or `switch` role. The control can be the trigger itself, or sit inside it.
+
+Use `data-easy-tooltip-hold` to turn it on for anything else, and `data-easy-tooltip-hold="false"` to turn it off for a control:
+```html
+<div data-easy-tooltip="I stay while you drag me" data-easy-tooltip-hold>…</div>
+<button data-easy-tooltip="I hide as soon as you leave" data-easy-tooltip-hold="false">Press me</button>
+```
+
+The tooltip hides when you release, unless the pointer is back over the trigger by then.
+
 ### Events
 Tooltips fire events on their trigger element. They bubble, so you can listen on `document`.
 
