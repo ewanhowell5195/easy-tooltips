@@ -231,7 +231,7 @@ type TooltipElement = HTMLElement & {
     function entryAnchor(node: TooltipElement, pin: boolean, entry: boolean) {
       const axis = anchorAxisOf(node.dataset.easyTooltipAnchor)
 
-      if ((entry || pin) && node._anchorSide === undefined) {
+      if ((entry || (pin && axis === "both")) && node._anchorSide === undefined) {
         const box = node.getBoundingClientRect()
         const gaps = {
           left: cursorX - box.left,
@@ -258,7 +258,8 @@ type TooltipElement = HTMLElement & {
     function anchorFlags(node: TooltipElement) {
       const preferAttr = node.dataset.easyTooltipPrefer
       const pin = anchorBaseOf(node.dataset.easyTooltipAnchor) === "pin" && lastByPointer
-      const entry = lastByPointer && (preferAttr === "entry" || (!preferAttr && pin))
+      const pinsToEdge = pin && anchorAxisOf(node.dataset.easyTooltipAnchor) === "both"
+      const entry = lastByPointer && (preferAttr === "entry" || (!preferAttr && pinsToEdge))
       return { preferAttr, pin, entry }
     }
 
