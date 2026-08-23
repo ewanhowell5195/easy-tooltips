@@ -121,7 +121,7 @@ Use `data-easy-tooltip-prefer` to control which side a tooltip shows on. It stil
 * `below`: show below, fall back to above
 * `left`: show to the left, fall back to the right
 * `right`: show to the right, fall back to the left
-* `entry`: show on whichever edge of the trigger the cursor came in nearest to, decided when the tooltip appears. Keyboard focus has no entry point, so it falls back to `above`
+* `entry`: show on whichever edge of the trigger the cursor crossed on the way in. The side is locked in as you enter, so it stays right even when you move fast. Keyboard focus has no entry point, so it falls back to `above`
 
 ```html
 <button data-easy-tooltip="Shows below" data-easy-tooltip-prefer="below">Hover me</button>
@@ -133,7 +133,7 @@ By default a tooltip is anchored to its trigger element. Use `data-easy-tooltip-
 
 * `element` (default): anchored to the trigger's bounding box.
 * `cursor`: anchored to the cursor (or touch point), follows the cursor as it moves around the element. On touch, the tooltip appears at the tap point and tracks the finger if you drag.
-* `pin`: pins to the point on the trigger's nearest edge to the cursor when the tooltip appears, so coming in from the left pins it to the left edge at the height you came in at. The side defaults to `entry`, and setting `data-easy-tooltip-prefer` overrides that while keeping the pinned position. If the tooltip is delayed, it pins where the cursor ends up rather than where it entered, and it keeps tracking the page as you scroll.
+* `pin`: pins to the point on the trigger's nearest edge to the cursor when the tooltip appears, so coming in from the left pins it to the left edge at the height you are at. The side defaults to `entry`, and setting `data-easy-tooltip-prefer` overrides that while keeping the pinned position. If the tooltip is delayed, it pins where the cursor ends up rather than where it entered, and it keeps tracking the page as you scroll.
 
 `cursor` and `pin` also come in single axis versions, which take one axis from the cursor and the other from the trigger's bounding box:
 

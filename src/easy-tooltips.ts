@@ -89,6 +89,8 @@ type TooltipElement = HTMLElement & {
       cursorX: number,
       cursorY: number,
       cursorAnchorActive: boolean,
+      prevCursorX: number,
+      prevCursorY: number,
       cursorRafQueued: boolean,
       cooldownTimer: number,
       ignoreFocusReturn: boolean,
@@ -198,29 +200,59 @@ type TooltipElement = HTMLElement & {
       return mode?.replace(/-[xy]$/, "")
     }
 
+    function setCursor(x: number, y: number) {
+      prevCursorX = cursorX
+      prevCursorY = cursorY
+      cursorX = x
+      cursorY = y
+    }
+
+    function crossedSide(box: DOMRect): TooltipSide | undefined {
+      if (prevCursorX === undefined) return
+      const dx = cursorX - prevCursorX
+      const dy = cursorY - prevCursorY
+      let best: TooltipSide | undefined
+      let bestT = Infinity
+
+      const check = (side: TooltipSide, t: number, along: number, min: number, max: number) => {
+        if (t < 0 || t > 1 || t >= bestT || along < min || along > max) return
+        bestT = t
+        best = side
+      }
+
+      if (dx > 0 && prevCursorX < box.left) check("left", (box.left - prevCursorX) / dx, prevCursorY + dy * ((box.left - prevCursorX) / dx), box.top, box.bottom)
+      if (dx < 0 && prevCursorX > box.right) check("right", (box.right - prevCursorX) / dx, prevCursorY + dy * ((box.right - prevCursorX) / dx), box.top, box.bottom)
+      if (dy > 0 && prevCursorY < box.top) check("above", (box.top - prevCursorY) / dy, prevCursorX + dx * ((box.top - prevCursorY) / dy), box.left, box.right)
+      if (dy < 0 && prevCursorY > box.bottom) check("below", (box.bottom - prevCursorY) / dy, prevCursorX + dx * ((box.bottom - prevCursorY) / dy), box.left, box.right)
+
+      return best
+    }
+
     function entryAnchor(node: TooltipElement, pin: boolean, entry: boolean) {
       const axis = anchorAxisOf(node.dataset.easyTooltipAnchor)
-      let x = cursorX, y = cursorY
-      let side: TooltipSide | undefined
 
-      if (entry || (pin && axis === "both")) {
+      if ((entry || pin) && node._anchorSide === undefined) {
         const box = node.getBoundingClientRect()
-        const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max)
         const gaps = {
           left: cursorX - box.left,
           right: box.right - cursorX,
           above: cursorY - box.top,
           below: box.bottom - cursorY,
         }
-        side = (Object.keys(gaps) as TooltipSide[]).reduce((a, b) => gaps[b] < gaps[a] ? b : a)
-        if (axis === "both") {
-          x = side === "left" ? box.left : side === "right" ? box.right : clamp(cursorX, box.left, box.right)
-          y = side === "above" ? box.top : side === "below" ? box.bottom : clamp(cursorY, box.top, box.bottom)
-        }
+        node._anchorSide = crossedSide(box) ?? (Object.keys(gaps) as TooltipSide[]).reduce((a, b) => gaps[b] < gaps[a] ? b : a)
       }
 
-      node._anchorSide = side
-      if (pin) node._anchorPoint = { x: x + window.scrollX, y: y + window.scrollY }
+      if (!pin) return
+
+      let x = cursorX, y = cursorY
+      const side = node._anchorSide
+      if (side && axis === "both") {
+        const box = node.getBoundingClientRect()
+        const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max)
+        x = side === "left" ? box.left : side === "right" ? box.right : clamp(cursorX, box.left, box.right)
+        y = side === "above" ? box.top : side === "below" ? box.bottom : clamp(cursorY, box.top, box.bottom)
+      }
+      node._anchorPoint = { x: x + window.scrollX, y: y + window.scrollY }
     }
 
     function anchorFlags(node: TooltipElement) {
@@ -335,6 +367,7 @@ type TooltipElement = HTMLElement & {
         if (tooltip._delay && performance.now() < Number(tooltip._start) + tooltip._delay) {
           if (tooltip.classList.contains("easy-tooltip-visible")) visibleCount--
           tooltip.classList.remove("easy-tooltip-visible")
+          if (tooltip._trigger) tooltip._trigger._anchorSide = undefined
           clearTimeout(tooltip._timeout)
           clearTimeout(tooltip._activateTimer)
           tooltip._timeout = tooltip._activateTimer = tooltip._start = tooltip._delay = undefined
@@ -351,6 +384,7 @@ type TooltipElement = HTMLElement & {
       if (tooltip._timeout === undefined) {
         tooltip._next = undefined
         tooltip.classList.toggle("easy-tooltip-visible", visible)
+        if (!visible && tooltip._trigger) tooltip._trigger._anchorSide = undefined
         visibleCount += visible ? 1 : -1
 
         clearTimeout(tooltip._activateTimer)
@@ -878,8 +912,7 @@ type TooltipElement = HTMLElement & {
     function setTouchPos(e: TouchEvent) {
       const t = e.touches[0]
       if (!t) return false
-      cursorX = t.clientX
-      cursorY = t.clientY
+      setCursor(t.clientX, t.clientY)
       return true
     }
 
@@ -931,8 +964,7 @@ type TooltipElement = HTMLElement & {
       ignoreFocusReturn = false
       lastByPointer = true
       mouseActive = true
-      cursorX = e.clientX
-      cursorY = e.clientY
+      setCursor(e.clientX, e.clientY)
       updateTooltipTarget(e)
     })
 
@@ -958,8 +990,7 @@ type TooltipElement = HTMLElement & {
     document.addEventListener("mousemove", e => {
       if (touchedAt && performance.now() - touchedAt < 700) return
       mouseActive = true
-      cursorX = e.clientX
-      cursorY = e.clientY
+      setCursor(e.clientX, e.clientY)
       followCursor()
     })
 
