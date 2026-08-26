@@ -6,7 +6,7 @@
   "contributors": [
     "Even Torset <eventorset@gmail.com>"
   ],
-  "license": "MIT",
+  "license": "MPL-2.0",
   "type": "module",
   "main": "./dist/easy-tooltips.min.js",
   "style": "./dist/easy-tooltips.min.css",

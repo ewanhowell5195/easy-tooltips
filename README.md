@@ -5,7 +5,7 @@ Just add `data-easy-tooltip` to any element! No setup or config required.
 
 [![npm version](https://badge.fury.io/js/easy-tooltips.svg)](https://www.npmjs.com/package/easy-tooltips)
 [![jsDelivr](https://data.jsdelivr.com/v1/package/npm/easy-tooltips/badge)](https://www.jsdelivr.com/package/npm/easy-tooltips)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MPL 2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)
 
 [**Live Demo**](https://easy-tooltips.ewanhowell.com/)
 
@@ -338,4 +338,4 @@ Easy-tooltips uses a smart positioning system that:
 
 ## License
 
-MIT © [Ewan Howell](https://ewanhowell.com/)
+[MPL-2.0](LICENSE) © [Ewan Howell](https://ewanhowell.com/)

@@ -4,7 +4,7 @@ import pkg from "./package.json" with { type: "json" }
 const banner = `/*!
  * easy-tooltips
  * Version  : ${pkg.version}
- * License  : MIT
+ * License  : MPL-2.0
  * Copyright: ${new Date().getFullYear()} Ewan Howell
  */`
 
