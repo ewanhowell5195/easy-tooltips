@@ -54,6 +54,8 @@ type TooltipElement = HTMLElement & {
   _moveAt?: number
   _moveTimer?: number
   _held?: boolean
+  _hold?: { axis: "x" | "y", pos: number }
+  _clampArmed?: boolean
 }
 
 {
@@ -299,13 +301,6 @@ type TooltipElement = HTMLElement & {
       }))
     }
 
-    function anchorPoint(rect: TooltipRect, side: TooltipSide) {
-      if (side === "left" || side === "right") {
-        return { x: Math.round(side === "left" ? rect.left : rect.right), y: Math.round(rect.top + rect.height / 2) }
-      }
-      return { x: Math.round(rect.left + rect.width / 2), y: Math.round(side === "below" ? rect.bottom : rect.top) }
-    }
-
     function tooltipMove(tooltip: TooltipElement) {
       const previous = tooltip._reported
       const placement = tooltip._placement
@@ -385,6 +380,7 @@ type TooltipElement = HTMLElement & {
       if (tooltip._timeout === undefined) {
         tooltip._next = undefined
         tooltip.classList.toggle("easy-tooltip-visible", visible)
+        if (visible) tooltip._hold = tooltip._clampArmed = undefined
         if (!visible && tooltip._trigger) tooltip._trigger._anchorSide = tooltip._trigger._anchorPoint = undefined
         visibleCount += visible ? 1 : -1
 
@@ -542,6 +538,12 @@ type TooltipElement = HTMLElement & {
           const useCursor = anchorBase === "cursor" && lastByPointer
           const { preferAttr, pin: usePin, entry: useEntry } = anchorFlags(node)
           if (useCursor) cursorAnchorActive = true
+          const clamp = (v: number, lo: number, hi: number) => Math.min(Math.max(v, lo), hi)
+          const holdFree = (axis: "x" | "y", center: number) => {
+            if (anchorMode) return center
+            if (!tooltip._hold || tooltip._hold.axis !== axis) tooltip._hold = { axis, pos: center }
+            return tooltip._hold.pos
+          }
           if ((usePin || useEntry) && !tooltip._activated && node._anchorSide === undefined && node._anchorPoint === undefined) {
             entryAnchor(node, usePin, useEntry)
           }
@@ -713,9 +715,29 @@ type TooltipElement = HTMLElement & {
           }
 
           let textShift
+          let freePoint: { x: number, y: number }
+          const cursorKnown = mouseActive && cursorX !== undefined
+          const clampToEdge = !!tooltip._held || !cursorKnown ||
+            (cursorX >= rect.left && cursorX <= rect.right && cursorY >= rect.top && cursorY <= rect.bottom)
+          const placeFree = (axis: "x" | "y", center: number, min: number, max: number) => {
+            const held = holdFree(axis, center)
+            if (!clampToEdge) return held
+            const clamped = clamp(held, min, max)
+            if (clamped === held) {
+              tooltip._clampArmed = false
+              return held
+            }
+            if (!tooltip._clampArmed) {
+              tooltip._clampArmed = true
+              return held
+            }
+            if (tooltip._hold) tooltip._hold.pos = clamped
+            return clamped
+          }
 
           if (dir === "left" || dir === "right") {
-            const cy = Math.round(rect.top + rect.height / 2)
+            const cy = Math.round(placeFree("y", rect.top + rect.height / 2, rect.top, rect.bottom))
+            freePoint = { x: Math.round(dir === "right" ? rect.right : rect.left), y: cy }
             tooltip.style.top = `${cy - containerRect.top}px`
             if (!inside) {
               tooltip.style.left = `${Math.round(dir === "right" ? rect.right : rect.left) - containerRect.left}px`
@@ -731,8 +753,9 @@ type TooltipElement = HTMLElement & {
             const height = tooltip.getBoundingClientRect().height
             textShift = shift(cy - height / 2, cy + height / 2, height, viewTop, viewportHeight, edgeBufferY, true)
           } else {
-            const x = Math.round(rect.left + rect.width / 2)
+            const x = Math.round(placeFree("x", rect.left + rect.width / 2, rect.left, rect.right))
             const y = Math.round(rect.top)
+            freePoint = { x, y: Math.round(dir === "below" ? rect.bottom : rect.top) }
             tooltip.style.left = `${x - containerRect.left}px`
             if (!inside) {
               tooltip.style.top = dir === "above" ? `${y - containerRect.top}px` : `${y + rect.height - containerRect.top}px`
@@ -839,7 +862,7 @@ type TooltipElement = HTMLElement & {
             inside: !!inside,
             anchor: (useCursor || usePin ? anchorMode : "element") as TooltipAnchor,
             anchorRect,
-            point: anchorPoint(anchorRect, dir!)
+            point: freePoint!
           }
           if (tooltip._dispatched) tooltipMove(tooltip)
 

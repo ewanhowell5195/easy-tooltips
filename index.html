@@ -49,6 +49,29 @@
     <div style="position: fixed; bottom: 20px; left: 20px;">
       <div tabindex="0" id="auto-release" data-easy-tooltip="Hover me, I delete myself in 5s" style="background: violet; padding: 10px;">Auto release</div>
     </div>
+    <div style="position: fixed; top: 50px; bottom: 80px; left: 20px; width: 220px; overflow-y: scroll; background: #eee; border: 1px solid #999; padding: 8px;">
+      <div id="scroll-list"></div>
+    </div>
+    <div style="position: fixed; top: 50px; bottom: 80px; left: 250px; width: 220px; overflow-y: scroll; background: #eee; border: 1px solid #999; padding: 8px;">
+      <div id="scroll-list-small"></div>
+    </div>
+    <script>
+      function fillList(container, tall) {
+        for (let i = 1; i <= 40; i++) {
+          const item = document.createElement("div")
+          item.tabIndex = 0
+          item.dataset.easyTooltip = `Tooltip for item ${i}`
+          item.dataset.easyTooltipPrefer = "right"
+          item.style.cssText = tall
+            ? "background: #6cf; padding: 10px; margin-bottom: 6px; min-height: 640px; box-sizing: border-box; display: flex; align-items: center;"
+            : "background: #6cf; padding: 10px; margin-bottom: 6px;"
+          item.textContent = `Item ${i}`
+          container.append(item)
+        }
+      }
+      fillList(document.getElementById("scroll-list"), true)
+      fillList(document.getElementById("scroll-list-small"), false)
+    </script>
     <script>
       let count = 0
       setInterval(() => {
