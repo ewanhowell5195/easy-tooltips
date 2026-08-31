@@ -410,6 +410,24 @@ type TooltipElement = HTMLElement & {
       }
     }
 
+    function visibleRect(node: Element) {
+      const r = node.getBoundingClientRect()
+      let left = r.left, top = r.top, right = r.right, bottom = r.bottom
+      let el = node.parentElement
+      while (el && el !== document.body) {
+        const s = getComputedStyle(el)
+        const clipsX = s.overflowX !== "visible"
+        const clipsY = s.overflowY !== "visible"
+        if (clipsX || clipsY) {
+          const cr = el.getBoundingClientRect()
+          if (clipsX) { left = Math.max(left, cr.left); right = Math.min(right, cr.right) }
+          if (clipsY) { top = Math.max(top, cr.top); bottom = Math.min(bottom, cr.bottom) }
+        }
+        el = el.parentElement
+      }
+      return { x: left, y: top, left, top, right, bottom, width: right - left, height: bottom - top }
+    }
+
     function addTooltips() {
       cursorAnchorActive = false
       if (lastElement) {
@@ -561,7 +579,7 @@ type TooltipElement = HTMLElement & {
               height: anchorAxis === "x" ? box!.height : 0,
             }
           } else {
-            rect = node.getBoundingClientRect()
+            rect = visibleRect(node)
           }
 
           const styles = getComputedStyle(tooltip)
