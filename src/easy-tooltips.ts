@@ -699,7 +699,7 @@ type TooltipElement = HTMLElement & {
               if (after + text > max) tip = -(after + text - max)
             }
             if (text && tooltipText !== undefined) tooltipText.style.translate = vertical ? `0 ${text}px` : `${text}px`
-            if (tip && tooltip !== undefined) tooltip.style.translate = vertical ? `0 ${tip}px` : `${tip}px 0`
+            tipShift = tip
             return text
           }
 
@@ -733,6 +733,7 @@ type TooltipElement = HTMLElement & {
           }
 
           let textShift
+          let tipShift = 0
           let freePoint: { x: number, y: number }
           const cursorKnown = mouseActive && cursorX !== undefined
           const clampToEdge = !!tooltip._held || !cursorKnown ||
@@ -756,7 +757,6 @@ type TooltipElement = HTMLElement & {
           if (dir === "left" || dir === "right") {
             const cy = Math.round(placeFree("y", rect.top + rect.height / 2, rect.top, rect.bottom))
             freePoint = { x: Math.round(dir === "right" ? rect.right : rect.left), y: cy }
-            tooltip.style.top = `${cy - containerRect.top}px`
             if (!inside) {
               tooltip.style.left = `${Math.round(dir === "right" ? rect.right : rect.left) - containerRect.left}px`
               if (dir === "right") {
@@ -770,16 +770,17 @@ type TooltipElement = HTMLElement & {
 
             const height = tooltip.getBoundingClientRect().height
             textShift = shift(cy - height / 2, cy + height / 2, height, viewTop, viewportHeight, edgeBufferY, true)
+            tooltip.style.top = `${cy - containerRect.top + tipShift}px`
           } else {
             const x = Math.round(placeFree("x", rect.left + rect.width / 2, rect.left, rect.right))
             const y = Math.round(rect.top)
             freePoint = { x, y: Math.round(dir === "below" ? rect.bottom : rect.top) }
-            tooltip.style.left = `${x - containerRect.left}px`
             if (!inside) {
               tooltip.style.top = dir === "above" ? `${y - containerRect.top}px` : `${y + rect.height - containerRect.top}px`
             }
 
             textShift = shift(x - tooltipWidth / 2, x + tooltipWidth / 2, tooltipWidth, viewLeft, viewportWidth, edgeBufferX, false)
+            tooltip.style.left = `${x - containerRect.left + tipShift}px`
           }
 
           const { width: bw, height: bh } = tooltipText.getBoundingClientRect()
