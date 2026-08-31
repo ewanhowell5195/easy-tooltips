@@ -42,8 +42,8 @@ const demoDevPlugin = (): Plugin => ({
   },
   transformIndexHtml(html) {
     return html
-      .replace(`<link href="https://cdn.jsdelivr.net/npm/easy-tooltips@latest/dist/easy-tooltips.min.css" rel="stylesheet">`, "")
-      .replace(`<script src="https://cdn.jsdelivr.net/npm/easy-tooltips@latest/dist/easy-tooltips.min.js"></script>`, `<script type="module" src="/src/easy-tooltips.ts"></script>`)
+      .replace(`<link href="https://cdn.jsdelivr.net/npm/easy-tooltips/dist/easy-tooltips.min.css" rel="stylesheet">`, "")
+      .replace(`<script src="https://cdn.jsdelivr.net/npm/easy-tooltips/dist/easy-tooltips.min.js"></script>`, `<script type="module" src="/src/easy-tooltips.ts"></script>`)
   },
 })
 
