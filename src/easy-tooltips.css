@@ -125,7 +125,9 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  overflow: visible;
+  /* The arrow is drawn outside this box, and an edge shift moves the bubble outside it too,
+     so a host page clipping this loses both. A bare class loses to ordinary host selectors. */
+  overflow: visible !important;
 }
 
 .easy-tooltip-bg path {
