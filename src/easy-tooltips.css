@@ -1,17 +1,72 @@
 :root {
-  --easy-tooltip-distance: 16px;
-  --easy-tooltip-arrow-size: 16px;
-  --easy-tooltip-arrow-edge-buffer-x: 12px;
-  --easy-tooltip-arrow-edge-buffer-y: 6px;
-  --easy-tooltip-viewport-padding: 16px;
-  --easy-tooltip-border-size: 1px;
-  --easy-tooltip-border-radius: 4px;
   --easy-tooltip-padding: 8px 12px;
-  --easy-tooltip-animation-length: .15s;
   --easy-tooltip-animation-distance: 4px;
-  --easy-tooltip-delay: 0s;
-  --easy-tooltip-inactive-delay: .15s;
-  --easy-tooltip-cooldown: .15s;
+}
+
+@property --easy-tooltip-distance {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 16px;
+}
+
+@property --easy-tooltip-arrow-size {
+  syntax: "<length>+";
+  inherits: true;
+  initial-value: 16px;
+}
+
+@property --easy-tooltip-arrow-edge-buffer-x {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 12px;
+}
+
+@property --easy-tooltip-arrow-edge-buffer-y {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 6px;
+}
+
+@property --easy-tooltip-viewport-padding {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 16px;
+}
+
+@property --easy-tooltip-border-size {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 1px;
+}
+
+@property --easy-tooltip-border-radius {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 4px;
+}
+
+@property --easy-tooltip-animation-length {
+  syntax: "<time>";
+  inherits: true;
+  initial-value: .15s;
+}
+
+@property --easy-tooltip-delay {
+  syntax: "<time>";
+  inherits: true;
+  initial-value: 0s;
+}
+
+@property --easy-tooltip-inactive-delay {
+  syntax: "<time>";
+  inherits: true;
+  initial-value: .15s;
+}
+
+@property --easy-tooltip-cooldown {
+  syntax: "<time>";
+  inherits: true;
+  initial-value: .15s;
 }
 
 @property --easy-tooltip-background-color {
