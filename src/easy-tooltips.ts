@@ -67,7 +67,30 @@ type TooltipElement = HTMLElement & {
     if (initialRect.width <= 0 || initialHeight <= 0) return
 
     const ceilW = Math.ceil(initialRect.width)
-    let minW = 1
+
+    el.style.maxWidth = "none"
+    el.style.width = "max-content"
+    const naturalW = Math.ceil(el.getBoundingClientRect().width)
+    el.style.maxWidth = ""
+
+    if (naturalW <= ceilW) {
+      el.style.width = ""
+      return
+    }
+
+    el.style.minWidth = "0"
+    el.style.width = "min-content"
+    const floorRect = el.getBoundingClientRect()
+    const floorW = Math.ceil(floorRect.width)
+    const floorFits = Math.round(floorRect.height) <= initialHeight
+    el.style.minWidth = ""
+
+    if (floorFits) {
+      el.style.width = `${floorW}px`
+      return
+    }
+
+    let minW = floorW + 1
     let maxW = ceilW + 1
     let bestW = ceilW
 
@@ -690,10 +713,12 @@ type TooltipElement = HTMLElement & {
           if (dir !== "above") tooltip.classList.add("easy-tooltip-" + dir)
           if (inside) tooltip.classList.add("easy-tooltip-inside")
 
-          if (dir === "right") {
-            tooltip.style.setProperty("--easy-tooltip-left-offset", `${rightPlacementOffset}px`)
-          } else if (dir === "left") {
-            tooltip.style.setProperty("--easy-tooltip-right-offset", `${leftPlacementOffset}px`)
+          if (!inside) {
+            if (dir === "right") {
+              tooltip.style.setProperty("--easy-tooltip-left-offset", `${rightPlacementOffset}px`)
+            } else if (dir === "left") {
+              tooltip.style.setProperty("--easy-tooltip-right-offset", `${leftPlacementOffset}px`)
+            }
           }
 
           shrinkwrap(tooltipText)
