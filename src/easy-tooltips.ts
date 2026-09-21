@@ -59,6 +59,32 @@ type TooltipElement = HTMLElement & {
 }
 
 {
+  function shrinkwrap(el: HTMLElement) {
+    el.style.width = ""
+    const initialRect = el.getBoundingClientRect()
+    const initialHeight = Math.round(initialRect.height)
+
+    if (initialRect.width <= 0 || initialHeight <= 0) return
+
+    const ceilW = Math.ceil(initialRect.width)
+    let minW = 1
+    let maxW = ceilW + 1
+    let bestW = ceilW
+
+    while (minW <= maxW) {
+      const mid = Math.floor((minW + maxW) / 2)
+      el.style.width = `${mid}px`
+      if (Math.round(el.getBoundingClientRect().height) <= initialHeight) {
+        bestW = mid
+        maxW = mid - 1
+      } else {
+        minW = mid + 1
+      }
+    }
+
+    el.style.width = `${bestW}px`
+  }
+
   function initTooltips() {
     const tooltips = document.createElement("div")
     tooltips.id = "easy-tooltips"
@@ -608,9 +634,9 @@ type TooltipElement = HTMLElement & {
           tooltip.style.removeProperty("--easy-tooltip-left-offset")
           tooltip.style.removeProperty("--easy-tooltip-right-offset")
           tooltipText.style.translate = ""
+          tooltipText.style.width = ""
           tooltip.classList.remove("easy-tooltip-below", "easy-tooltip-inside", "easy-tooltip-left", "easy-tooltip-right")
 
-          let tooltipWidth: number = 0, tooltipHeight: number = 0
           let dir: "above" | "below" | "right" | "left" | undefined, inside
 
           if (prefer === "left" || prefer === "right") {
@@ -642,10 +668,10 @@ type TooltipElement = HTMLElement & {
               inside = true
             }
           } else {
-            ;({ width: tooltipWidth, height: tooltipHeight } = tooltip.getBoundingClientRect())
+            const { height: tempHeight } = tooltip.getBoundingClientRect()
             const y = Math.round(rect.top)
-            const fitsAbove = y - tooltipHeight - distance > viewTop + padding
-            const fitsBelow = y + rect.height + tooltipHeight + distance < viewTop + viewportHeight - padding
+            const fitsAbove = y - tempHeight - distance > viewTop + padding
+            const fitsBelow = y + rect.height + tempHeight + distance < viewTop + viewportHeight - padding
 
             if (prefer === "below") {
               dir = fitsBelow ? "below" : fitsAbove ? "above" : "below"
@@ -663,6 +689,14 @@ type TooltipElement = HTMLElement & {
 
           if (dir !== "above") tooltip.classList.add("easy-tooltip-" + dir)
           if (inside) tooltip.classList.add("easy-tooltip-inside")
+
+          if (dir === "right") {
+            tooltip.style.setProperty("--easy-tooltip-left-offset", `${rightPlacementOffset}px`)
+          } else if (dir === "left") {
+            tooltip.style.setProperty("--easy-tooltip-right-offset", `${leftPlacementOffset}px`)
+          }
+
+          shrinkwrap(tooltipText)
 
           tooltip.classList.remove("easy-tooltip-setup")
           let show = true
@@ -759,13 +793,6 @@ type TooltipElement = HTMLElement & {
             freePoint = { x: Math.round(dir === "right" ? rect.right : rect.left), y: cy }
             if (!inside) {
               tooltip.style.left = `${Math.round(dir === "right" ? rect.right : rect.left) - containerRect.left}px`
-              if (dir === "right") {
-                tooltip.style.setProperty("--easy-tooltip-left-offset", `${rightPlacementOffset}px`)
-                tooltip.style.removeProperty("--easy-tooltip-right-offset")
-              } else {
-                tooltip.style.setProperty("--easy-tooltip-right-offset", `${leftPlacementOffset}px`)
-                tooltip.style.removeProperty("--easy-tooltip-left-offset")
-              }
             }
 
             const height = tooltip.getBoundingClientRect().height
@@ -779,6 +806,7 @@ type TooltipElement = HTMLElement & {
               tooltip.style.top = dir === "above" ? `${y - containerRect.top}px` : `${y + rect.height - containerRect.top}px`
             }
 
+            const tooltipWidth = tooltip.getBoundingClientRect().width
             textShift = shift(x - tooltipWidth / 2, x + tooltipWidth / 2, tooltipWidth, viewLeft, viewportWidth, edgeBufferX, false)
             tooltip.style.left = `${x - containerRect.left + tipShift}px`
           }
