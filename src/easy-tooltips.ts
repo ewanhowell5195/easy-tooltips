@@ -459,18 +459,28 @@ type TooltipElement = HTMLElement & {
       }
     }
 
+    function createsContainingBlock(s: CSSStyleDeclaration) {
+      return s.transform !== "none" || s.translate !== "none" || s.rotate !== "none" || s.scale !== "none" || s.perspective !== "none" || s.filter !== "none" || s.backdropFilter !== "none" || /paint|layout|strict|content/.test(s.contain) || /transform|translate|rotate|scale|perspective|filter/.test(s.willChange)
+    }
+
     function visibleRect(node: Element) {
       const r = node.getBoundingClientRect()
       let left = r.left, top = r.top, right = r.right, bottom = r.bottom
+      let position = getComputedStyle(node).position
       let el = node.parentElement
       while (el && el !== document.body) {
         const s = getComputedStyle(el)
-        const clipsX = s.overflowX !== "visible"
-        const clipsY = s.overflowY !== "visible"
-        if (clipsX || clipsY) {
-          const cr = el.getBoundingClientRect()
-          if (clipsX) { left = Math.max(left, cr.left); right = Math.min(right, cr.right) }
-          if (clipsY) { top = Math.max(top, cr.top); bottom = Math.min(bottom, cr.bottom) }
+        // an ancestor's overflow only clips a fixed or absolute element when it is on that element's containing block chain
+        const contains = position === "fixed" ? createsContainingBlock(s) : position === "absolute" ? s.position !== "static" || createsContainingBlock(s) : true
+        if (contains) {
+          const clipsX = s.overflowX !== "visible"
+          const clipsY = s.overflowY !== "visible"
+          if (clipsX || clipsY) {
+            const cr = el.getBoundingClientRect()
+            if (clipsX) { left = Math.max(left, cr.left); right = Math.min(right, cr.right) }
+            if (clipsY) { top = Math.max(top, cr.top); bottom = Math.min(bottom, cr.bottom) }
+          }
+          position = s.position
         }
         el = el.parentElement
       }
