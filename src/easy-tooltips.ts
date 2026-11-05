@@ -495,7 +495,11 @@ type TooltipElement = HTMLElement & {
         const toAdd = []
         let node: TooltipElement | null = lastElement
         while (node && node !== document.body) {
-          if (node.dataset.easyTooltip) {
+          if (toAdd.length) {
+            if (node._tooltip && !node._tooltip._held) tooltipVisibility(node._tooltip, false)
+          } else if (node.dataset.easyTooltip) {
+            node._sourceObserver?.disconnect()
+            node._sourceObserver = node._source = undefined
             toAdd.push(node)
           } else if (node.dataset.easyTooltipSrc) {
             const src = node.dataset.easyTooltipSrc

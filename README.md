@@ -332,7 +332,7 @@ Easy-tooltips uses a smart positioning system that:
 3. **Falls back gracefully** - When a tooltip can't fit on either side, it pins inside the viewport instead of overflowing
 4. **Manages animations** - Queues tooltip updates to prevent conflicts and flicker on rapid hover
 5. **Skips the delay when grazing** - The first hover waits a short delay to ignore accidental movement, but once any tooltip is showing, switching to adjacent tooltips is instant until you stop hovering for the cooldown period
-6. **Stacks newest on top** - When multiple tooltips are visible at once, the most recently activated one renders above the others
+6. **Stacks newest on top** - When multiple tooltips are visible at once, the most recently activated one renders above the others. When triggers are nested, only the innermost one shows
 7. **Always paints above everything** - The tooltip container lives in the browser's top layer (via the Popover API), so tooltips render above any z-index, no matter how large, and re-promote themselves above modal dialogs and fullscreen elements when activated. Falls back to a high z-index in browsers without popover support
 8. **Cleans up** - Removes a tooltip automatically when its trigger element leaves the DOM
 
