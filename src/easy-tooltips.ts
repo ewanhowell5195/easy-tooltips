@@ -54,6 +54,7 @@ type TooltipElement = HTMLElement & {
   _moveAt?: number
   _moveTimer?: number
   _held?: boolean
+  _dismissed?: boolean
   _hold?: { axis: "x" | "y", pos: number }
   _clampArmed?: boolean
 }
@@ -497,6 +498,8 @@ type TooltipElement = HTMLElement & {
         while (node && node !== document.body) {
           if (toAdd.length) {
             if (node._tooltip && !node._tooltip._held) tooltipVisibility(node._tooltip, false)
+          } else if (node._dismissed) {
+            if (node._tooltip) tooltipVisibility(node._tooltip, false)
           } else if (node.dataset.easyTooltip) {
             node._sourceObserver?.disconnect()
             node._sourceObserver = node._source = undefined
@@ -1045,6 +1048,14 @@ type TooltipElement = HTMLElement & {
         node = node.parentElement as TooltipElement | null
       }
       if (!node?._tooltip) return
+      const dismiss = node.closest("[data-easy-tooltip-dismiss]")?.getAttribute("data-easy-tooltip-dismiss")
+      if (e.pointerType !== "touch" && dismiss !== undefined && dismiss !== "false") {
+        const trigger = node
+        trigger._dismissed = true
+        tooltipVisibility(trigger._tooltip!, false)
+        trigger.addEventListener("pointerleave", () => trigger._dismissed = false, { once: true })
+        return
+      }
       const hold = node.dataset.easyTooltipHold
       if (hold === "false") return
       if (hold === undefined && !(e.target as Element)?.closest?.(holdControls)) return

@@ -162,6 +162,16 @@ Use `data-easy-tooltip-hold` to turn it on for anything else, and `data-easy-too
 
 The tooltip hides when you release, unless the pointer is back over the trigger by then.
 
+### Dismissing on click
+`data-easy-tooltip-dismiss` hides the tooltip when its trigger is clicked, and keeps it hidden until the pointer leaves the trigger. It takes priority over holding. Touch is not affected, since a tap is how a tooltip is shown there.
+
+Unlike the other attributes, it is inherited, so putting it on `<html>` turns it on for every tooltip on the page. Use `data-easy-tooltip-dismiss="false"` to turn it off for one trigger:
+```html
+<html data-easy-tooltip-dismiss>
+  …
+  <button data-easy-tooltip="Copied!" data-easy-tooltip-dismiss="false">Copy</button>
+```
+
 ### Events
 Tooltips fire events on their trigger element. They bubble, so you can listen on `document`.
 
